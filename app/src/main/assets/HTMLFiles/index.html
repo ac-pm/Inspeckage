@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inspeckage - Package Inspector</title>
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<!--NEW-->
+<div class="container-fluid">
+
+    <!--header navbar-->
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+
+                        </button>
+
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a class="navbar-brand active" href=".">Inspeckage </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <ul class="nav navbar-nav">
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" onclick="download_apk();"> APK</a>
+                                    </li>
+                                    <li><a href="#" onclick="download_all();"> All Files</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search">
+
+
+                            <button type="button" onclick="screenshot();" class="btn btn-default" data-toggle="tooltip" title="Screenshot">
+
+                                <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+
+                            </button>
+
+
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" data-toggle="tooltip" title="Settings">
+                                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                            </button>
+
+
+                            <input type='checkbox' data-label-text='<span class="glyphicon glyphicon-refresh" aria-hidden="true" data-toggle="tooltip" title="Auto Refresh"></span>' name='refresh' data-size='small' unchecked>
+                        </form>
+
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <li> <a href="https://github.com/ac-pm/"> Module enable: #moduleEnable# | Version: #inspeckageVersion#</a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="#"><div id="checkapp1"></div></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </div>
+    </div>
+
+    <!--dados da app-->
+    <div class="row">
+        <div class="col-md-3">
+            <h3>#appName#  <span class="label label-default" data-toggle="tooltip" title="Version">#appVersion#</span></h3>
+
+        </div>
+        <div class="col-md-3">
+            <h5>UID: #uid# | Debuggable: #isdebuggable# </h5>
+            <h5>GIDs: #gids# </h5>
+
+        </div>
+        <div class="col-md-6">
+            <h5>Package: #package# </h5>
+            <h5>Data dir: #data_dir#
+            <button type="button" class="btn btn-default btn-xs" onclick="fileTree();" data-toggle="modal" data-target="#myModal3">
+            Tree View
+            </button>
+
+            </h5>
+        </div>
+    </div>
+    <hr>
+    <!--tabs-->
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Package Information</a>
+                </li>
+                <li role="presentation"><a href="#sharedPreferences" aria-controls="sharedPreferences" role="tab" data-toggle="tab">Shared Preferences</a>
+                </li>
+                <li role="presentation"><a href="#serialization" aria-controls="serialization" role="tab" data-toggle="tab">Serialization</a>
+                </li>
+                <li role="presentation"><a href="#Crypto" aria-controls="Crypto" role="tab" data-toggle="tab">Crypto</a>
+                </li>
+                <li role="presentation"><a href="#Hash" aria-controls="Hash" role="tab" data-toggle="tab">Hash</a>
+                </li>
+                <li role="presentation"><a href="#SQLite" aria-controls="SQLite" role="tab" data-toggle="tab">SQLite</a>
+                </li>
+                <li role="presentation"><a href="#http" aria-controls="http" role="tab" data-toggle="tab">HTTP</a>
+                </li>
+                <li role="presentation"><a href="#fileSystem" aria-controls="fileSystem" role="tab" data-toggle="tab">File System</a>
+                </li>
+                <li role="presentation"><a href="#misc" aria-controls="misc" role="tab" data-toggle="tab">Misc.</a>
+                </li>
+                <li role="presentation"><a href="#webView" aria-controls="webView" role="tab" data-toggle="tab">WebView</a>
+                </li>
+                <li role="presentation"><a href="#ipc" aria-controls="ipc" role="tab" data-toggle="tab">IPC</a>
+                </li>
+
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+
+                <!--home-->
+                <div role="tabpanel" class="tab-pane fade in active" id="home">
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap2" aria-expanded="true" aria-controls="collap2">
+                                            Exported Activities
+                                        </a>
+
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li>
+                                                <button type="button" class="btn .btn-default btn-xs" data-toggle="modal" data-target="#myModal1">
+                                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Start Activity
+                                                </button>
+                                            </li>
+                                        </ul>
+
+                                    </h4>
+                                </div>
+                                <div id="collap2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head2">
+                                    <div class="panel-body">
+                                        #exported_act#
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap3" aria-expanded="true" aria-controls="collap3">
+                                                    Non Exported Activities
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap3" class="panel-collapse collapse in" aria-expanded="true" role="tabpanel" aria-labelledby="head3">
+                                            <div class="panel-body">
+                                                #non_exported_act#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" aria-expanded="true" role="button" data-toggle="collapse" data-parent="#accordion" href="#collap6" aria-controls="collap6">
+                                                    Exported Content Provider
+                                                </a>
+                                                <ul class="nav navbar-nav navbar-right">
+                                                    <li>
+                                                        <button type="button" class="btn .btn-default btn-xs" data-toggle="modal" data-target="#myModal2">
+                                                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Query Provider
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </h4>
+                                        </div>
+                                        <div id="collap6" class="panel-collapse collapse in" aria-expanded="true" role="tabpanel" aria-labelledby="head6">
+                                            <div class="panel-body">
+                                                #exported_provider#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap10" aria-expanded="true" aria-controls="collap10">
+                                                    Non Exported Content Provider
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap10" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head10">
+                                            <div class="panel-body">
+                                                #non_exported_provider#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap4" aria-expanded="true" aria-controls="collap4">
+                                                    Exported Services
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap4" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head4">
+                                            <div class="panel-body">
+                                                #exported_services#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap5" aria-expanded="true" aria-controls="collap5">
+                                                    Exported Broadcast Receiver
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap5" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head5">
+                                            <div class="panel-body">
+                                                #exported_broadcast#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap7" aria-expanded="true" aria-controls="collap7">
+                                            Requested Permissions
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collap7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head7">
+                                    <div class="panel-body">
+                                        #req_permissions#
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap8" aria-expanded="true" aria-controls="collap8">
+                                                    App Permissions
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap8" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head8">
+                                            <div class="panel-body">
+                                                #app_permissions#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap9" aria-expanded="true" aria-controls="collap9">
+                                                    Shared Libraries
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap9" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head9">
+                                            <div class="panel-body">
+
+
+                                                #shared_libraries#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap11" aria-expanded="true" aria-controls="collap11">
+                                                    Non Exported Services
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap11" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head11">
+                                            <div class="panel-body">
+                                                #non_exported_services#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap12" aria-expanded="true" aria-controls="collap12">
+                                                    Non Exported Broadcast Receiver
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collap12" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head12">
+                                            <div class="panel-body">
+                                                #non_exported_broadcast#
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end home-->
+
+                <div role="tabpanel" class="tab-pane fade" id="sharedPreferences">
+
+                    <div class="bs-docs-example">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#Plog" data-toggle="tab">Log</a></li>
+                            <li><a href="#pFile" data-toggle="tab">Files</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="Plog">
+                                <div id="prefs1"></div>
+                            </div>
+                            <div class="tab-pane fade" id="pFile">
+                                <div id="accordion1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="serialization">
+
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div id="serialization1"></div>
+                    </div>
+
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="Crypto">
+                    <div id="crypto1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="Hash">
+                   <div id="hash1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="SQLite">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal2">
+                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Query Provider
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div id="sqlite1"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="ipc">
+                    <div id="ipc1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="fileSystem">
+                    <div id="fs1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="http">
+                    <div id="http1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="webView">
+                    <div id="webview1"></div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="misc">
+                        <div id="misc1"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--fim div tabs-->
+</div>
+
+<!-- Modal1 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Settings</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="btn-group" data-toggle="buttons">
+                                    #flags# Disable FLAG_SECURE
+
+                                    </br>
+                                    #sslunpinning# SSL uncheck
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!--FORM-->
+                                <form class="form-horizontal " role="form">
+                                    <div class="form-group">
+                                        #proxy#
+                                        <button type="button" onclick="setProxy();" class="btn btn-default btn-sm pull-right">Add Proxy</button>
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-7">
+                                <form class="form-horizontal " role="form">
+                                    <button type="button" onclick="restartApp();" class="btn btn-default btn-sm">
+                                        Restart App
+                                    </button>
+
+                                    <button type="button" onclick="finishApp();" class="btn btn-default btn-sm">
+                                        Finish App
+                                    </button>
+
+                                    <button type="button" onclick="startApp();" class="btn btn-default btn-sm">
+                                        Start App
+                                    </button>
+
+                                </form>
+                                </div>
+                                <div class="col-md-5">
+
+                                <form class="form-horizontal " role="form">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control input-sm" id="ip" value="" placeholder="192.168.1.1">
+                                        <input type="text" class="form-control input-sm" id="mac" value="" placeholder="01:23:45:67:89:ab">
+                                        <button type="button" onclick="setARP();" class="btn btn-default btn-sm pull-right">Set ARP Entry</button>
+                                        <!--
+sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 80 -j REDIRECT --to-ports PROXY_PORT
+
+sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT --to-ports PROXY_PORT
+-->
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- Fim Modal1 -->
+
+<!-- Modal2 -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel1">
+                    <a data-toggle="collapse" href="#collapseIntent" aria-expanded="false" aria-controls="collapseIntent">
+                    Intent
+                    </a>
+                </h4>
+                <div class="collapse" id="collapseIntent">
+                    <div class="well">
+                        <p>
+                            When the system receives an implicit intent to start an activity, it searches for the
+                            best activity for the intent by comparing the intent to intent filters based on three aspects:
+                        </p>
+                        <ul>
+                            <li>The intent action</li>
+                            <li>The intent data (both URI and data type)</li>
+                            <li>The intent category</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!--FORM-->
+                                <form class="form-horizontal " role="form">
+                                    <div class="form-group">
+
+                                        <div class="input-group">
+
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Activity <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    #activities_list#
+                                                </ul>
+                                            </div><!-- /btn-group -->
+                                            <input type="text" class="form-control" aria-label="..." id="txt_activity">
+
+                                        </div><!-- /input-group -->
+                                        </br>
+                                        <div class="input-group">
+
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" onclick="selectAction('');">-NONE-</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.ALL_APPS</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.ANSWER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.APP_ERROR</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.ASSIST</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.ATTACH_DATA</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.BUG_REPORT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CALL</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CALL_BUTTON</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CHOOSER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CREATE_DOCUMENT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CREATE_LIVE_FOLDER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.CREATE_SHORTCUT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.DELETE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.DIAL</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.EDIT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.EVENT_REMINDER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.GET_CONTENT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.INSERT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.INSERT_OR_EDIT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.INSTALL_PACKAGE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.MAIN</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.MANAGE_NETWORK_USAGE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.MEDIA_SEARCH</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.MUSIC_PLAYER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.OPEN_DOCUMENT</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.OPEN_DOCUMENT_TREE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.PASTE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.PICK</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.PICK_ACTIVITY</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.POWER_USAGE_SUMMARY</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.RESPOND_VIA_MESSAGE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.RINGTONE_PICKER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.RUN</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SEARCH</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SEARCH_LONG_PRESS</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SEND</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SENDTO</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SEND_MULTIPLE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SET_ALARM</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SET_TIMER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SET_WALLPAPER</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SHOW_ALARMS</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SYNC</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.SYSTEM_TUTORIAL</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.UNINSTALL_PACKAGE</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.VIEW</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.VIEW_DOWNLOADS</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.VOICE_COMMAND</a></li>
+                                                    <li><a href="#" onclick="selectAction(this.innerHTML);">android.intent.action.WEB_SEARCH</a></li>
+                                                </ul>
+                                            </div><!-- /btn-group -->
+
+                                            <input type="text" class="form-control" aria-label="..." id="txt_action">
+
+                                        </div><!-- /input-group -->
+
+                                        </br>
+
+                                        <div class="input-group">
+
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Category <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" onclick="selectCategory('');">-NONE-</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.ALTERNATIVE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_BROWSER</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_CALCULATOR</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_CALENDAR</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_CONTACTS</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_EMAIL</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_GALLERY</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_MAPS</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_MARKET</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_MESSAGING</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.APP_MUSIC</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.BROWSABLE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.CAR_DOCK</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.CAR_MODE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.DEFAULT</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.DESK_DOCK</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.DEVELOPMENT_PREFERENCE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.EMBED</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.HE_DESK_DOCK</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.HOME</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.INFO</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.LAUNCHER</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.LEANBACK_LAUNCHER</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.LE_DESK_DOCK</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.MONKEY</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.NOTIFICATION_PREFERENCES</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.OPENABLE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.PREFERENCE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.SELECTED_ALTERNATIVE</a></li>
+                                                    <li><a href="#" onclick="selectCategory(this.innerHTML);">android.intent.category.TAB</a></li>
+                                                </ul>
+                                            </div><!-- /btn-group -->
+                                            <input type="text" class="form-control" aria-label="..." id="txt_category">
+
+                                        </div><!-- /input-group -->
+
+                                        </br>
+                                        <input placeholder="DATA_URI ex: content://contacts/people/1" type="text" class="form-control" aria-label="..."  id="txt_datauri">
+                                        </br>
+                                        <input placeholder="Extras ex: type,key,value ; string,color,red ; boolean,hasColor,true" type="text" class="form-control" aria-label="..." id="txt_extra">
+                                        </br>
+                                        <div class="input-group">
+
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Flag <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_NEW_TASK</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_GRANT_READ_URI_PERMISSION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_GRANT_WRITE_URI_PERMISSION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_GRANT_PERSISTABLE_URI_PERMISSION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_GRANT_PREFIX_URI_PERMISSION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_DEBUG_LOG_RESOLUTION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_FROM_BACKGROUND</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_BROUGHT_TO_FRONT</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_CLEAR_TASK</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_CLEAR_TOP</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_FORWARD_RESULT</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_MULTIPLE_TASK</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_NEW_DOCUMENT</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_NO_ANIMATION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_NO_HISTORY</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_NO_USER_ACTION</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_PREVIOUS_IS_TOP</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_RESET_TASK_IF_NEEDED</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_REORDER_TO_FRONT</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_SINGLE_TOP</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_ACTIVITY_TASK_ON_HOME</a></li>
+                                                    <li><a href="#" onclick="selectFlag(this.innerHTML);">FLAG_RECEIVER_REGISTERED_ONLY</a></li>
+                                                </ul>
+                                            </div><!-- /btn-group -->
+                                            <input placeholder="For more than one, add manually. ex: a,b,c... Default value: FLAG_ACTIVITY_NEW_TASK" type="text" class="form-control" aria-label="..."  id="txt_flags">
+
+                                        </div><!-- /input-group -->
+
+                                        </br>
+                                        <input placeholder="Mimetype" type="text" class="form-control" aria-label="..." id="txt_mimetype">
+                                        </br>
+                                        <button type="button" onclick="startComplexActivity();" class="btn btn-default btn-sm pull-right">Start Activity</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal2-->
+
+<!-- Modal3 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">
+                    <a data-toggle="collapse" href="#collapseIntent1" aria-expanded="false" aria-controls="collapseIntent1">
+                        Provider
+                    </a>
+                </h4>
+                <div class="collapse" id="collapseIntent1">
+                    <div class="well">
+                        <p>
+                            A <strong>content URI</strong> is a URI that identifies data in a provider. Content URIs
+                            include the symbolic name of the entire provider (its <strong>authority</strong>) and a
+                            name that points to a table (a <strong>path</strong>). When you call
+                            a client method to access a table in a provider, the content URI for the table is one of
+                            the arguments.
+                        </p>
+                        <p>
+                            The <code><a href="http://developer.android.com/reference/android/content/ContentProvider.html" target="_blank">ContentProvider</a></code> uses the path part of the content URI to choose the
+                            table to access. A provider usually has a <strong>path</strong> for each table it exposes.
+                        </p>
+                        <p>
+                            For example, the full URI for the "words" table is:
+                        </p>
+                        <pre class="prettyprint"><span class="pln">content</span><span class="pun">:</span><span class="com">//br.com.appname.authority/words</span></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!--FORM-->
+                                <form class="form-horizontal " role="form">
+                                    <div class="form-group">
+                                        Content URI: <input type="text" class="form-control" aria-label="..." id="txt_uri">
+                                        <button type="button" onclick="queryProvider();" class="btn btn-default btn-sm pull-right">Retrieve</button>
+                                    </div>
+                                    View the result in "SQLite" tab.
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal3-->
+
+<!-- Modal4 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel3">
+
+                    <h4>Data dir: #data_dir#/</h4>
+
+                </h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="fileTree1">#filetree#</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal4-->
+
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-switch.js"></script>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="js/base.js"></script>
+<script src="js/CollapsibleLists.compressed.js"></script>
+</body>
+
+</html>

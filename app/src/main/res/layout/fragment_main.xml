@@ -1,0 +1,150 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mobi.acpm.inspeckage.ui.MainFragment"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Package Inspector"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal"
+            />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Only user app"
+        android:id="@+id/only_user_app_switch"
+        android:checked="true" />
+
+
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/appsListView"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/white"/>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="..."
+            android:id="@+id/txtAppSelected"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#375a7f"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Module disabled"
+            android:id="@+id/txtModule"
+            android:background="@android:color/holo_red_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Server stopped"
+            android:id="@+id/txtServer"
+            android:background="@android:color/holo_red_dark" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#375a7f"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Started on:"
+            android:id="@+id/textView7"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="http://192.168.1.30:8008"
+            android:id="@+id/txtHost"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Access with ADB:"
+            android:id="@+id/textView9"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="adb forward tcp:8008 tcp:8008"
+            android:id="@+id/txtAdb"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:text="Launch App"
+            android:id="@+id/btnLaunchApp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_shape"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
