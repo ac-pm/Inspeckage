@@ -603,7 +603,6 @@ public class WebServer extends NanoHTTPD {
             return res;
         } catch (FileNotFoundException e) {
             //response with some alert
-            //return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "txt/html", e.getMessage());
             e.printStackTrace();
         }
         return null;
