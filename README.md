@@ -1,6 +1,5 @@
 # <img src="http://i.imgur.com/dupvus6.png" width="100" /> Inspeckage - Android Package Inspector
 
-=======================
 Inspeckage is a tool developed to offer dynamic analysis of Android applications. With this tool we can better understand what an Android application is doing at runtime.
 
 Installation
