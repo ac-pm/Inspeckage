@@ -326,7 +326,7 @@ public class PackageDetail {
 
     public String getGIDs() {
         String gidList = "";
-        if (mPInfo.gids != null) {
+		if (mPInfo.gids != null && mPInfo.gids.length != 0) {
             for (int gid : mPInfo.gids) {
                 gidList = gidList + "" + gid + "-";
             }
