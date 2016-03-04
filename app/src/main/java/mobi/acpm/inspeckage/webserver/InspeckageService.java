@@ -28,16 +28,22 @@ public class InspeckageService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Let it continue running until it is stopped.
         Context context = getApplicationContext();
+
+        int port = 8008;
+        if (intent != null && intent.getExtras() != null) {
+            port = intent.getIntExtra("port", 8008);
+        }
+
         try {
 
-            ws = new WebServer(intent.getIntExtra("port",8008),context);
+            ws = new WebServer(port, context);
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Toast.makeText(this, "Service started on port "+String.valueOf(intent.getIntExtra("port",8008)), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Service started on port " + port, Toast.LENGTH_LONG).show();
         return START_STICKY;
     }
 
