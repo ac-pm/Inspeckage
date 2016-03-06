@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         int count = getFragmentManager().getBackStackEntryCount();
 
-        if (count == 0) {
+        if (count == 1) {
+            stopService();
             super.onBackPressed();
             //additional code
         } else {
@@ -110,7 +111,9 @@ public class MainActivity extends AppCompatActivity
 
             clearAll();
             TextView txtAppSelected = (TextView) findViewById(R.id.txtAppSelected);
-            txtAppSelected.setText("... ");
+            if(txtAppSelected!=null) {
+                txtAppSelected.setText("... ");
+            }
 
         } else if (id == R.id.nav_close) {
 
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity
     public void stopService() {
         stopService(new Intent(this, InspeckageService.class));
     }
+
     private void clearAll(){
         SharedPreferences.Editor edit = mPrefs.edit();
 

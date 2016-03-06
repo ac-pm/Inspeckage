@@ -136,7 +136,11 @@ public class MainFragment extends Fragment {
                     pd = new PackageDetail(context, mPrefs.getString(Config.SP_PACKAGE,""));
                 }
                 Intent i = pd.getLaunchIntent();
-                startActivity(i);
+                if(i!=null) {
+                    startActivity(i);
+                }else{
+                    Toast.makeText(context, "Launch Intent not found.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
