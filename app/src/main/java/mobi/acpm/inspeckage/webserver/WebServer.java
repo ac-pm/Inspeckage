@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.Html;
 
@@ -14,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -505,13 +507,22 @@ public class WebServer extends NanoHTTPD {
         String nact = mPrefs.getString(Config.SP_N_EXP_ACTIVITIES, "N Exported Activities");
         String[] nactivities = nact.split("\n");
 
+        if(nactivities.length > 0){
+            sb.append("<li role='separator' class='divider'></li>");
+        }
+        String disabled = "";
+        if(!mPrefs.getBoolean(Config.SP_APP_IS_RUNNING,false)){
+            disabled = "class='disabled'";
+        }
+
         for (String activity : nactivities) {
             if (!activity.trim().equals("")) {
+
                 if (activity.contains("PERM:")) {
                     String[] actInfo = activity.split("PERM:");
-                    sb.append("<li><a href=\"#\" onclick=\"selectAct('" + actInfo[0].trim() + "');\">N " + actInfo[0].trim() + "</a></li>");
+                    sb.append("<li "+disabled+"><a href=\"#\" onclick=\"selectAct('" + actInfo[0].trim() + "');\">N " + actInfo[0].trim() + "</a></li>");
                 } else {
-                    sb.append("<li><a href=\"#\" onclick=\"selectAct('" + activity + "');\">N " + activity + "</a></li>");
+                    sb.append("<li "+disabled+"><a href=\"#\" onclick=\"selectAct('" + activity + "');\">N " + activity + "</a></li>");
                 }
             }
         }
@@ -722,7 +733,83 @@ public class WebServer extends NanoHTTPD {
         intent.putExtra("mimetype", mimetype);
         intent.putExtra("category", category);
 
-        mContext.sendBroadcast(intent, null);
+        if(mPrefs.getBoolean(Config.SP_APP_IS_RUNNING,false)){
+            mContext.sendBroadcast(intent, null);
+        }else {
+            Intent i = new Intent();
+            i.setClassName(mPrefs.getString(Config.SP_PACKAGE, ""), activity);
+
+            //FLAGS
+            if(!flags.trim().equals("")) {
+                Field[] fields = Intent.class.getFields();
+                for (Field f : fields) {
+
+                    try {
+                        Object value = f.get(i);
+
+                        if (flags.trim().contains(f.getName())) {
+                            i.addFlags((int) value);
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+
+            //DATA_URI
+            if(!data_uri.trim().equals("")){
+                Uri u = Uri.parse(data_uri);
+                i.setData(u);
+            }
+
+            if(!category.trim().equals("")){
+                i.addCategory(category);
+            }
+
+            if(!mimetype.trim().equals("")){
+                i.normalizeMimeType(mimetype);
+            }
+
+            if(!extra.trim().equals("")){
+
+                String[] extras = new String[]{extra};
+                if(extra.contains(";")){
+                    extras = extra.split(";");
+                }
+
+                for(String e : extras){
+                    String[] values = e.split(",");
+
+                    if(values.length==3){
+
+                        if(values[0].trim().toLowerCase().equals("string")){
+                            i.putExtra(values[1],values[2]);
+                        }
+
+                        if(values[0].trim().toLowerCase().equals("boolean")){
+                            i.putExtra(values[1],Boolean.valueOf(values[2]));
+                        }
+
+                        if(values[0].trim().toLowerCase().equals("int")){
+                            i.putExtra(values[1], Integer.valueOf(values[2]));
+                        }
+
+                        if(values[0].trim().toLowerCase().equals("float")){
+                            i.putExtra(values[1],Float.valueOf(values[2]));
+                        }
+
+                        if(values[0].trim().toLowerCase().equals("double")){
+                            i.putExtra(values[1],Double.valueOf(values[2]));
+                        }
+                    }
+                }
+
+            }
+
+            mContext.startActivity(i);
+        }
     }
 
     public Response queryProvider(String uri) {
