@@ -119,14 +119,18 @@ public class ConfigFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity) context);
+        super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            //at the moment OnFragmentInteractionListener is not necessary
+            //throw new RuntimeException(context.toString()
+            //        + " must implement OnFragmentInteractionListener");
         }
     }
+
+
 
     @Override
     public void onDetach() {
