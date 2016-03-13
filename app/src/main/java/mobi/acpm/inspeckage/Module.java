@@ -53,12 +53,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
 
         //check if this module is enable
         if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage")) {
-
-            findAndHookMethod("mobi.acpm.inspeckage.webserver.WebServer", loadPackageParam.classLoader, "isModuleEnabled", new XC_MethodHook() {
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    param.setResult(true);
-                }
-            });
+            findAndHookMethod("mobi.acpm.inspeckage.webserver.WebServer", loadPackageParam.classLoader, "isModuleEnabled", XC_MethodReplacement.returnConstant(true));
         }
 
         if (!loadPackageParam.packageName.equals(sPrefs.getString("package", "")))
