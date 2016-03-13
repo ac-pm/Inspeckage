@@ -8,8 +8,8 @@ android {
         applicationId "mobi.acpm.inspeckage"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.1b"
+        versionCode 2
+        versionName "1.2b"
     }
 
     buildTypes {
