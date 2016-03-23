@@ -60,7 +60,7 @@ Even though our tool has some hooks to the HTTP libraries, using an external pro
 
 == Logcat
 
-Logcat.html page. A experimental page with websocket to show some information through the logcat.
+Logcat.html page. A experimental page with websocket to show some information from the logcat.
 
 Installation
 ---------------
