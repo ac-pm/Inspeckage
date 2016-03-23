@@ -26,6 +26,10 @@
             android:name=".webserver.InspeckageService"
             android:enabled="true" />
 
+        <service
+            android:name=".log.LogService"
+            android:enabled="true" />
+
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"

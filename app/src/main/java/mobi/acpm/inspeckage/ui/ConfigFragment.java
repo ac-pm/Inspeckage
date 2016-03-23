@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.R;
+import mobi.acpm.inspeckage.log.LogService;
 import mobi.acpm.inspeckage.util.Config;
 import mobi.acpm.inspeckage.webserver.InspeckageService;
 
@@ -92,6 +93,8 @@ public class ConfigFragment extends Fragment {
         TextView txtPort = (TextView) view.findViewById(R.id.txtPort);
         txtPort.setText(String.valueOf(mPrefs.getInt(Config.SP_SERVER_PORT,8008)));
 
+        TextView txtWSPort = (TextView) view.findViewById(R.id.txtWSPort);
+        txtWSPort.setText(String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT,8887)));
 
         final Button button = (Button) view.findViewById(R.id.btnNewPort);
         button.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +102,12 @@ public class ConfigFragment extends Fragment {
                 TextView txtPort = (TextView) view.findViewById(R.id.txtPort);
                 stopService();
                 startService(Integer.parseInt(txtPort.getText().toString()));
+
+                TextView txtWSPort = (TextView) view.findViewById(R.id.txtWSPort);
+
                 SharedPreferences.Editor edit = mPrefs.edit();
                 edit.putInt(Config.SP_SERVER_PORT,Integer.valueOf(txtPort.getText().toString()));
+                edit.putInt(Config.SP_WSOCKET_PORT,Integer.valueOf(txtWSPort.getText().toString()));
                 edit.apply();
             }
         });
@@ -162,5 +169,6 @@ public class ConfigFragment extends Fragment {
 
     public void stopService() {
         context.stopService(new Intent(context, InspeckageService.class));
+        context.stopService(new Intent(context, LogService.class));
     }
 }

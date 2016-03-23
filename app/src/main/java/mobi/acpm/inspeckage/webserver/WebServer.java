@@ -33,6 +33,7 @@ import mobi.acpm.inspeckage.hooks.SQLiteHook;
 import mobi.acpm.inspeckage.hooks.SerializationHook;
 import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
+import mobi.acpm.inspeckage.log.LogService;
 import mobi.acpm.inspeckage.receivers.InspeckageWebReceiver;
 import mobi.acpm.inspeckage.util.Config;
 import mobi.acpm.inspeckage.util.FileUtil;
@@ -95,7 +96,25 @@ public class WebServer extends NanoHTTPD {
 
             if (type != null) {
 
-                if (type.equals("filetree")) {
+                if (type.equals("startWS")) {
+
+                    String selected = parms.get("selected");
+
+                    Intent i = new Intent(mContext, LogService.class);
+                    i.putExtra("filter",selected);
+                    i.putExtra("port", mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887));
+
+                    mContext.startService(i);
+
+                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
+
+                } else if (type.equals("stopWS")) {
+
+                    mContext.stopService(new Intent(mContext, LogService.class));
+
+                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
+
+                } else if (type.equals("filetree")) {
 
                     String tree = mPrefs.getString(Config.SP_DATA_DIR_TREE, "");
                     if (tree.equals("")) {
@@ -276,6 +295,12 @@ public class WebServer extends NanoHTTPD {
 
             html = FileUtil.readHtmlFile(mContext, uri);
 
+        } else if (uri.equals("/logcat.html")) {
+
+            html = FileUtil.readHtmlFile(mContext, uri);
+            html = html.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
+            html = html.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
+            return newFixedLengthResponse(html);
         } else {
 
             String fname = FileUtil.readHtmlFile(mContext, uri);

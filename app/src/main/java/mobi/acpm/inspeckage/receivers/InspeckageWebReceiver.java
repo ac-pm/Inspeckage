@@ -45,7 +45,9 @@ public class InspeckageWebReceiver extends BroadcastReceiver {
         if(action.equals("checkApp")){
 
             boolean isRunning = intent.getExtras().getBoolean("isRunning");
+            int pid = intent.getExtras().getInt("PID");
             edit.putBoolean(Config.SP_APP_IS_RUNNING, isRunning);
+            edit.putInt(Config.SP_APP_PID, pid);
             edit.apply();
         }
     }

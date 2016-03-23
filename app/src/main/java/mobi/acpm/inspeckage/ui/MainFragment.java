@@ -57,11 +57,14 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
 
-        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+            startService(mPrefs.getInt(Config.SP_SERVER_PORT, 8008));
 
-        startService(mPrefs.getInt(Config.SP_SERVER_PORT,8008));
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -148,6 +151,10 @@ public class MainFragment extends Fragment {
         WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
         String formatedIp = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_SERVER_IP, formatedIp);
+        edit.apply();
 
         String port = String.valueOf(mPrefs.getInt(Config.SP_SERVER_PORT, 8008));
 
@@ -299,4 +306,6 @@ public class MainFragment extends Fragment {
         }
 
     }
+
+
 }

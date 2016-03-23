@@ -35,9 +35,13 @@ public class Config {
     public static String SP_DATA_DIR = "path";
     public static String SP_DATA_DIR_TREE = "tree";
     public static String SP_APP_IS_RUNNING = "isRunning";
+    public static String SP_APP_PID = "pid";
 
     public static String SP_SERVER_STARTED = "server_started";
     public static String SP_SERVER_PORT = "server_port";
+    public static String SP_SERVER_IP = "server_ip";
+
+    public static String SP_WSOCKET_PORT = "wsocket_port";
 
     public static String SP_REQ_PERMISSIONS = "req_permissions";
     public static String SP_APP_PERMISSIONS = "app_permissions";

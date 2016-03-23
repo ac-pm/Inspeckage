@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inspeckage - Package Inspector</title>
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        .navbar-form {
+        background-color: #fff;
+        }
+    </style>
+
+    <script type="text/javascript" src="/js/prototype.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/logcat.js"></script>
+
+</head>
+<body>
+<!--NEW-->
+<div class="container-fluid">
+
+    <!--header navbar-->
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                        </button>
+
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a class="navbar-brand active" href=".">Inspeckage - LogCat</a>
+                        </ul>
+                    </div>
+
+                    <div class="checkboxg">
+                        <form class="navbar-form navbar-left" id="formx" role="search">
+
+                            <input type="checkbox" id="inlineCheckbox1" value="D"> Debug
+                            <input type="checkbox" id="inlineCheckbox2" value="I"> Info
+                            <input type="checkbox" id="inlineCheckbox3" value="W"> Warning
+                            <input type="checkbox" id="inlineCheckbox4" value="E"> Error
+                            <input type="checkbox" id="inlineCheckbox5" value="F"> Fatal
+                            <input type="checkbox" id="inlineCheckbox6" value="V"> Verbose
+
+                            <button type="button" id="startWS" onclick="startWSocket();" class="btn btn-default" data-toggle="tooltip" title="Start Web Socket">
+                                <span aria-hidden="true">Start</span>
+                            </button>
+
+                            <button type="button" id="stopWS" onclick="stopWSocket();" active="false" class="btn btn-default" data-toggle="modal" data-toggle="tooltip" title="Start Web Socket" disabled="disabled">
+                                <span aria-hidden="true">Stop</span>
+                            </button>
+
+                        </form>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li> <a href="https://github.com/ac-pm/Inspeckage"> GitHub</a>
+                            </li>
+                        </ul>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </div>
+    </div>
+
+    <!--dados da app-->
+    <div class="row">
+
+        <div class="col-md-5">
+
+            <form id="uriForm" class="form-inline">
+
+                <div class="input-group">
+
+                    <span class="input-group-addon">ws://</span>
+                    <input type="text" id="uri" class="form-control" value="#ip_ws#">
+                    <span class="input-group-addon" id="wsport">#port_ws#</span>
+
+                </div>
+
+                <input type="submit" value="Connect" id="connect" class="btn btn-default btn-sm">
+                <input type="button" id="disconnect" value="Disconnect" disabled="disabled" class="btn btn-default btn-sm">
+
+            </form>
+        </div>
+
+
+        <div class="col-md-5">
+
+        </div>
+
+        <div class="col-md-2">
+
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form><textarea id="log" rows="20" style="font-family:monospace; color:blue; width:100%;"></textarea></form><br>
+        </div>
+    </div>
+    <input type="button" id="clear" value="Clear" class="btn btn-default btn-sm pull-right">
+    <input type="button" id="scroll" value="Auto Scroll" class="btn btn-default btn-sm pull-right">
+
+</div>
+</div>
+</body>
+</html>

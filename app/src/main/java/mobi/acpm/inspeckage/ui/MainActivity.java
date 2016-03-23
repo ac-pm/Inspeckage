@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
 
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "https://github.com/ac-pm");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "https://github.com/ac-pm/Inspeckage");
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
 

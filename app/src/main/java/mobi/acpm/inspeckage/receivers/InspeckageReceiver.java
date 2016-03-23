@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.webkit.WebView;
 
 import java.lang.reflect.Field;
@@ -155,7 +154,6 @@ public class InspeckageReceiver extends BroadcastReceiver {
 
                 } else if (action.equals("fileTree")) {
 
-                    Log.d("FILETREX", "Entrou");
                     String tree = Util.FileTree(activity.getApplicationInfo().dataDir, "");
 
                     Intent i = new Intent("mobi.acpm.inspeckage.INSPECKAGE_WEB");
@@ -163,12 +161,9 @@ public class InspeckageReceiver extends BroadcastReceiver {
                     float m = (float) tree.length() / 3;
                     String sub1 = tree.substring(0, (int) m);
                     String sub2 = tree.substring((int) m, tree.length());
-
+                    //talvez tenha que dividir pq a arvore pode ficar muito grande para ser enviada via intent
                     i.putExtra("tree", tree);
-                    //i.putExtra("tree2", sub2);
-                    Log.d("FILETREX", "PREPAROU" + sub1.length());
                     activity.sendBroadcast(i, null);
-                    Log.d("FILETREX", tree);
                     Util.sb = new StringBuilder();
 
                 } else if (action.equals("checkApp")) {
@@ -176,6 +171,10 @@ public class InspeckageReceiver extends BroadcastReceiver {
                     Intent i = new Intent("mobi.acpm.inspeckage.INSPECKAGE_WEB");
                     i.putExtra("action", "checkApp");
                     i.putExtra("isRunning", true);
+
+                    int pid = android.os.Process.myPid();
+                    i.putExtra("PID",pid);
+
                     activity.sendBroadcast(i, null);
 
                 } else if (action.equals("webviewSetDebug")) {

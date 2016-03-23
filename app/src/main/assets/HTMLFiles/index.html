@@ -13,10 +13,18 @@
     <link href="css/bootstrap-switch.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-
 </head>
 
 <body>
+
+<script  type="text/javascript">
+
+        function logcat() {
+          var win = window.open('/logcat.html', '_blank');
+          win.focus();
+        }
+
+</script>
 
 <!--NEW-->
 <div class="container-fluid">
@@ -72,6 +80,12 @@
 
                             <input type='checkbox' data-label-text='<span class="glyphicon glyphicon-refresh" aria-hidden="true" data-toggle="tooltip" title="Auto Refresh"></span>' name='refresh' data-size='small' unchecked>
                         </form>
+
+
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="/logcat.html" onclick="logcat();" >LogCat</a>
+                            </li>
+                        </ul>
 
                         <ul class="nav navbar-nav navbar-right">
 
