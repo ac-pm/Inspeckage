@@ -58,6 +58,10 @@ Even though our tool has some hooks to the HTTP libraries, using an external pro
 * Enable and disable proxy;
 * Add entries in the arp table.
 
+== Logcat
+
+Logcat.html page. A experimental page with websocket to show some information from the logcat.
+
 Installation
 ---------------
 Requirements:
@@ -97,6 +101,8 @@ And reboot!
 <img src="http://i.imgur.com/W7496ru.png" width="800" />
 
 <img src="http://i.imgur.com/sEzwWYj.png" width="900" />
+
+<img src="http://i.imgur.com/2tCyBMW.png" width="900" />
 
 
 License
