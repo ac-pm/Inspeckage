@@ -44,8 +44,17 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, "int", new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        int modeId = (Integer) param.args[1];
+                        String mode = "MODE_PRIVATE";
+                        if(modeId == 1){
+                            mode = "MODE_WORLD_READABLE";
+                        }else if(modeId == 2){
+                            mode = "MODE_WORLD_WRITEABLE";
+                        }else if(modeId > 2){
+                            mode = "APPEND or MULTI_PROCESS";
+                        }
                         sb = new StringBuffer();
-                        sb.append("PUT[" + (String) param.args[0] + ".xml]");
+                        sb.append("PUT[" + (String) param.args[0] + ".xml , "+mode+"]");
                     }
                 });
 
