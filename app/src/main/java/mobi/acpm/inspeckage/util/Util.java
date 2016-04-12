@@ -132,6 +132,9 @@ public class Util {
             sh = Runtime.getRuntime().exec("su", null, null);
             OutputStream os = sh.getOutputStream();
             String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            if(new File("/storage/emulated/legacy").exists()){
+                path = "/storage/emulated/legacy";
+            }
             os.write(("/system/bin/screencap -p " + path + Config.P_ROOT + "/" + fileName).getBytes("ASCII"));
             os.flush();
             os.close();
