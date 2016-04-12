@@ -28,7 +28,7 @@ public class CryptoHook extends XC_MethodHook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
                 sb = new StringBuffer();
-                sb.append("" + (String) param.args[1] + " Key[" + Util.byteArrayToString((byte[]) param.args[0]) + "");
+                sb.append("SecretKeySpec(" + Util.byteArrayToString((byte[]) param.args[0]) + ","+(String) param.args[1]+")");
             }
 
         });
@@ -75,7 +75,7 @@ public class CryptoHook extends XC_MethodHook {
                     sb = new StringBuffer();
                 }
                 //Transformation ex AES/CBC/PKCS7Padding
-                sb.append(" , " + (String) param.args[0] + "] ");
+                sb.append(" , Cipher[" + (String) param.args[0] + "] ");
             }
 
         });
