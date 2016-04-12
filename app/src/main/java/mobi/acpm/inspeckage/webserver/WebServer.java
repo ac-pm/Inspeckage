@@ -650,6 +650,11 @@ public class WebServer extends NanoHTTPD {
         String filename = path.substring(path.lastIndexOf("/") + 1);
 
         String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        if(new File("/storage/emulated/legacy").exists()){
+            sdcardPath = "/storage/emulated/legacy";
+        }
+
         String absolutePath = sdcardPath + Config.P_ROOT + "/" + filename;
         Util.copyFileRoot(path, absolutePath);
         try {
@@ -1090,7 +1095,7 @@ public class WebServer extends NanoHTTPD {
                 String[] x = html.split("</br>");
                 for (int i = 0; i < x.length; i++) {
 
-                    String color = "label-info";
+                    String color = "label-danger";
                     if (x[i].contains("GET[")) {
                         color = "label-info";
                     } else if (x[i].contains("CONTAINS[")) {
