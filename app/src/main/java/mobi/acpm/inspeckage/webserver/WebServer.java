@@ -70,6 +70,16 @@ public class WebServer extends NanoHTTPD {
         start();
     }
 
+    private Response ok(String type, String html) {
+        return newFixedLengthResponse(Response.Status.OK, type, html);
+    }
+
+    private Response ok(String html) {
+        return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, html);
+    }
+
+    private String html = "";
+
     @Override
     public Response serve(IHTTPSession session) {
 
@@ -89,206 +99,64 @@ public class WebServer extends NanoHTTPD {
 
         Map<String, String> parms = session.getParms();
         String type = parms.get("type");
+        html = "";
 
-        String html = "";
 
         if (uri.equals("/")) {
-
             if (type != null) {
+                switch (type) {
+                    case "startWS":
+                        return startWS(parms);
+                    case "stopWS":
+                        return stopWS();
+                    case "filetree":
+                        return fileTreeHtml();
+                    case "checkapp":
+                        return checkApp();
+                    case "downloadfile":
+                        return downloadFile(parms);
+                    case "screenshot":
+                        return takeScreenshot();
+                    case "setarp":
+                        return setArp(parms);
+                    case "downapk":
+                        return downloadApk();
+                    case "downall":
+                        return downloadAll();
+                    case "finishapp":
+                        finishApp();
+                        return ok("OK");
+                    case "restartapp":
+                        finishApp();
+                        startApp();
+                        return ok("OK");
+                    case "startapp":
+                        startApp();
+                        return ok("OK");
+                    case "start":
+                        return startHtml(parms);
+                    case "file":
+                        fileHtml(parms);
+                        break;
+                    case Config.SP_EXPORTED:
+                        spExported(parms);
+                        break;
+                    case "flagsec":
+                        flagSecure(parms);
+                        break;
+                    case "proxy":
+                        proxy(parms);
+                        break;
+                    case "switchproxy":
+                        switchProxy(parms);
+                        break;
+                    case "sslunpinning":
+                        sslUnpinning(parms);
+                        break;
 
-                if (type.equals("startWS")) {
-
-                    String selected = parms.get("selected");
-
-                    Intent i = new Intent(mContext, LogService.class);
-                    i.putExtra("filter",selected);
-                    i.putExtra("port", mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887));
-
-                    mContext.startService(i);
-
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-
-                } else if (type.equals("stopWS")) {
-
-                    mContext.stopService(new Intent(mContext, LogService.class));
-
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-
-                } else if (type.equals("filetree")) {
-
-                    String tree = mPrefs.getString(Config.SP_DATA_DIR_TREE, "");
-                    if (tree.equals("")) {
-                        tree = "<p class=\"text-danger\">The app is running?</p>";
-                    }
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, tree);
-
-                } else if (type.equals("checkapp")) {
-
-                    String isRunning = "App is running: true";
-                    if (!mPrefs.getBoolean(Config.SP_APP_IS_RUNNING, false)) {
-                        isRunning = "App is running: <font style=\"color:red; background:yellow;\">false</font>";
-                    }
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, isRunning);
-
-                } else if (type.equals("downloadfile")) {
-
-                    String path = parms.get("value");
-                    return downloadFileRoot(path);
-
-                } else if (type.equals("screenshot")) {
-
-
-                    return takeScreenshot();
-
-                } else if (type.equals("setarp")) {
-
-                    String ip = parms.get("ip");
-                    String mac = parms.get("mac");
-                    Util.setARPEntry(ip, mac);
-                    Util.showNotification(mContext, "arp -s " + ip + " " + mac + "");
-
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-
-                } else if (type.equals("downapk")) {
-
-                    return downloadApk();
-
-                } else if (type.equals("downall")) {
-
-                    return downloadAll();
-
-                } else if (type.equals("finishapp")) {
-                    finishApp();
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-                } else if (type.equals("restartapp")) {
-
-                    finishApp();
-
-                    startApp();
-
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-
-                } else if (type.equals("startapp")) {
-
-                    startApp();
-
-                    return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, "OK");
-
-                } else if (type.equals("start")) {
-
-                    String component = parms.get("component");
-
-                    if (component.equals("activity")) {
-
-                        String activity = parms.get("activity");
-                        String action = parms.get("action");
-                        String category = parms.get("category");
-                        String data_uri = parms.get("datauri");
-                        String extra = parms.get("extra");
-                        String flags = parms.get("flags");
-                        String mimetype = parms.get("mimetype");
-
-                        startActivity(activity, action, category, data_uri, extra, flags, mimetype);
-
-                    } else if (component.equals("service")) {
-
-                    } else if (component.equals("broadcast")) {
-
-                    } else if (component.equals("provider")) {
-
-                        String uri_provider = parms.get("uri");
-                        return queryProvider(uri_provider);
-                    }
-
-                    return newFixedLengthResponse("");
-
-                } else if (type.equals("file")) {
-
-                    String value = parms.get("value");
-
-                    if (value != null && !value.trim().equals(""))
-                        html = hooksContent(value);
-
-                } else if (type.equals(Config.SP_EXPORTED)) {
-
-                    String value = parms.get("value");
-                    if (value != null) {
-                        SharedPreferences.Editor edit = mPrefs.edit();
-                        edit.putBoolean(Config.SP_EXPORTED, Boolean.valueOf(value));
-                        edit.apply();
-                        if (Boolean.valueOf(value))
-                            Util.showNotification(mContext, "Export all activities");
-                    }
-                    html = "#exported#";
-
-                } else if (type.equals("flagsec")) {
-
-                    String fs_switch = parms.get("fsswitch");
-                    if (fs_switch != null) {
-                        SharedPreferences.Editor edit = mPrefs.edit();
-                        edit.putBoolean(Config.SP_FLAG_SECURE, Boolean.valueOf(fs_switch));
-                        edit.apply();
-                        if (Boolean.valueOf(fs_switch))
-                            Util.showNotification(mContext, "Disable all FLAG_SECURE");
-                    }
-                    html = "#flags#";
-
-                } else if (type.equals("proxy")) {
-                    html = "#proxy#";
-
-                    String host = parms.get("host");
-                    String port = parms.get("port");
-
-                    if (host != null && port != null && Util.isInt(port)) {
-
-                        SharedPreferences.Editor edit = mPrefs.edit();
-                        edit.putString(Config.SP_PROXY_PORT, port);
-                        edit.putString(Config.SP_PROXY_HOST, host);
-                        edit.apply();
-                        Util.showNotification(mContext, "Save Proxy: " + host + ":" + port);
-                    }
-
-                } else if (type.equals("switchproxy")) {
-                    html = "#proxy#";
-
-                    String pswitch = parms.get("value");
-                    if (pswitch != null) {
-
-                        String host = mPrefs.getString(Config.SP_PROXY_HOST, "");
-                        String port = mPrefs.getString(Config.SP_PROXY_PORT, "");
-
-                        SharedPreferences.Editor edit = mPrefs.edit();
-                        if (Boolean.valueOf(pswitch) && host.length() > 1 && port.length() > 0) {
-                            edit.putBoolean(Config.SP_SWITCH_PROXY, true);
-                            Util.showNotification(mContext, "Proxy Enable");
-                        } else {
-                            edit.putBoolean(Config.SP_SWITCH_PROXY, false);
-                        }
-                        edit.apply();
-                    }
-
-                } else if (type.equals("sslunpinning")) {
-                    String ssl_switch = parms.get("sslswitch");
-                    if (ssl_switch != null) {
-                        SharedPreferences.Editor edit = mPrefs.edit();
-                        edit.putBoolean(Config.SP_UNPINNING, Boolean.valueOf(ssl_switch));
-                        edit.apply();
-                        if (Boolean.valueOf(ssl_switch))
-                            Util.showNotification(mContext, "Disable SSL");
-                    }
-                    html = "#sslunpinning#";
                 }
             } else {
-
-                SharedPreferences.Editor edit = mPrefs.edit();
-                edit.putBoolean(Config.SP_APP_IS_RUNNING, false);
-                edit.putString(Config.SP_DATA_DIR_TREE, "");
-                edit.apply();
-
-                isRunning();
-                fileTree();
-
-                html = FileUtil.readHtmlFile(mContext, "/index.html");
+                setDefaultOptions();
             }
 
         } else if (uri.equals("/index.html")) {
@@ -300,16 +168,16 @@ public class WebServer extends NanoHTTPD {
             html = FileUtil.readHtmlFile(mContext, uri);
             html = html.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
             html = html.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
-            return newFixedLengthResponse(html);
+            return ok(html);
         } else {
 
             String fname = FileUtil.readHtmlFile(mContext, uri);
 
             if (uri.contains(".css")) {
-                return newFixedLengthResponse(Response.Status.OK, "text/css", fname);
+                return ok("text/css", fname);
             }
             if (uri.contains(".js")) {
-                return newFixedLengthResponse(Response.Status.OK, "text/javascript", fname);
+                return ok("text/javascript", fname);
             }
             if (uri.contains(".png")) {
                 try {
@@ -322,24 +190,24 @@ public class WebServer extends NanoHTTPD {
             }
 
             if (uri.contains(".ico")) {
-                return newFixedLengthResponse(Response.Status.OK, "image/vnd.microsoft.icon", fname);
+                return ok("image/vnd.microsoft.icon", fname);
             }
             if (uri.contains(".eot")) {
-                return newFixedLengthResponse(Response.Status.OK, "application/vnd.ms-fontobject", fname);
+                return ok("application/vnd.ms-fontobject", fname);
             }
             if (uri.contains(".svg")) {
-                return newFixedLengthResponse(Response.Status.OK, "image/svg+xml", fname);
+                return ok("image/svg+xml", fname);
             }
             if (uri.contains(".ttf")) {
-                return newFixedLengthResponse(Response.Status.OK, "application/x-font-ttf", fname);
+                return ok("application/x-font-ttf", fname);
             }
             if (uri.contains(".woff")) {
-                return newFixedLengthResponse(Response.Status.OK, "font/x-woff", fname);
+                return ok("font/x-woff", fname);
             }
             if (uri.contains(".woff2")) {
-                return newFixedLengthResponse(Response.Status.OK, "font/woff2", fname);
+                return ok("font/woff2", fname);
             }
-            return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, fname);
+            return ok(fname);
         }
 
         if (mPrefs.getBoolean(Config.SP_EXPORTED, false)) {
@@ -360,6 +228,188 @@ public class WebServer extends NanoHTTPD {
             moduleEnable = "<font style=\"color:red; background:yellow;\">false</font>";
         }
         html = html.replace("#moduleEnable#", moduleEnable);
+        replaceHtmlVariables();
+
+        //Inspeckage version
+        PackageInfo pInfo;
+        try {
+            pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+            String version = pInfo.versionName;
+            html = html.replace("#inspeckageVersion#", version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return ok(html);
+    }
+
+    private void setDefaultOptions() {
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putBoolean(Config.SP_APP_IS_RUNNING, false);
+        edit.putString(Config.SP_DATA_DIR_TREE, "");
+        edit.apply();
+
+        isRunning();
+        fileTree();
+
+        html = FileUtil.readHtmlFile(mContext, "/index.html");
+    }
+
+    private void sslUnpinning(Map<String, String> parms) {
+        String ssl_switch = parms.get("sslswitch");
+        if (ssl_switch != null) {
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putBoolean(Config.SP_UNPINNING, Boolean.valueOf(ssl_switch));
+            edit.apply();
+            if (Boolean.valueOf(ssl_switch))
+                Util.showNotification(mContext, "Disable SSL");
+        }
+        html = "#sslunpinning#";
+    }
+
+    private void switchProxy(Map<String, String> parms) {
+        html = "#proxy#";
+
+        String pswitch = parms.get("value");
+        if (pswitch != null) {
+
+            String host = mPrefs.getString(Config.SP_PROXY_HOST, "");
+            String port = mPrefs.getString(Config.SP_PROXY_PORT, "");
+
+            SharedPreferences.Editor edit = mPrefs.edit();
+            if (Boolean.valueOf(pswitch) && host.length() > 1 && port.length() > 0) {
+                edit.putBoolean(Config.SP_SWITCH_PROXY, true);
+                Util.showNotification(mContext, "Proxy Enable");
+            } else {
+                edit.putBoolean(Config.SP_SWITCH_PROXY, false);
+            }
+            edit.apply();
+        }
+    }
+
+    private void proxy(Map<String, String> parms) {
+        html = "#proxy#";
+
+        String host = parms.get("host");
+        String port = parms.get("port");
+
+        if (host != null && port != null && Util.isInt(port)) {
+
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putString(Config.SP_PROXY_PORT, port);
+            edit.putString(Config.SP_PROXY_HOST, host);
+            edit.apply();
+            Util.showNotification(mContext, "Save Proxy: " + host + ":" + port);
+        }
+    }
+
+    private void flagSecure(Map<String, String> parms) {
+        String fs_switch = parms.get("fsswitch");
+        if (fs_switch != null) {
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putBoolean(Config.SP_FLAG_SECURE, Boolean.valueOf(fs_switch));
+            edit.apply();
+            if (Boolean.valueOf(fs_switch))
+                Util.showNotification(mContext, "Disable all FLAG_SECURE");
+        }
+        html = "#flags#";
+    }
+
+    private void spExported(Map<String, String> parms) {
+        String value = parms.get("value");
+        if (value != null) {
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putBoolean(Config.SP_EXPORTED, Boolean.valueOf(value));
+            edit.apply();
+            if (Boolean.valueOf(value))
+                Util.showNotification(mContext, "Export all activities");
+        }
+        html = "#exported#";
+    }
+
+    private void fileHtml(Map<String, String> parms) {
+        String value = parms.get("value");
+
+        if (value != null && !value.trim().equals("")) {
+            html = hooksContent(value);
+        }
+    }
+
+    private Response startHtml(Map<String, String> parms) {
+        String component = parms.get("component");
+
+        if (component.equals("activity")) {
+
+            String activity = parms.get("activity");
+            String action = parms.get("action");
+            String category = parms.get("category");
+            String data_uri = parms.get("datauri");
+            String extra = parms.get("extra");
+            String flags = parms.get("flags");
+            String mimetype = parms.get("mimetype");
+
+            startActivity(activity, action, category, data_uri, extra, flags, mimetype);
+
+        } else if (component.equals("service")) {
+
+        } else if (component.equals("broadcast")) {
+
+        } else if (component.equals("provider")) {
+
+            String uri_provider = parms.get("uri");
+            return queryProvider(uri_provider);
+        }
+
+        return ok("");
+    }
+
+    private Response setArp(Map<String, String> parms) {
+        String ip = parms.get("ip");
+        String mac = parms.get("mac");
+        Util.setARPEntry(ip, mac);
+        Util.showNotification(mContext, "arp -s " + ip + " " + mac + "");
+
+        return ok("OK");
+    }
+
+    private Response downloadFile(Map<String, String> parms) {
+        String path = parms.get("value");
+        return downloadFileRoot(path);
+    }
+
+    private Response checkApp() {
+        String isRunning = "App is running: true";
+        if (!mPrefs.getBoolean(Config.SP_APP_IS_RUNNING, false)) {
+            isRunning = "App is running: <font style=\"color:red; background:yellow;\">false</font>";
+        }
+        return ok(isRunning);
+    }
+
+    private Response fileTreeHtml() {
+        String tree = mPrefs.getString(Config.SP_DATA_DIR_TREE, "");
+        if (tree.equals("")) {
+            tree = "<p class=\"text-danger\">The app is running?</p>";
+        }
+        return ok(tree);
+    }
+
+    private Response startWS(Map<String, String> parms) {
+        String selected = parms.get("selected");
+
+        Intent i = new Intent(mContext, LogService.class);
+        i.putExtra("filter",selected);
+        i.putExtra("port", mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887));
+
+        mContext.startService(i);
+        return ok("OK");
+    }
+
+    private Response stopWS() {
+        mContext.stopService(new Intent(mContext, LogService.class));
+        return ok("OK");
+    }
+
+    private void replaceHtmlVariables() {
         html = html.replace("#proxy#", htmlProxy());
         html = html.replace("#flags#", flagSecureCheckbox());
         html = html.replace("#sslunpinning#", SSLUnpinningCheckbox());
@@ -385,18 +435,6 @@ public class WebServer extends NanoHTTPD {
         html = html.replace("#req_permissions#", mPrefs.getString(Config.SP_REQ_PERMISSIONS, "Permissions").replace("\n", "</br>"));
         html = html.replace("#app_permissions#", mPrefs.getString(Config.SP_APP_PERMISSIONS, "Permissions").replace("\n", "</br>"));
         html = html.replace("#shared_libraries#", mPrefs.getString(Config.SP_SHARED_LIB, "Shared Libraries").replace("\n", "</br>"));
-
-        //Inspeckage version
-        PackageInfo pInfo;
-        try {
-            pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
-            String version = pInfo.versionName;
-            html = html.replace("#inspeckageVersion#", version);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return newFixedLengthResponse(html);
     }
 
     //HTML
