@@ -68,3 +68,7 @@ p.breakWord {
 
     word-break: break-all;
 }
+
+#general-info-icon {
+  font-size: 20px;
+}

@@ -12,18 +12,33 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-switch.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript">
+        var shown = true;
+
+        function showGeneralInfo() {
+          var general = $('#general-info');
+          var generalInfoIcon = $('#general-info-icon');
+          if(shown) {
+            general.fadeOut();
+            generalInfoIcon.attr("class", "glyphicon glyphicon-chevron-down");
+            shown = false;
+          } else {
+            general.fadeIn();
+            generalInfoIcon.attr("class", "glyphicon glyphicon-chevron-up");
+            shown = true;
+          }
+        }
+    </script>
 
 </head>
 
 <body>
 
 <script  type="text/javascript">
-
         function logcat() {
           var win = window.open('/logcat.html', '_blank');
           win.focus();
         }
-
 </script>
 
 <!--NEW-->
@@ -91,6 +106,11 @@
 
                             <li> <a href="https://github.com/ac-pm/"> Module enable: #moduleEnable# | Version: #inspeckageVersion#</a>
                             </li>
+                            <li>
+                                <a href="#" onclick="showGeneralInfo()">
+                                    <span id="general-info-icon" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                                </a>
+                            </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li>
@@ -106,27 +126,29 @@
     </div>
 
     <!--dados da app-->
-    <div class="row">
-        <div class="col-md-3">
-            <h3>#appName#  <span class="label label-default" data-toggle="tooltip" title="Version">#appVersion#</span></h3>
+    <div id="general-info">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>#appName#  <span class="label label-default" data-toggle="tooltip" title="Version">#appVersion#</span></h3>
 
-        </div>
-        <div class="col-md-3">
-            <h5>UID: #uid# | Debuggable: #isdebuggable# </h5>
-            <h5>GIDs: #gids# </h5>
+            </div>
+            <div class="col-md-3">
+                <h5>UID: #uid# | Debuggable: #isdebuggable# </h5>
+                <h5>GIDs: #gids# </h5>
 
-        </div>
-        <div class="col-md-6">
-            <h5>Package: #package# </h5>
-            <h5>Data dir: #data_dir#
-            <button type="button" class="btn btn-default btn-xs" onclick="fileTree();" data-toggle="modal" data-target="#myModal3">
-            Tree View
-            </button>
+            </div>
+            <div class="col-md-6">
+                <h5>Package: #package# </h5>
+                <h5>Data dir: #data_dir#
+                <button type="button" class="btn btn-default btn-xs" onclick="fileTree();" data-toggle="modal" data-target="#myModal3">
+                Tree View
+                </button>
 
-            </h5>
+                </h5>
+            </div>
         </div>
+        <hr>
     </div>
-    <hr>
     <!--tabs-->
     <div class="row">
 
