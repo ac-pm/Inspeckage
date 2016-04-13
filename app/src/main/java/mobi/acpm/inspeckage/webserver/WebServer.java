@@ -134,7 +134,7 @@ public class WebServer extends NanoHTTPD {
                         startApp();
                         return ok("OK");
                     case "start":
-                        return startHtml(parms);
+                        return startComponent(parms);
                     case "file":
                         fileHtml(parms);
                         break;
@@ -335,7 +335,7 @@ public class WebServer extends NanoHTTPD {
         }
     }
 
-    private Response startHtml(Map<String, String> parms) {
+    private Response startComponent(Map<String, String> parms) {
         String component = parms.get("component");
 
         if (component.equals("activity")) {
