@@ -3,6 +3,7 @@ package mobi.acpm.inspeckage.hooks;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -80,14 +81,16 @@ public class CryptoHook extends XC_MethodHook {
 
         });
 
+        findAndHookConstructor(PBEKeySpec.class, char[].class, byte[].class, int.class, int.class, new XC_MethodHook() {
 
-        /**
-         *
-         * SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
-         Mac mac = Mac.getInstance("HmacSHA256");
-         mac.init(secretKey);
-         hmacData = mac.doFinal(data.getBytes("UTF-8"));
-         return new BASE64Encoder().encode(hmacData);
-         **/
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (sb == null)
+                    sb = new StringBuffer();
+
+                sb.append("[PBEKeySpec] - Password: " + String.valueOf((char[])param.args[0]) + " || Salt: " +  Util.byteArrayToString((byte[])param.args[1]));
+                XposedBridge.log(TAG + sb.toString());
+                sb = new StringBuffer();
+            }
+        });
     }
 }
