@@ -2,13 +2,13 @@
     <string name="app_name">Inspeckage</string>
 
 
-    <string name="action_close">Close</string>
+    <string name="action_close">Закрыть</string>
     <string name="title_activity_main">Inspeckage</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
