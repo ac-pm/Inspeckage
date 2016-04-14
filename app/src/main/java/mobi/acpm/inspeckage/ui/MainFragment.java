@@ -80,13 +80,13 @@ public class MainFragment extends Fragment {
 
         TextView txtModule = (TextView) view.findViewById(R.id.txtModule);
         if (WebServer.isModuleEnabled()) {
-            txtModule.setText("Module enabled");
+            txtModule.setText(R.string.module_enabled);
             txtModule.setBackgroundColor(Color.TRANSPARENT);
         }
 
         TextView txtServer = (TextView) view.findViewById(R.id.txtServer);
         if (Util.isMyServiceRunning(context, InspeckageService.class)) {
-            txtServer.setText("Server started");
+            txtServer.setText(R.string.server_started);
             txtServer.setBackgroundColor(Color.TRANSPARENT);
         }
 
@@ -233,7 +233,7 @@ public class MainFragment extends Fragment {
 
     private void loadListView(View view) {
         List<String> mListDataHeader = new ArrayList<String>();
-        mListDataHeader.add("choose target");
+        mListDataHeader.add(context.getString(R.string.fragment_config_choose));
 
         HashMap<String, List<ExpandableListItem>> mListDataChild = new HashMap<String, List<ExpandableListItem>>();
 

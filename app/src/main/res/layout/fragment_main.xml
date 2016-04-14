@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Package Inspector"
+            android:text="@string/package_inspector"
             android:id="@+id/textView4"
             android:layout_gravity="center_horizontal"
             />
@@ -33,7 +33,7 @@
         <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Only user app"
+        android:text="@string/fragment_main_only_user"
         android:id="@+id/only_user_app_switch"
         android:checked="true" />
 
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Module disabled"
+            android:text="@string/module_disabled"
             android:id="@+id/txtModule"
             android:background="@android:color/holo_red_dark" />
 
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Server stopped"
+            android:text="@string/server_stopped"
             android:id="@+id/txtServer"
             android:background="@android:color/holo_red_dark" />
 
@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Started on:"
+            android:text="@string/fragment_config_started"
             android:id="@+id/textView7"/>
 
         <TextView
@@ -112,7 +112,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Access with ADB:"
+            android:text="@string/fragment_config_access_adb"
             android:id="@+id/textView9"/>
 
         <TextView
@@ -131,7 +131,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="109dp"
             android:layout_height="wrap_content"
-            android:text="Launch App"
+            android:text="@string/fragment_config_launch"
             android:id="@+id/btnLaunchApp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/btn_shape"/>

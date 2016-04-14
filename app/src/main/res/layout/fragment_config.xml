@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Server Port"
+            android:text="@string/fragment_config_server_port"
             android:id="@+id/textView2"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Web Socket Port (logcat)"
+            android:text="@string/fragment_config_web_socket_port"
             android:id="@+id/textView3"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
@@ -55,7 +55,7 @@
             style="android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Apply"
+            android:text="@string/fragment_config_btn_apply"
             android:id="@+id/btnNewPort"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>

@@ -2,19 +2,19 @@
     <string name="app_name">Inspeckage</string>
 
 
-    <string name="action_close">Close</string>
+    <string name="action_close">Закрыть</string>
     <string name="title_activity_main">Inspeckage</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_config">Config</string>
-    <string name="action_clear">Clear all</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_config">Kонфигурация</string>
+    <string name="action_clear">Очистить</string>
 
-    <string name="action_divider">Communicate</string>
+    <string name="action_divider">Cообщаться</string>
 
-    <string name="action_share">Share</string>
+    <string name="action_share">Поделиться</string>
 
     <string name="fragment_main_only_user">Only user app</string>
     <string name="fragment_config_launch">Launch App</string>
@@ -25,7 +25,7 @@
 
     <string name="fragment_config_server_port">Server Port</string>
     <string name="fragment_config_web_socket_port">Web Socket Port (logcat)</string>
-    <string name="fragment_config_btn_apply">Apply</string>
+    <string name="fragment_config_btn_apply">Применять</string>
 
     <string name="module_disabled">Module disabled</string>
     <string name="server_stopped">Server stopped</string>

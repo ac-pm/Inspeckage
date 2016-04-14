@@ -6,27 +6,27 @@
         <item
             android:id="@+id/nav_config"
             android:icon="@drawable/ic_settings_24dp"
-            android:title="Config" />
+            android:title="@string/action_config" />
 
 
         <item
             android:id="@+id/nav_clear"
             android:icon="@drawable/ic_autorenew_24dp"
-            android:title="Clear all" />
+            android:title="@string/action_clear" />
         <item
             android:id="@+id/nav_close"
             android:icon="@drawable/ic_exit_to_app_24dp"
-            android:title="Close" />
+            android:title="@string/action_close" />
 
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/action_divider">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/action_share" />
 
             <!--item
                 android:id="@+id/nav_send"
