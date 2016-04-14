@@ -9,7 +9,27 @@
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
 
     <string name="action_settings">Настройки</string>
+    <string name="action_config">Kонфигурация</string>
+    <string name="action_clear">Очистить</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_divider">Cообщаться</string>
+
+    <string name="action_share">Поделиться</string>
+
+    <string name="fragment_main_only_user">Only user app</string>
+    <string name="fragment_config_launch">Launch App</string>
+    <string name="fragment_config_choose">choose target</string>
+    <string name="fragment_config_started">Started on:</string>
+    <string name="fragment_config_access_adb">Access with ADB:</string>
+    <string name="package_inspector">Package Inspector</string>
+
+    <string name="fragment_config_server_port">Server Port</string>
+    <string name="fragment_config_web_socket_port">Web Socket Port (logcat)</string>
+    <string name="fragment_config_btn_apply">Применять</string>
+
+    <string name="module_disabled">Module disabled</string>
+    <string name="server_stopped">Server stopped</string>
+    <string name="module_enabled">Module enabled</string>
+    <string name="server_started">Server started</string>
+
 </resources>
