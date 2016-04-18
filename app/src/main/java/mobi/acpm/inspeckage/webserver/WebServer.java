@@ -78,8 +78,6 @@ public class WebServer extends NanoHTTPD {
         return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_HTML, html);
     }
 
-    public class Container { public String data; };
-
     @Override
     public Response serve(IHTTPSession session) {
 
@@ -99,7 +97,7 @@ public class WebServer extends NanoHTTPD {
 
         Map<String, String> parms = session.getParms();
         String type = parms.get("type");
-        Container cHtml = new Container();
+        String html = new String();
 
 
         if (uri.equals("/")) {
@@ -136,39 +134,39 @@ public class WebServer extends NanoHTTPD {
                     case "start":
                         return startComponent(parms);
                     case "file":
-                        fileHtml(parms, cHtml);
+                        html = fileHtml(parms);
                         break;
                     case Config.SP_EXPORTED:
-                        spExported(parms, cHtml);
+                        html = spExported(parms);
                         break;
                     case "flagsec":
-                        flagSecure(parms, cHtml);
+                        html = flagSecure(parms);
                         break;
                     case "proxy":
-                        proxy(parms, cHtml);
+                        html = proxy(parms);
                         break;
                     case "switchproxy":
-                        switchProxy(parms, cHtml);
+                        html = switchProxy(parms);
                         break;
                     case "sslunpinning":
-                        sslUnpinning(parms, cHtml);
+                        html = sslUnpinning(parms);
                         break;
 
                 }
             } else {
-                setDefaultOptions(cHtml);
+                html = setDefaultOptions();
             }
 
         } else if (uri.equals("/index.html")) {
 
-            cHtml.data = FileUtil.readHtmlFile(mContext, uri);
+            html = FileUtil.readHtmlFile(mContext, uri);
 
         } else if (uri.equals("/logcat.html")) {
 
-            cHtml.data = FileUtil.readHtmlFile(mContext, uri);
-            cHtml.data = cHtml.data.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
-            cHtml.data = cHtml.data.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
-            return ok(cHtml.data);
+            html = FileUtil.readHtmlFile(mContext, uri);
+            html = html.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
+            html = html.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
+            return ok(html);
         } else {
 
             String fname = FileUtil.readHtmlFile(mContext, uri);
@@ -220,30 +218,30 @@ public class WebServer extends NanoHTTPD {
 
 
         if (!mPrefs.getString(Config.SP_DATA_DIR_TREE, "").equals("")) {
-            cHtml.data = cHtml.data.replace("#filetree#", mPrefs.getString(Config.SP_DATA_DIR_TREE, ""));
+            html = html.replace("#filetree#", mPrefs.getString(Config.SP_DATA_DIR_TREE, ""));
         }
 
         String moduleEnable = "true";
         if (!isModuleEnabled()) {
             moduleEnable = "<font style=\"color:red; background:yellow;\">false</font>";
         }
-        cHtml.data = cHtml.data.replace("#moduleEnable#", moduleEnable);
-        replaceHtmlVariables(cHtml);
+        html = html.replace("#moduleEnable#", moduleEnable);
+        html = replaceHtmlVariables(html);
 
         //Inspeckage version
         PackageInfo pInfo;
         try {
             pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             String version = pInfo.versionName;
-            cHtml.data = cHtml.data.replace("#inspeckageVersion#", version);
+            html = html.replace("#inspeckageVersion#", version);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
-        return ok(cHtml.data);
+        return ok(html);
     }
 
-    private void setDefaultOptions(Container cHtml) {
+    private String setDefaultOptions() {
         SharedPreferences.Editor edit = mPrefs.edit();
         edit.putBoolean(Config.SP_APP_IS_RUNNING, false);
         edit.putString(Config.SP_DATA_DIR_TREE, "");
@@ -252,10 +250,10 @@ public class WebServer extends NanoHTTPD {
         isRunning();
         fileTree();
 
-        cHtml.data = FileUtil.readHtmlFile(mContext, "/index.html");
+        return FileUtil.readHtmlFile(mContext, "/index.html");
     }
 
-    private void sslUnpinning(Map<String, String> parms, Container cHtml) {
+    private String sslUnpinning(Map<String, String> parms) {
         String ssl_switch = parms.get("sslswitch");
         if (ssl_switch != null) {
             SharedPreferences.Editor edit = mPrefs.edit();
@@ -264,11 +262,10 @@ public class WebServer extends NanoHTTPD {
             if (Boolean.valueOf(ssl_switch))
                 Util.showNotification(mContext, "Disable SSL");
         }
-        cHtml.data = "#sslunpinning#";
+        return "#sslunpinning#";
     }
 
-    private void switchProxy(Map<String, String> parms, Container cHtml) {
-        cHtml.data = "#proxy#";
+    private String switchProxy(Map<String, String> parms) {
 
         String pswitch = parms.get("value");
         if (pswitch != null) {
@@ -285,11 +282,10 @@ public class WebServer extends NanoHTTPD {
             }
             edit.apply();
         }
+        return "#proxy#";
     }
 
-    private void proxy(Map<String, String> parms, Container cHtml) {
-        cHtml.data = "#proxy#";
-
+    private String proxy(Map<String, String> parms) {
         String host = parms.get("host");
         String port = parms.get("port");
 
@@ -301,9 +297,10 @@ public class WebServer extends NanoHTTPD {
             edit.apply();
             Util.showNotification(mContext, "Save Proxy: " + host + ":" + port);
         }
+        return "#proxy#";
     }
 
-    private void flagSecure(Map<String, String> parms, Container cHtml) {
+    private String flagSecure(Map<String, String> parms) {
         String fs_switch = parms.get("fsswitch");
         if (fs_switch != null) {
             SharedPreferences.Editor edit = mPrefs.edit();
@@ -312,10 +309,10 @@ public class WebServer extends NanoHTTPD {
             if (Boolean.valueOf(fs_switch))
                 Util.showNotification(mContext, "Disable all FLAG_SECURE");
         }
-        cHtml.data = "#flags#";
+        return "#flags#";
     }
 
-    private void spExported(Map<String, String> parms, Container cHtml) {
+    private String spExported(Map<String, String> parms) {
         String value = parms.get("value");
         if (value != null) {
             SharedPreferences.Editor edit = mPrefs.edit();
@@ -324,15 +321,16 @@ public class WebServer extends NanoHTTPD {
             if (Boolean.valueOf(value))
                 Util.showNotification(mContext, "Export all activities");
         }
-        cHtml.data = "#exported#";
+        return "#exported#";
     }
 
-    private void fileHtml(Map<String, String> parms, Container cHtml) {
+    private String fileHtml(Map<String, String> parms) {
         String value = parms.get("value");
 
         if (value != null && !value.trim().equals("")) {
-            cHtml.data = hooksContent(value);
+            return hooksContent(value);
         }
+        return "";
     }
 
     private Response startComponent(Map<String, String> parms) {
@@ -409,32 +407,33 @@ public class WebServer extends NanoHTTPD {
         return ok("OK");
     }
 
-    private void replaceHtmlVariables(Container cHtml) {
-        cHtml.data = cHtml.data.replace("#proxy#", htmlProxy());
-        cHtml.data = cHtml.data.replace("#flags#", flagSecureCheckbox());
-        cHtml.data = cHtml.data.replace("#sslunpinning#", SSLUnpinningCheckbox());
-        cHtml.data = cHtml.data.replace("#exported#", exportedCheckbox());
-        cHtml.data = cHtml.data.replace("#exported_act#", htmlExportedActivities());
-        cHtml.data = cHtml.data.replace("#activities_list#", htmlActivityList());
-        cHtml.data = cHtml.data.replace("#exported_provider#", htmlExportedProviders());
-        cHtml.data = cHtml.data.replace("#non_exported_provider#", htmlNonExportedProviders());
-        cHtml.data = cHtml.data.replace("#exported_services#", htmlExportedServices());
-        cHtml.data = cHtml.data.replace("#exported_broadcast#", htmlExportedBroadcasts());
+    private String replaceHtmlVariables(String html) {
+        html = html.replace("#proxy#", htmlProxy());
+        html = html.replace("#flags#", flagSecureCheckbox());
+        html = html.replace("#sslunpinning#", SSLUnpinningCheckbox());
+        html = html.replace("#exported#", exportedCheckbox());
+        html = html.replace("#exported_act#", htmlExportedActivities());
+        html = html.replace("#activities_list#", htmlActivityList());
+        html = html.replace("#exported_provider#", htmlExportedProviders());
+        html = html.replace("#non_exported_provider#", htmlNonExportedProviders());
+        html = html.replace("#exported_services#", htmlExportedServices());
+        html = html.replace("#exported_broadcast#", htmlExportedBroadcasts());
 
-        cHtml.data = cHtml.data.replace("#appName#", mPrefs.getString(Config.SP_APP_NAME, "AppName"));
-        cHtml.data = cHtml.data.replace("#appVersion#", mPrefs.getString(Config.SP_APP_VERSION, "Version"));
-        cHtml.data = cHtml.data.replace("#uid#", mPrefs.getString(Config.SP_UID, "uid"));
-        cHtml.data = cHtml.data.replace("#gids#", mPrefs.getString(Config.SP_GIDS, "GIDs"));
-        cHtml.data = cHtml.data.replace("#package#", mPrefs.getString(Config.SP_PACKAGE, "package"));
-        cHtml.data = cHtml.data.replace("#data_dir#", mPrefs.getString(Config.SP_DATA_DIR, "Data Path"));
-        cHtml.data = cHtml.data.replace("#isdebuggable#", mPrefs.getString(Config.SP_DEBUGGABLE, "?"));
+        html = html.replace("#appName#", mPrefs.getString(Config.SP_APP_NAME, "AppName"));
+        html = html.replace("#appVersion#", mPrefs.getString(Config.SP_APP_VERSION, "Version"));
+        html = html.replace("#uid#", mPrefs.getString(Config.SP_UID, "uid"));
+        html = html.replace("#gids#", mPrefs.getString(Config.SP_GIDS, "GIDs"));
+        html = html.replace("#package#", mPrefs.getString(Config.SP_PACKAGE, "package"));
+        html = html.replace("#data_dir#", mPrefs.getString(Config.SP_DATA_DIR, "Data Path"));
+        html = html.replace("#isdebuggable#", mPrefs.getString(Config.SP_DEBUGGABLE, "?"));
 
-        cHtml.data = cHtml.data.replace("#non_exported_act#", mPrefs.getString(Config.SP_N_EXP_ACTIVITIES, "Non Exported Activities").replace("\n", "</br>"));
-        cHtml.data = cHtml.data.replace("#non_exported_services#", mPrefs.getString(Config.SP_N_EXP_SERVICES, "Services").replace("\n", "</br>"));
-        cHtml.data = cHtml.data.replace("#non_exported_broadcast#", mPrefs.getString(Config.SP_N_EXP_BROADCAST, "Broadcast Receiver").replace("\n", "</br>"));
-        cHtml.data = cHtml.data.replace("#req_permissions#", mPrefs.getString(Config.SP_REQ_PERMISSIONS, "Permissions").replace("\n", "</br>"));
-        cHtml.data = cHtml.data.replace("#app_permissions#", mPrefs.getString(Config.SP_APP_PERMISSIONS, "Permissions").replace("\n", "</br>"));
-        cHtml.data = cHtml.data.replace("#shared_libraries#", mPrefs.getString(Config.SP_SHARED_LIB, "Shared Libraries").replace("\n", "</br>"));
+        html = html.replace("#non_exported_act#", mPrefs.getString(Config.SP_N_EXP_ACTIVITIES, "Non Exported Activities").replace("\n", "</br>"));
+        html = html.replace("#non_exported_services#", mPrefs.getString(Config.SP_N_EXP_SERVICES, "Services").replace("\n", "</br>"));
+        html = html.replace("#non_exported_broadcast#", mPrefs.getString(Config.SP_N_EXP_BROADCAST, "Broadcast Receiver").replace("\n", "</br>"));
+        html = html.replace("#req_permissions#", mPrefs.getString(Config.SP_REQ_PERMISSIONS, "Permissions").replace("\n", "</br>"));
+        html = html.replace("#app_permissions#", mPrefs.getString(Config.SP_APP_PERMISSIONS, "Permissions").replace("\n", "</br>"));
+        html = html.replace("#shared_libraries#", mPrefs.getString(Config.SP_SHARED_LIB, "Shared Libraries").replace("\n", "</br>"));
+        return html;
     }
 
     //HTML
