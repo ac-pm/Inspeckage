@@ -24,7 +24,7 @@
 
     <string name="fragment_config_server_port">Порт сервера</string>
     <string name="fragment_config_web_socket_port">Web Socket порт (logcat)</string>
-    <string name="fragment_config_btn_apply">Применять</string>
+    <string name="fragment_config_btn_apply">Применить</string>
 
     <string name="module_disabled">Модуль не активен</string>
     <string name="server_stopped">Сервер остановлен</string>
