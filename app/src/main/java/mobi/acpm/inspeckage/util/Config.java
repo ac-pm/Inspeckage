@@ -21,6 +21,7 @@ public class Config {
     public static final String P_MISC = "/miscellaneous";
     public static final String P_SERIALIZATION = "/serialization";
     public static final String P_HTTP = "/http";
+    public static final String P_USERHOOKS = "/user_hooks";
     public static final String PREFS_BKP = "/prefs_bkp/";
 
     //Shared Preferences
@@ -72,4 +73,6 @@ public class Config {
     public static final String SP_EXPORTED = "exported";
 
     public static final String SP_HAS_W_PERMISSION = "write_permission";
+
+    public static final String SP_USER_HOOKS = "user_hooks";
 }

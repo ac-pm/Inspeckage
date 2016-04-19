@@ -32,6 +32,7 @@ import mobi.acpm.inspeckage.hooks.MiscHook;
 import mobi.acpm.inspeckage.hooks.SQLiteHook;
 import mobi.acpm.inspeckage.hooks.SerializationHook;
 import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
+import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.log.LogService;
 import mobi.acpm.inspeckage.receivers.InspeckageWebReceiver;
@@ -49,6 +50,7 @@ import static mobi.acpm.inspeckage.util.FileType.MISC;
 import static mobi.acpm.inspeckage.util.FileType.PREFS;
 import static mobi.acpm.inspeckage.util.FileType.SERIALIZATION;
 import static mobi.acpm.inspeckage.util.FileType.SQLITE;
+import static mobi.acpm.inspeckage.util.FileType.USERHOOKS;
 import static mobi.acpm.inspeckage.util.FileType.WEBVIEW;
 
 /**
@@ -151,6 +153,10 @@ public class WebServer extends NanoHTTPD {
                     case "sslunpinning":
                         html = sslUnpinning(parms);
                         break;
+                    case "adduserhooks":
+                        return addUserHooks(parms);
+                    case "getuserhooks":
+                        return getUserHooks();
 
                 }
             } else {
@@ -405,6 +411,22 @@ public class WebServer extends NanoHTTPD {
     private Response stopWS() {
         mContext.stopService(new Intent(mContext, LogService.class));
         return ok("OK");
+    }
+
+    private Response addUserHooks(Map<String, String> parms) {
+
+        String json = parms.get("jhooks");
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_USER_HOOKS, json);
+        edit.apply();
+
+        return ok("OK");
+    }
+
+    private Response getUserHooks() {
+
+        String json = mPrefs.getString(Config.SP_USER_HOOKS,"");
+        return ok("text/json",json);
     }
 
     private String replaceHtmlVariables(String html) {
@@ -1246,6 +1268,29 @@ public class WebServer extends NanoHTTPD {
                 }
 
                 html = sb.toString().replace("</br></br>", "</br>");
+
+                break;
+            }
+            case "userhooks": {
+                html = FileUtil.readFromFile(mPrefs, USERHOOKS).replace(UserHooks.TAG, "");
+
+                String[] x = html.split("</br>");
+                for (int i = 0; i < x.length; i++) {
+                    x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+                }
+
+                List<String> ls = Arrays.asList(x);
+
+                Collections.reverse(ls);
+                x = (String[]) ls.toArray();
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < x.length; i++) {
+                    if (i < 1000)
+                        sb.append(x[i] + "</br>");
+                }
+
+                html = sb.toString();
 
                 break;
             }

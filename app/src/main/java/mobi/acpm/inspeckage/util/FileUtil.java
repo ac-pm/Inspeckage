@@ -100,6 +100,10 @@ public class FileUtil {
                         absolutePath += Config.P_HTTP; //10
                         data = data + "</br>";
                         break;
+                    case USERHOOKS:
+                        absolutePath += Config.P_USERHOOKS;
+                        data = data + "</br>";
+                        break;
                     default:
                 }
 
@@ -187,6 +191,9 @@ public class FileUtil {
                     break;
                 case HTTP:
                     absolutePath += Config.P_HTTP; //10
+                    break;
+                case USERHOOKS:
+                    absolutePath += Config.P_USERHOOKS; //10
                     break;
                 default:
             }

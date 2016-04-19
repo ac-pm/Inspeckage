@@ -20,6 +20,7 @@ import mobi.acpm.inspeckage.hooks.SQLiteHook;
 import mobi.acpm.inspeckage.hooks.SSLPinningHook;
 import mobi.acpm.inspeckage.hooks.SerializationHook;
 import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
+import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.util.FileType;
 import mobi.acpm.inspeckage.util.FileUtil;
@@ -93,6 +94,8 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
                                 ft = FileType.SERIALIZATION;
                             } else if (log.contains(HttpHook.TAG)) { //10
                                 ft = FileType.HTTP;
+                            } else if (log.contains(UserHooks.TAG)) { //10
+                                ft = FileType.USERHOOKS;
                             }
 
                             if (ft != null) {
@@ -120,6 +123,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
             SSLPinningHook.initAllHooks(loadPackageParam);// --
         }
         SerializationHook.initAllHooks(loadPackageParam);//
+        UserHooks.initAllHooks(loadPackageParam);
     }
 
     public static void logError(Error e){

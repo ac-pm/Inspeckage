@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    getUserHooks();
+
     $('#prefs1').load('?type=file&value=prefs');
     $('#accordion1').load('?type=file&value=pfiles');
     $('#crypto1').load('?type=file&value=crypto');
@@ -12,6 +14,7 @@ $(document).ready(function() {
     $('#http1').load('?type=file&value=http');
     $('#checkapp1').load('?type=checkapp');
     $('#serialization1').load('?type=file&value=serialization');
+    $('#userhooks1').load('?type=file&value=userhooks');
 
 
     $("[name='ssl_uncheck']").bootstrapSwitch();
@@ -89,6 +92,7 @@ function autoRefresh() {
                 $('#misc1').load('?type=file&value=misc');
                 $('#http1').load('?type=file&value=http');
                 $('#serialization1').load('?type=file&value=serialization');
+                $('#userhooks1').load('?type=file&value=userhooks');
 }
 
 function myStopFunction() {
@@ -261,3 +265,66 @@ function setCookie(c_name, value, exdays) {
     document.cookie = c_name + "=" + c_value;
 }
 
+function addHook() {
+    var table = document.getElementById("hook-table").getElementsByTagName('tbody')[0];;
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+
+    cell1.innerHTML = document.getElementById("className").value;
+    cell2.innerHTML = document.getElementById("method").value;
+    cell3.innerHTML = $("#hookConstructor").is(":checked");
+    cell4.innerHTML = "<a class='btn btn-danger btn-xs' onclick='removeUserHooks(this);'>Delete</a>";
+
+    var table = $('#hook-table').tableToJSON();
+
+    addUserHooks(JSON.stringify(table));
+    console.log("Data Loaded: " + JSON.stringify(table));
+
+}
+
+function removeUserHooks(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    document.getElementById("hook-table").deleteRow(i);
+
+    var table = $('#hook-table').tableToJSON();
+    addUserHooks(JSON.stringify(table));
+}
+
+function addUserHooks(jhooks) {
+    $.get("/", {
+        type: "adduserhooks",
+        jhooks: jhooks
+    }).done(function(data) {
+
+    });
+}
+
+function getUserHooks() {
+    $.get("/", {
+        type: "getuserhooks"
+    }).done(function(data) {
+
+        console.log("Data Loaded data: " + JSON.stringify(data));
+        drawTable(data);
+
+    });
+}
+
+function drawTable(data) {
+    for (var i = 0; i < data.length; i++) {
+        drawRow(data[i]);
+        console.log(data[i]);
+    }
+}
+
+function drawRow(rowData) {
+    var row = $("<tr />");
+    $("#hook-table").append(row);
+    row.append($("<td>" + rowData.className + "</td>"));
+    row.append($("<td>" + rowData.method + "</td>"));
+    row.append($("<td>" + rowData.constructor + "</td>"));
+    row.append($("<td><a class='btn btn-danger btn-xs' onclick='removeUserHooks(this);'>Delete</a></td>"));
+}
