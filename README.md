@@ -30,7 +30,8 @@ With the hooks, we can see what the application is doing in real time:
 * File System;
 * Miscellaneous (Clipboard, URL.Parse());
 * WebView;
-* IPC.
+* IPC;
+* + Hooks (add new hooks dynamically)
 
 == Actions
 
