@@ -93,7 +93,7 @@
                             </button>
 
 
-                            <input type='checkbox' data-label-text='<span class="glyphicon glyphicon-refresh" aria-hidden="true" data-toggle="tooltip" title="Auto Refresh"></span>' name='refresh' data-size='small' unchecked>
+                            <input type='checkbox' data-label-text='<span class="glyphicon glyphicon-refresh" aria-hidden="true" data-toggle="tooltip" title="Auto Refresh"></span>' name='refresh' data-size='small' checked>
                         </form>
 
 
@@ -104,7 +104,7 @@
 
                         <ul class="nav navbar-nav navbar-right">
 
-                            <li> <a href="https://github.com/ac-pm/"> Module enable: #moduleEnable# | Version: #inspeckageVersion#</a>
+                            <li> <a href="https://github.com/ac-pm/"> Module enable: #moduleEnable# | V #inspeckageVersion#</a>
                             </li>
                             <li>
                                 <a href="#" onclick="showGeneralInfo()">
@@ -158,27 +158,27 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Package Information</a>
                 </li>
-                <li role="presentation"><a href="#sharedPreferences" aria-controls="sharedPreferences" role="tab" data-toggle="tab">Shared Preferences</a>
+                <li role="presentation"><a href="#sharedPreferences" aria-controls="sharedPreferences" role="tab" data-toggle="tab">Shared Preferences <span class="badge badge-success" id="badge_sharedPreferences"></span></a>
                 </li>
-                <li role="presentation"><a href="#serialization" aria-controls="serialization" role="tab" data-toggle="tab">Serialization</a>
+                <li role="presentation"><a href="#serialization" aria-controls="serialization" role="tab" data-toggle="tab">Serialization <span class="badge badge-success" id="badgeSerialization"></span></a>
                 </li>
-                <li role="presentation"><a href="#Crypto" aria-controls="Crypto" role="tab" data-toggle="tab">Crypto</a>
+                <li role="presentation"><a href="#Crypto" aria-controls="Crypto" role="tab" data-toggle="tab">Crypto <span class="badge badge-success" id="badgeCrypto"></span></a>
                 </li>
-                <li role="presentation"><a href="#Hash" aria-controls="Hash" role="tab" data-toggle="tab">Hash</a>
+                <li role="presentation"><a href="#Hash" aria-controls="Hash" role="tab" data-toggle="tab">Hash <span class="badge badge-success" id="badgeHash"></span></a>
                 </li>
-                <li role="presentation"><a href="#SQLite" aria-controls="SQLite" role="tab" data-toggle="tab">SQLite</a>
+                <li role="presentation"><a href="#SQLite" aria-controls="SQLite" role="tab" data-toggle="tab">SQLite <span class="badge badge-success" id="badgeSqlite"></span></a>
                 </li>
-                <li role="presentation"><a href="#http" aria-controls="http" role="tab" data-toggle="tab">HTTP</a>
+                <li role="presentation"><a href="#http" aria-controls="http" role="tab" data-toggle="tab">HTTP <span class="badge badge-success" id="badgeHttp"></span></a>
                 </li>
-                <li role="presentation"><a href="#fileSystem" aria-controls="fileSystem" role="tab" data-toggle="tab">File System</a>
+                <li role="presentation"><a href="#fileSystem" aria-controls="fileSystem" role="tab" data-toggle="tab">File System <span class="badge badge-success" id="badgeFs"></span></a>
                 </li>
-                <li role="presentation"><a href="#misc" aria-controls="misc" role="tab" data-toggle="tab">Misc.</a>
+                <li role="presentation"><a href="#misc" aria-controls="misc" role="tab" data-toggle="tab">Misc. <span class="badge badge-success" id="badgeMisc"></span></a>
                 </li>
-                <li role="presentation"><a href="#webView" aria-controls="webView" role="tab" data-toggle="tab">WebView</a>
+                <li role="presentation"><a href="#webView" aria-controls="webView" role="tab" data-toggle="tab">WebView <span class="badge badge-success" id="badgeWeb"></span></a>
                 </li>
-                <li role="presentation"><a href="#ipc" aria-controls="ipc" role="tab" data-toggle="tab">IPC</a>
+                <li role="presentation"><a href="#ipc" aria-controls="ipc" role="tab" data-toggle="tab">IPC <span class="badge badge-success" id="badgeIpc"></span></a>
                 </li>
-                <li role="presentation"><a href="#userHooks" aria-controls="userHooks" role="tab" data-toggle="tab">+ Hooks</a>
+                <li role="presentation"><a href="#userHooks" aria-controls="userHooks" role="tab" data-toggle="tab">+ Hooks <span class="badge badge-success" id="badgeHooks"></span></a>
                 </li>
 
             </ul>
@@ -959,6 +959,7 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-switch.js"></script>
 <script src="js/base.js"></script>
+<script src="js/tabs.js"></script>
 <script src="js/CollapsibleLists.compressed.js"></script>
 <script src="js/jquery.tabletojson.min.js"></script>
 
