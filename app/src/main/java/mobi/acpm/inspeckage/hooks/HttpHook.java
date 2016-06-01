@@ -125,16 +125,17 @@ public class HttpHook extends XC_MethodHook {
 
         try {
             final Class<?> okHttpClient = findClass("com.android.okhttp.OkHttpClient", loadPackageParam.classLoader);
-
-            findAndHookMethod(okHttpClient, "open", URI.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    URI uri = null;
-                    if(param.args[0]!=null)
-                        uri = (URI) param.args[0];
-                    XposedBridge.log(TAG + "OkHttpClient: " + uri.toString() + "");
-                }
-            });
+            if(okHttpClient != null) {
+                findAndHookMethod(okHttpClient, "open", URI.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        URI uri = null;
+                        if (param.args[0] != null)
+                            uri = (URI) param.args[0];
+                        XposedBridge.log(TAG + "OkHttpClient: " + uri.toString() + "");
+                    }
+                });
+            }
         } catch (Error e) {
             Module.logError(e);
         }
@@ -145,8 +146,11 @@ public class HttpHook extends XC_MethodHook {
                 findAndHookMethod("libcore.net.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getOutputStream", RequestHook);
             } else {
                 //com.squareup.okhttp.internal.http.HttpURLConnectionImpl
-                findAndHookMethod("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getOutputStream", RequestHook);
-                findAndHookMethod("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getInputStream", ResponseHook);
+                final Class<?> httpURLConnectionImpl = findClass("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader);
+                if(httpURLConnectionImpl != null) {
+                    findAndHookMethod("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getOutputStream", RequestHook);
+                    findAndHookMethod("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getInputStream", ResponseHook);
+                }
             }
         } catch (Error e){
             Module.logError(e);
