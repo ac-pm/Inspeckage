@@ -1,21 +1,6 @@
 $(document).ready(function() {
 
-    getUserHooks();
-
-    $('#prefs1').load('?type=file&value=prefs');
-    $('#accordion1').load('?type=file&value=pfiles');
-    $('#crypto1').load('?type=file&value=crypto');
-    $('#hash1').load('?type=file&value=hash');
-    $('#sqlite1').load('?type=file&value=sqlite');
-    $('#ipc1').load('?type=file&value=ipc');
-    $('#fs1').load('?type=file&value=fs');
-    $('#webview1').load('?type=file&value=wv');
-    $('#misc1').load('?type=file&value=misc');
-    $('#http1').load('?type=file&value=http');
-    $('#checkapp1').load('?type=checkapp');
-    $('#serialization1').load('?type=file&value=serialization');
-    $('#userhooks1').load('?type=file&value=userhooks');
-
+    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
 
     $("[name='ssl_uncheck']").bootstrapSwitch();
     $('input[name="ssl_uncheck"]').on('switchChange.bootstrapSwitch', function(event, state) {
@@ -60,52 +45,15 @@ $(document).ready(function() {
 
         });
 
-        $("[name='refresh']").bootstrapSwitch();
-                $('input[name="refresh"]').on('switchChange.bootstrapSwitch', function(event, state) {
-                    console.log(state);
-
-                    if(state == true){
-                        myStartFunction();
-                    }else if(state == false){
-                        myStopFunction();
-                    }
-
-                });
-
-        setInterval(function(){ checkApp() }, 6000);
-
         CollapsibleLists.apply();
+
 
 });
 
-var refresh;
 
-function autoRefresh() {
-                $('#prefs1').load('?type=file&value=prefs');
-                $('#accordion1').load('?type=file&value=pfiles');
-                $('#crypto1').load('?type=file&value=crypto');
-                $('#hash1').load('?type=file&value=hash');
-                $('#sqlite1').load('?type=file&value=sqlite');
-                $('#ipc1').load('?type=file&value=ipc');
-                $('#fs1').load('?type=file&value=fs');
-                $('#webview1').load('?type=file&value=wv');
-                $('#misc1').load('?type=file&value=misc');
-                $('#http1').load('?type=file&value=http');
-                $('#serialization1').load('?type=file&value=serialization');
-                $('#userhooks1').load('?type=file&value=userhooks');
-}
 
-function myStopFunction() {
-    clearInterval(refresh);
-}
 
-function myStartFunction() {
-    refresh = setInterval(function(){ autoRefresh() }, 6000);
-}
 
-function checkApp() {
-    $('#checkapp1').load('?type=checkapp');
-}
 
 function fileTree() {
     $('#fileTree1').load('?type=filetree');
@@ -248,83 +196,3 @@ function startActivity(act){
          });
 }
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i].trim();
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-    }
-    return null;
-}
-
-function setCookie(c_name, value, exdays) {
-    var exdate = new Date();
-    exdate.setDate(exdate.getDate() + exdays);
-    var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
-    document.cookie = c_name + "=" + c_value;
-}
-
-function addHook() {
-    var table = document.getElementById("hook-table").getElementsByTagName('tbody')[0];;
-    var row = table.insertRow(0);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-
-    cell1.innerHTML = document.getElementById("className").value;
-    cell2.innerHTML = document.getElementById("method").value;
-    cell3.innerHTML = $("#hookConstructor").is(":checked");
-    cell4.innerHTML = "<a class='btn btn-danger btn-xs' onclick='removeUserHooks(this);'>Delete</a>";
-
-    var table = $('#hook-table').tableToJSON();
-
-    addUserHooks(JSON.stringify(table));
-    console.log("Data Loaded: " + JSON.stringify(table));
-
-}
-
-function removeUserHooks(row) {
-    var i = row.parentNode.parentNode.rowIndex;
-    document.getElementById("hook-table").deleteRow(i);
-
-    var table = $('#hook-table').tableToJSON();
-    addUserHooks(JSON.stringify(table));
-}
-
-function addUserHooks(jhooks) {
-    $.get("/", {
-        type: "adduserhooks",
-        jhooks: jhooks
-    }).done(function(data) {
-
-    });
-}
-
-function getUserHooks() {
-    $.get("/", {
-        type: "getuserhooks"
-    }).done(function(data) {
-
-        console.log("Data Loaded data: " + JSON.stringify(data));
-        drawTable(data);
-
-    });
-}
-
-function drawTable(data) {
-    for (var i = 0; i < data.length; i++) {
-        drawRow(data[i]);
-        console.log(data[i]);
-    }
-}
-
-function drawRow(rowData) {
-    var row = $("<tr />");
-    $("#hook-table").append(row);
-    row.append($("<td>" + rowData.className + "</td>"));
-    row.append($("<td>" + rowData.method + "</td>"));
-    row.append($("<td>" + rowData.constructor + "</td>"));
-    row.append($("<td><a class='btn btn-danger btn-xs' onclick='removeUserHooks(this);'>Delete</a></td>"));
-}
