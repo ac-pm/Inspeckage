@@ -1,6 +1,7 @@
 package mobi.acpm.inspeckage.hooks;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,14 +34,18 @@ public class UserHooks extends XC_MethodHook {
     }
 
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-        loadPrefs();;
+        loadPrefs();
 
-        String json = "{\"hookJson\": "+sPrefs.getString(Config.SP_USER_HOOKS,"")+"}";
+        String json = "{\"hookJson\": " + sPrefs.getString(Config.SP_USER_HOOKS, "") + "}";
+        try {
 
-        HookList hookList = gson.fromJson(json, HookList.class);
-        for (HookItem hookItem : hookList.hookJson) {
-            hook(hookItem, loadPackageParam.classLoader);
-        }
+            if(!json.trim().equals("{\"hookJson\":}")) {
+                HookList hookList = gson.fromJson(json, HookList.class);
+                for (HookItem hookItem : hookList.hookJson) {
+                    hook(hookItem, loadPackageParam.classLoader);
+                }
+            }
+        } catch (JsonSyntaxException ex) { }
     }
 
     static void hook(HookItem item, ClassLoader classLoader) {
