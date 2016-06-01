@@ -69,7 +69,7 @@ public class IPCHook extends XC_MethodHook {
 
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         Intent intent = (Intent) param.args[0];
-                        if(!intent.getAction().contains("mobi.acpm.inspeckage")) {
+                        if(intent !=null && !intent.getAction().contains("mobi.acpm.inspeckage")) {
                             XposedBridge.log(TAG + "sendBroadcast: " + intent);
                         }
                     }
@@ -80,7 +80,7 @@ public class IPCHook extends XC_MethodHook {
 
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         Intent intent = (Intent) param.args[0];
-                        if(!intent.getAction().contains("mobi.acpm.inspeckage")) {
+                        if(intent !=null && !intent.getAction().contains("mobi.acpm.inspeckage")) {
                             XposedBridge.log(TAG + "sendBroadcast: " + intent);
                         }
                     }
