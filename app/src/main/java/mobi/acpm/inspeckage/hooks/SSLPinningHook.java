@@ -73,86 +73,92 @@ public class SSLPinningHook extends XC_MethodHook {
 
         // --- APACHE ---
 
-        //HttpsURLConnection.setDefaultHostnameVerifier >> SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
-        try {
-            findAndHookMethod("org.apache.http.conn.ssl.HttpsURLConnection", loadPackageParam.classLoader, "setDefaultHostnameVerifier",
-                    HostnameVerifier.class, new XC_MethodHook() {
-                        @Override
-                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            param.args[0] = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                        }
-                    });
-        } catch (Error e) {
-            Module.logError(e);
-        }
+        final Class<?> httpsURLConnection = findClass("org.apache.http.conn.ssl.HttpsURLConnection", loadPackageParam.classLoader);
+        if(httpsURLConnection != null) {
 
-        //HttpsURLConnection.setHostnameVerifier >> SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
-        try {
-            findAndHookMethod("org.apache.http.conn.ssl.HttpsURLConnection", loadPackageParam.classLoader, "setHostnameVerifier", HostnameVerifier.class,
-                    new XC_MethodHook() {
-                        @Override
-                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            param.args[0] = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                        }
-                    });
-        } catch (Error e) {
-            Module.logError(e);
-        }
+            //HttpsURLConnection.setDefaultHostnameVerifier >> SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+            try {
 
-        //SSLSocketFactory.getSocketFactory >> new SSLSocketFactory
-        try {
-            findAndHookMethod("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader, "getSocketFactory", new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    param.setResult((SSLSocketFactory) newInstance(SSLSocketFactory.class));
-                }
-            });
-        } catch (Error e) {
-            Module.logError(e);
-        }
+                findAndHookMethod(httpsURLConnection, "setDefaultHostnameVerifier",
+                        HostnameVerifier.class, new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                param.args[0] = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                            }
+                        });
 
-        //SSLSocketFactory(...) >> SSLSocketFactory(...){ new EmptyTrustManager()}
-        try {
-            Class<?> sslSocketFactory = findClass("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader);
-            findAndHookConstructor(sslSocketFactory, String.class, KeyStore.class, String.class, KeyStore.class,
-                    SecureRandom.class, HostNameResolver.class, new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            } catch (Error e) {
+                Module.logError(e);
+            }
 
-                            String algorithm = (String) param.args[0];
-                            KeyStore keystore = (KeyStore) param.args[1];
-                            String keystorePassword = (String) param.args[2];
-                            SecureRandom random = (SecureRandom) param.args[4];
+            //HttpsURLConnection.setHostnameVerifier >> SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+            try {
+                findAndHookMethod("org.apache.http.conn.ssl.HttpsURLConnection", loadPackageParam.classLoader, "setHostnameVerifier", HostnameVerifier.class,
+                        new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                param.args[0] = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+                            }
+                        });
+            } catch (Error e) {
+                Module.logError(e);
+            }
 
-                            KeyManager[] keymanagers = null;
-                            TrustManager[] trustmanagers;
+            //SSLSocketFactory.getSocketFactory >> new SSLSocketFactory
+            try {
+                findAndHookMethod("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader, "getSocketFactory", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        param.setResult((SSLSocketFactory) newInstance(SSLSocketFactory.class));
+                    }
+                });
+            } catch (Error e) {
+                Module.logError(e);
+            }
 
-                            if (keystore != null) {
-                                keymanagers = (KeyManager[]) callStaticMethod(SSLSocketFactory.class, "createKeyManagers", keystore, keystorePassword);
+            //SSLSocketFactory(...) >> SSLSocketFactory(...){ new EmptyTrustManager()}
+            try {
+                Class<?> sslSocketFactory = findClass("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader);
+                findAndHookConstructor(sslSocketFactory, String.class, KeyStore.class, String.class, KeyStore.class,
+                        SecureRandom.class, HostNameResolver.class, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
+                                String algorithm = (String) param.args[0];
+                                KeyStore keystore = (KeyStore) param.args[1];
+                                String keystorePassword = (String) param.args[2];
+                                SecureRandom random = (SecureRandom) param.args[4];
+
+                                KeyManager[] keymanagers = null;
+                                TrustManager[] trustmanagers;
+
+                                if (keystore != null) {
+                                    keymanagers = (KeyManager[]) callStaticMethod(SSLSocketFactory.class, "createKeyManagers", keystore, keystorePassword);
+                                }
+
+                                trustmanagers = new TrustManager[]{new EmptyTrustManager()};
+
+                                setObjectField(param.thisObject, "sslcontext", SSLContext.getInstance(algorithm));
+                                callMethod(getObjectField(param.thisObject, "sslcontext"), "init", keymanagers, trustmanagers, random);
+                                setObjectField(param.thisObject, "socketfactory", callMethod(getObjectField(param.thisObject, "sslcontext"), "getSocketFactory"));
                             }
 
-                            trustmanagers = new TrustManager[]{new EmptyTrustManager()};
+                        });
+            } catch (Error e) {
+                Module.logError(e);
+            }
 
-                            setObjectField(param.thisObject, "sslcontext", SSLContext.getInstance(algorithm));
-                            callMethod(getObjectField(param.thisObject, "sslcontext"), "init", keymanagers, trustmanagers, random);
-                            setObjectField(param.thisObject, "socketfactory", callMethod(getObjectField(param.thisObject, "sslcontext"), "getSocketFactory"));
-                        }
-
-                    });
-        } catch (Error e) {
-            Module.logError(e);
-        }
-
-        //SSLSocketFactory.isSecure >> true
-        try {
-            findAndHookMethod("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader, "isSecure", Socket.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    param.setResult(true);
-                }
-            });
-        } catch (Error e) {
-            Module.logError(e);
+            //SSLSocketFactory.isSecure >> true
+            try {
+                findAndHookMethod("org.apache.http.conn.ssl.SSLSocketFactory", loadPackageParam.classLoader, "isSecure", Socket.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        param.setResult(true);
+                    }
+                });
+            } catch (Error e) {
+                Module.logError(e);
+            }
         }
     }
 }
