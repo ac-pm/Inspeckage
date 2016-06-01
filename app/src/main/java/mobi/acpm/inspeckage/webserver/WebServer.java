@@ -333,8 +333,16 @@ public class WebServer extends NanoHTTPD {
     private String fileHtml(Map<String, String> parms) {
         String value = parms.get("value");
 
+        int count = 0;
+
+        String c = parms.get("count");
+        if (c == null || c.equals("")) {
+            c = "0";
+        }
+        count = Integer.valueOf(c);
+
         if (value != null && !value.trim().equals("")) {
-            return hooksContent(value);
+            return hooksContent(value, count);
         }
         return "";
     }
@@ -426,7 +434,7 @@ public class WebServer extends NanoHTTPD {
     private Response getUserHooks() {
 
         String json = mPrefs.getString(Config.SP_USER_HOOKS,"");
-        return ok("text/json",json);
+        return ok("text/json", json);
     }
 
     private String replaceHtmlVariables(String html) {
@@ -711,7 +719,7 @@ public class WebServer extends NanoHTTPD {
         String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
         if(new File("/storage/emulated/legacy").exists()){
-            sdcardPath = "/storage/emulated/legacy";
+            //sdcardPath = "/storage/emulated/legacy";
         }
 
         String absolutePath = sdcardPath + Config.P_ROOT + "/" + filename;
@@ -914,384 +922,505 @@ public class WebServer extends NanoHTTPD {
 
     //HOOKS TABS
 
-    public String hooksContent(String type) {
+    public String hooksContent(String type, int count) {
 
         String html = "";
-
+        int countTmp = 0;
         switch (type) {
             case "serialization": {
                 html = FileUtil.readFromFile(mPrefs, SERIALIZATION).replace(SerializationHook.TAG, "");
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
+
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
 
 
-                    if (x[i].length() > 170) {
-                        String len170 = x[i].substring(0, 135);
-                        String rest = x[i].substring(135);
-                        x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
-                                "<div class=\"collapse\"><div class=\"breakWord\">" + rest + "</div></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
-                        continue;
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+
+                        if (x[i].length() > 170) {
+                            String len170 = x[i].substring(0, 135);
+                            String rest = x[i].substring(135);
+                            x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
+                                    "<div class=\"collapse\"><div class=\"breakWord\">" + rest + "</div></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
+                            continue;
+                        }
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+
                     }
-                    x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    //need load from here for callapse work correctaly
+                    String script = "<script>$(document).ready(function() {" +
+                            "$('a').on('click', function(e) {" +
+                            "                    e.preventDefault();" +
+                            "                    var $this = $(this);" +
+                            "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
+                            "                    $collapse.collapse('toggle');" +
+                            "                });" +
+                            "});</script>";
+                    sb.append(script);
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                //need load from here for callapse work correctaly
-                String script = "<script>$(document).ready(function() {" +
-                        "$('a').on('click', function(e) {" +
-                        "                    e.preventDefault();" +
-                        "                    var $this = $(this);" +
-                        "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
-                        "                    $collapse.collapse('toggle');" +
-                        "                });" +
-                        "});</script>";
-                sb.append(script);
-                html = sb.toString();
-
                 break;
             }
             case "fs": {
                 html = FileUtil.readFromFile(mPrefs, FILESYSTEM).replace(FileSystemHook.TAG, "");
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
-                    x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i];
+
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i];
+
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+                    }
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i] + "</br>");
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i] + "</br>");
-                }
-
-                html = sb.toString();
                 break;
             }
             case "misc": {
                 html = FileUtil.readFromFile(mPrefs, MISC).replace(MiscHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
+                        if (x[i].length() > 170) {
+                            x[i] = "<div class=\"breakWord\"><span class=\"label label-info\"> " + (i + 1) + "</span>  " + x[i] + "</div>";
+                        } else {
+                            x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+                        }
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
-                    if (x[i].length() > 170) {
-                        x[i] = "<div class=\"breakWord\"><span class=\"label label-info\"> " + (i + 1) + "</span>  " + x[i]+ "</div>";
-                    }else {
-                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i]+"</br>";
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+                    }
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
                     }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                html = sb.toString();
-
                 break;
             }
             case "http": {
                 html = FileUtil.readFromFile(mPrefs, HTTP).replace(HttpHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
 
+                        if (x[i].length() > 170) {
+                            x[i] = "<div class=\"breakWord\"><span class=\"label label-info\">" + (i + 1) + "</span> " + x[i] + "</div>";
+                        } else {
 
+                            String color = "label-info";
+                            if (x[i].contains("Possible pinning")) {
+                                color = "label-danger";
+                            }
 
-                    if (x[i].length() > 170) {
-                        x[i] = "<div class=\"breakWord\"><span class=\"label label-info\">" + (i + 1) + "</span> " + x[i]+ "</div>";
-                    }else {
-
-                        String color = "label-info";
-                        if(x[i].contains("Possible pinning")){
-                            color = "label-danger";
+                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span> " + x[i] + "</br>";
+                        }
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
                         }
 
-                        x[i] = "<span class=\"label "+color+"\">" + (i + 1) + "</span> " + x[i] +"</br>";
                     }
 
+                    List<String> ls = Arrays.asList(x);
 
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                html = sb.toString();
-
                 break;
             }
             case "wv": {
                 html = FileUtil.readFromFile(mPrefs, WEBVIEW).replace(WebViewHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
+                        if (x[i].contains("addJavascriptInterface(Object, ")) {
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
-                    if (x[i].contains("addJavascriptInterface(Object, ")) {
+                            x[i] = "<a href=\"#\" role=\"button\" class=\"btn popovers\" data-toggle=\"popover\" " +
+                                    "title=\"\" data-content=\"" + "Injects the supplied Java object into this WebView. " +
+                                    "The object is injected into the JavaScript context of the main frame, " +
+                                    "using the supplied name. This allows the Java object's methods to " +
+                                    "be accessed from JavaScript. <a href='http://developer.android.com/intl/pt-br/reference/android/webkit/WebView.html#addJavascriptInterface(java.lang.Object, java.lang.String)' target='_blank' title='link'> read more.</a>\">" + x[i] + " </a>";
+                        } else {
+                            x[i] = x[i];
+                        }
 
-                        x[i] = "<a href=\"#\" role=\"button\" class=\"btn popovers\" data-toggle=\"popover\" " +
-                                "title=\"\" data-content=\"" + "Injects the supplied Java object into this WebView. " +
-                                "The object is injected into the JavaScript context of the main frame, " +
-                                "using the supplied name. This allows the Java object's methods to " +
-                                "be accessed from JavaScript. <a href='http://developer.android.com/intl/pt-br/reference/android/webkit/WebView.html#addJavascriptInterface(java.lang.Object, java.lang.String)' target='_blank' title='link'> read more.</a>\">" + x[i] + " </a>";
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+                    }
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (String aX : x) {
+                        sb.append(aX + "</br>");
+                    }
+
+                    String script = "<script>$(document).ready(function() {" +
+                            "$('[data-toggle=popover]').popover({html:true})" +
+                            "});</script>";
+
+                    sb.append(script);
+
+                    if (count == -1) {
+                        html = sb.toString();
                     } else {
-                        x[i] = x[i];
+                        html = "" + countTmp;
                     }
                 }
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (String aX : x) {
-                    sb.append(aX + "</br>");
-                }
-
-                String script = "<script>$(document).ready(function() {" +
-                        "$('[data-toggle=popover]').popover({html:true})" +
-                        "});</script>";
-
-                sb.append(script);
-
-                html = sb.toString();
-
                 break;
             }
             case "ipc": {
                 html = FileUtil.readFromFile(mPrefs, IPC).replace(IPCHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
+                        x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
-                    x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+                    }
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i] + "</br>");
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i] + "</br>");
-                }
-
-                html = sb.toString();
-
                 break;
             }
             case "crypto": {
                 html = FileUtil.readFromFile(mPrefs, CRYPTO).replace(CryptoHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
 
-                String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
 
-                for (int i = 0; i < x.length; i++) {
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+
+                        if (x[i].length() > 170) {
+                            String len170 = x[i].substring(0, 135);
+                            String rest = x[i].substring(135);
+                            x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
+                                    "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
+                            continue;
+                        }
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
 
 
-                    if (x[i].length() > 170) {
-                        String len170 = x[i].substring(0, 135);
-                        String rest = x[i].substring(135);
-                        x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
-                                "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
-                        continue;
                     }
-                    x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    //need load from here for callapse work correctaly
+                    String script = "<script>$(document).ready(function() {" +
+                            "$('a').on('click', function(e) {" +
+                            "                    e.preventDefault();" +
+                            "                    var $this = $(this);" +
+                            "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
+                            "                    $collapse.collapse('toggle');" +
+                            "                });" +
+                            "});</script>";
+                    sb.append(script);
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                //need load from here for callapse work correctaly
-                String script = "<script>$(document).ready(function() {" +
-                        "$('a').on('click', function(e) {" +
-                        "                    e.preventDefault();" +
-                        "                    var $this = $(this);" +
-                        "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
-                        "                    $collapse.collapse('toggle');" +
-                        "                });" +
-                        "});</script>";
-                sb.append(script);
-                html = sb.toString();
-
                 break;
             }
             case "prefs": {
                 html = FileUtil.readFromFile(mPrefs, PREFS).replace(SharedPrefsHook.TAG, "");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
+                        String color = "label-danger";
+                        if (x[i].contains("GET[")) {
+                            color = "label-info";
+                        } else if (x[i].contains("CONTAINS[")) {
+                            color = "label-warning";
+                        } else if (x[i].contains("PUT[")) {
+                            color = "label-danger";
+                        }
 
-                    String color = "label-danger";
-                    if (x[i].contains("GET[")) {
-                        color = "label-info";
-                    } else if (x[i].contains("CONTAINS[")) {
-                        color = "label-warning";
-                    } else if (x[i].contains("PUT[")) {
-                        color = "label-danger";
+                        if (x[i].length() > 170) {
+                            x[i] = "<div class=\"breakWord\"><span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</div>";
+                        } else {
+                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
+                        }
+
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
                     }
 
-                    if (x[i].length() > 170) {
-                        x[i] = "<div class=\"breakWord\"><span class=\"label "+color+"\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i])+"</div>";
-                    }else{
-                        x[i] = "<span class=\"label "+color+"\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i])+"</br>";
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 2000)
+                            sb.append(x[i]);
                     }
 
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 2000)
-                        sb.append(x[i]);
-                }
-
-                html = sb.toString();
-
                 break;
             }
             case "hash": {
 
                 html = FileUtil.readFromFile(mPrefs, HASH).replace(HashHook.TAG, "");
-                String[] x = html.split("</br>");
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
 
-                for (int i = 0; i < x.length; i++) {
+                    for (int i = 0; i < x.length; i++) {
 
-                    if (x[i].length() > 170) {
-                        String len170 = x[i].substring(0, 135);
-                        String rest = x[i].substring(135);
-                        x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
-                                "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
-                        continue;
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+
+                        if (x[i].length() > 170) {
+                            String len170 = x[i].substring(0, 135);
+                            String rest = x[i].substring(135);
+                            x[i] = "<div class=\"collapse-group\"> <span class=\"label label-info\">" + (i + 1) + "</span>  " + len170 +
+                                    "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
+                            continue;
+                        }
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+
+
                     }
-                    x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    //need load from here for callapse work correctaly
+                    String script = "<script>$(document).ready(function() {" +
+                            "$('a').on('click', function(e) {" +
+                            "                    e.preventDefault();" +
+                            "                    var $this = $(this);" +
+                            "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
+                            "                    $collapse.collapse('toggle');" +
+                            "                });" +
+                            "});</script>";
+                    sb.append(script);
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                //need load from here for callapse work correctaly
-                String script = "<script>$(document).ready(function() {" +
-                        "$('a').on('click', function(e) {" +
-                        "                    e.preventDefault();" +
-                        "                    var $this = $(this);" +
-                        "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
-                        "                    $collapse.collapse('toggle');" +
-                        "                });" +
-                        "});</script>";
-                sb.append(script);
-                html = sb.toString();
-
-
                 break;
             }
             case "sqlite": {
                 html = FileUtil.readFromFile(mPrefs, SQLITE).replace(SQLiteHook.TAG, "");
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
 
-                    String color;
-                    if (x[i].contains("INSERT INTO")) {
-                        color = "label-info";
-                    } else if (x[i].contains("UPDATE")) {
-                        color = "label-warning";
-                    } else if (x[i].contains("execSQL(")) {
-                        color = "label-danger";
-                    }else if (x[i].contains("SELECT")) {
-                        color = "label-success";
-                        x[i].replace("\n", "</br>");
-                    }else{
-                        color = "label-default";
+                        String color;
+                        if (x[i].contains("INSERT INTO")) {
+                            color = "label-info";
+                        } else if (x[i].contains("UPDATE")) {
+                            color = "label-warning";
+                        } else if (x[i].contains("execSQL(")) {
+                            color = "label-danger";
+                        } else if (x[i].contains("SELECT")) {
+                            color = "label-success";
+                            x[i].replace("\n", "</br>");
+                        } else {
+                            color = "label-default";
+                        }
+
+                        if (x[i].length() > 170) {
+                            x[i] = "<div class=\"breakWord\"><span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</div>";
+                        } else {
+                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
+                        }
+
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
                     }
 
-                    if (x[i].length() > 170) {
-                        x[i] = "<div class=\"breakWord\"><span class=\"label "+color+"\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i])+"</div>";
-                    }else{
-                        x[i] = "<span class=\"label "+color+"\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i])+"</br>";
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i]);
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString().replace("</br></br>", "</br>");
+                    } else {
+                        html = "" + countTmp;
                     }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i]);
-                }
-
-                html = sb.toString().replace("</br></br>", "</br>");
 
                 break;
             }
             case "userhooks": {
                 html = FileUtil.readFromFile(mPrefs, USERHOOKS).replace(UserHooks.TAG, "");
 
-                String[] x = html.split("</br>");
-                for (int i = 0; i < x.length; i++) {
-                    x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+                if(!html.equals("")) {
+                    String[] x = html.split("</br>");
+                    for (int i = 0; i < x.length; i++) {
+                        x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+
+                        if ((i + 1) > count) {
+                            countTmp = (i + 1);
+                        } else {
+                            countTmp = count;
+                        }
+                    }
+
+                    List<String> ls = Arrays.asList(x);
+
+                    Collections.reverse(ls);
+                    x = (String[]) ls.toArray();
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < x.length; i++) {
+                        if (i < 1000)
+                            sb.append(x[i] + "</br>");
+                    }
+
+                    if (count == -1) {
+                        html = sb.toString();
+                    } else {
+                        html = "" + countTmp;
+                    }
                 }
-
-                List<String> ls = Arrays.asList(x);
-
-                Collections.reverse(ls);
-                x = (String[]) ls.toArray();
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < x.length; i++) {
-                    if (i < 1000)
-                        sb.append(x[i] + "</br>");
-                }
-
-                html = sb.toString();
-
                 break;
             }
         }
