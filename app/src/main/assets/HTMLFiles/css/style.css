@@ -1,5 +1,9 @@
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
 
+.badge-success {
+  background-color: #468847;
+}
+
 .navbar-default {
   background-color: #375a7f;
   border-color: transparent;
