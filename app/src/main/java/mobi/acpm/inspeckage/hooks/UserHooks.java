@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -49,35 +50,42 @@ public class UserHooks extends XC_MethodHook {
     }
 
     static void hook(HookItem item, ClassLoader classLoader) {
-        Class<?> hookClass = findClass(item.className, classLoader);
+        try {
+            Class<?> hookClass = findClass(item.className, classLoader);
 
-        if(hookClass !=null) {
+            if (hookClass != null) {
 
-            if(item.method != null && !item.method.equals("")) {
-                for (Method method : hookClass.getDeclaredMethods()) {
-                    if (method.getName().equals(item.method)) {
-                        XposedBridge.hookMethod(method, methodHook);
+                if (item.method != null && !item.method.equals("")) {
+                    for (Method method : hookClass.getDeclaredMethods()) {
+                        if (method.getName().equals(item.method) && !Modifier.isAbstract(method.getModifiers())) {
+                            XposedBridge.hookMethod(method, methodHook);
+                        }
+                    }
+                } else {
+                    for (Method method : hookClass.getDeclaredMethods()) {
+                        if(!Modifier.isAbstract(method.getModifiers())) {
+                            XposedBridge.hookMethod(method, methodHook);
+                        }
                     }
                 }
-            }else {
-                for (Method method : hookClass.getDeclaredMethods()) {
-                    XposedBridge.hookMethod(method, methodHook);
-                }
-            }
 
-            if(item.constructor){
-                for (Constructor<?> constructor : hookClass.getDeclaredConstructors()){
-                    XposedBridge.hookMethod(constructor, methodHook);
+                if (item.constructor) {
+                    for (Constructor<?> constructor : hookClass.getDeclaredConstructors()) {
+                        XposedBridge.hookMethod(constructor, methodHook);
+                    }
                 }
-            }
 
-        }else{
-            XposedBridge.log(TAG+"class not found.");
+            } else {
+                XposedBridge.log(TAG + "class not found.");
+            }
+        } catch (Error e) {
+            Module.logError(e);
         }
     }
 
     static XC_MethodHook methodHook = new XC_MethodHook() {
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            loadPrefs();
             parseParam(param);
         }
     };
