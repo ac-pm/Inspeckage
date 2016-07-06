@@ -54,6 +54,8 @@ public class Util {
     }
 
     public static String byteArrayToString(byte[] input) {
+        if(input==null)
+            return "";
         String out = new String(input);
         int tmp = 0;
         for (int i = 0; i < out.length(); i++) {
