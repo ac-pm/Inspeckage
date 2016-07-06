@@ -35,19 +35,22 @@ public class HttpHook extends XC_MethodHook {
 
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
 
-        final Class<?> httpUrlConnection = findClass("java.net.HttpURLConnection", loadPackageParam.classLoader);
-        hookAllConstructors(httpUrlConnection, new XC_MethodHook() {
+        try {
+            final Class<?> httpUrlConnection = findClass("java.net.HttpURLConnection", loadPackageParam.classLoader);
+            hookAllConstructors(httpUrlConnection, new XC_MethodHook() {
 
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
-                if (param.args.length != 1 || param.args[0].getClass() != URL.class) {
-                    return;
+                    if (param.args.length != 1 || param.args[0].getClass() != URL.class) {
+                        return;
+                    }
+
+                    XposedBridge.log(TAG + "HttpURLConnection: " + param.args[0] + "");
                 }
-
-                XposedBridge.log(TAG + "HttpURLConnection: " + param.args[0] + "");
-            }
-        });
-
+            });
+        } catch (Error e) {
+            Module.logError(e);
+        }
 
         XC_MethodHook RequestHook = new XC_MethodHook() {
 
@@ -152,7 +155,7 @@ public class HttpHook extends XC_MethodHook {
                     findAndHookMethod("com.android.okhttp.internal.http.HttpURLConnectionImpl", loadPackageParam.classLoader, "getInputStream", ResponseHook);
                 }
             }
-        } catch (Error e){
+        } catch (Error e) {
             Module.logError(e);
         }
 
