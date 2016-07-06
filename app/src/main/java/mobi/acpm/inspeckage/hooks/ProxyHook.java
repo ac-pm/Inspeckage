@@ -31,12 +31,13 @@ public class ProxyHook extends XC_MethodHook {
 
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
 
-        loadPrefs();
 
         findAndHookMethod("java.net.ProxySelectorImpl", loadPackageParam.classLoader, "select", URI.class, new XC_MethodHook() {
 
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+
+                loadPrefs();
 
                 if (sPrefs.getBoolean("switch_proxy", false)) {
 
@@ -65,6 +66,7 @@ public class ProxyHook extends XC_MethodHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
+                loadPrefs();
 
                 if (sPrefs.getBoolean("switch_proxy", false)) {
                     param.args[1] = "--inpeckage--";
@@ -74,6 +76,9 @@ public class ProxyHook extends XC_MethodHook {
 
         hookAllConstructors(XposedHelpers.findClass("org.apache.http.impl.client.DefaultHttpClient", loadPackageParam.classLoader), new XC_MethodHook() {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
+                loadPrefs();
+
                 if (sPrefs.getBoolean("switch_proxy", false)) {
                     String proxyHost = sPrefs.getString("host", null);
                     int proxyPort;
