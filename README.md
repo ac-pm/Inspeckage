@@ -101,9 +101,13 @@ And reboot!
 
 <img src="http://i.imgur.com/W7496ru.png" width="800" />
 
-<img src="http://i.imgur.com/sEzwWYj.png" width="900" />
+<img src="http://i.imgur.com/kdlajWg.png" width="900" />
 
-<img src="http://i.imgur.com/2tCyBMW.png" width="900" />
+<img src="http://i.imgur.com/CC4Qgem.png" width="900" />
+
+<img src="http://i.imgur.com/FH7GifA.png" width="900" />
+
+<img src="http://i.imgur.com/Lc6lHNB.png" width="900" />
 
 
 License
