@@ -267,9 +267,11 @@ public class MainFragment extends Fragment {
         }
 
         edit.putString(Config.SP_APP_NAME, pd.getAppName());
+        edit.putString(Config.SP_APP_ICON_BASE64, pd.getIconBase64());
         edit.putString(Config.SP_PROCESS_NAME, pd.getProcessName());
         edit.putString(Config.SP_APP_VERSION, pd.getVersion());
         edit.putString(Config.SP_DEBUGGABLE, pd.isDebuggable());
+        edit.putString(Config.SP_ALLOW_BACKUP, pd.allowBackup());
         edit.putString(Config.SP_APK_DIR, pd.getApkDir());
         edit.putString(Config.SP_UID, pd.getUID());
         edit.putString(Config.SP_GIDS, pd.getGIDs());
