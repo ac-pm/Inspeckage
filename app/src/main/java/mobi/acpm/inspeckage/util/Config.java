@@ -27,9 +27,11 @@ public class Config {
     //Shared Preferences
     public static final String SP_PACKAGE = "package";
     public static final String SP_APP_NAME = "app_name";
+    public static final String SP_APP_ICON_BASE64 = "app_icon_base64";
     public static final String SP_PROCESS_NAME = "process";
     public static final String SP_APP_VERSION = "app_version";
     public static final String SP_DEBUGGABLE = "isDebuggable";
+    public static final String SP_ALLOW_BACKUP = "allowBackup";
     public static final String SP_APK_DIR = "apk_dir";
     public static final String SP_UID = "uid";
     public static final String SP_GIDS = "gids";
@@ -75,4 +77,16 @@ public class Config {
     public static final String SP_HAS_W_PERMISSION = "write_permission";
 
     public static final String SP_USER_HOOKS = "user_hooks";
+
+    public static final String SP_TAB_ENABLE_SHAREDP = "enable_sharedp";
+    public static final String SP_TAB_ENABLE_SERIALIZATION = "enable_serialization";
+    public static final String SP_TAB_ENABLE_CRYPTO = "enable_crypto";
+    public static final String SP_TAB_ENABLE_HASH = "enable_hash";
+    public static final String SP_TAB_ENABLE_SQLITE = "enable_sqlite";
+    public static final String SP_TAB_ENABLE_HTTP = "enable_http";
+    public static final String SP_TAB_ENABLE_FS = "enable_fs";
+    public static final String SP_TAB_ENABLE_MISC = "enable_misc";
+    public static final String SP_TAB_ENABLE_WV = "enable_webview";
+    public static final String SP_TAB_ENABLE_IPC = "enable_ipc";
+    public static final String SP_TAB_ENABLE_PHOOKS = "enable_plus_hooks";
 }
