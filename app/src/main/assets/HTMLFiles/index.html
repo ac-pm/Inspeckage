@@ -128,13 +128,16 @@
     <!--dados da app-->
     <div id="general-info">
         <div class="row">
-            <div class="col-md-3">
-                <h3>#appName#  <span class="label label-default" data-toggle="tooltip" title="Version">#appVersion#</span></h3>
-
+            <div class="col-md-1">
+                #appIcon#
+            </div>
+            <div class="col-md-2">
+                <h3>#appName# <span class="label label-default" data-toggle="tooltip" title="Version">#appVersion#</span></h3>
             </div>
             <div class="col-md-3">
                 <h5>UID: #uid# | Debuggable: #isdebuggable# </h5>
                 <h5>GIDs: #gids# </h5>
+                <h5>Allow Backup: #allowbackup#</h5>
 
             </div>
             <div class="col-md-6">
@@ -564,13 +567,22 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
                                 </form>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <form class="form-horizontal" role="form">
+
+                                        <!-- Form Name -->
+                                        <legend>Disable/Enable</legend>
+
+                                        #tab_scheckbox#
+
+                                </form>
+
+                        </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-        </div>
-
+    </div>
     </div>
 </div>
 <!-- Fim Modal1 -->

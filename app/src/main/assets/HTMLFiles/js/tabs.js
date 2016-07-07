@@ -482,3 +482,102 @@ function setCookie(c_name, value, exdays) {
 function checkApp() {
     $('#checkapp1').load('?type=checkapp');
 }
+
+$("[name='shared']").bootstrapSwitch();
+    $('input[name="shared"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        $.get("/", {
+           type: "enableTab",
+           tab: "shared",
+           value: state
+        });
+    });
+
+$("[name='serialization']").bootstrapSwitch();
+    $('input[name="serialization"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        $.get("/", {
+           type: "enableTab",
+           tab: "serialization",
+           value: state
+        });
+    });
+
+    $("[name='crypto']").bootstrapSwitch();
+        $('input[name="crypto"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "crypto",
+               value: state
+            });
+        });
+
+    $("[name='hash']").bootstrapSwitch();
+        $('input[name="hash"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "hash",
+               value: state
+            });
+        });
+
+    $("[name='sqlite']").bootstrapSwitch();
+        $('input[name="sqlite"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "sqlite",
+               value: state
+            });
+        });
+
+    $("[name='http']").bootstrapSwitch();
+        $('input[name="http"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "http",
+               value: state
+            });
+        });
+
+    $("[name='filesystem']").bootstrapSwitch();
+        $('input[name="filesystem"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "filesystem",
+               value: state
+            });
+        });
+
+    $("[name='misc']").bootstrapSwitch();
+        $('input[name="misc"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "misc",
+               value: state
+            });
+        });
+
+    $("[name='webview']").bootstrapSwitch();
+        $('input[name="webview"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "webview",
+               value: state
+            });
+        });
+
+    $("[name='ipc']").bootstrapSwitch();
+        $('input[name="ipc"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "ipc",
+               value: state
+            });
+        });
+
+    $("[name='phooks']").bootstrapSwitch();
+        $('input[name="phooks"]').on('switchChange.bootstrapSwitch', function(event, state) {
+            $.get("/", {
+               type: "enableTab",
+               tab: "phooks",
+               value: state
+            });
+        });

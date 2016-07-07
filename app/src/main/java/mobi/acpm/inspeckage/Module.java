@@ -22,6 +22,7 @@ import mobi.acpm.inspeckage.hooks.SerializationHook;
 import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
 import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
+import mobi.acpm.inspeckage.util.Config;
 import mobi.acpm.inspeckage.util.FileType;
 import mobi.acpm.inspeckage.util.FileUtil;
 
@@ -105,25 +106,43 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
                     }
                 });
 
-        HttpHook.initAllHooks(loadPackageParam);//10
-        MiscHook.initAllHooks(loadPackageParam);//10
-        WebViewHook.initAllHooks(loadPackageParam);//8
-        ClipboardHook.initAllHooks(loadPackageParam); //1
-        CryptoHook.initAllHooks(loadPackageParam); //2
-        FileSystemHook.initAllHooks(loadPackageParam); //9
-        if (sPrefs.getBoolean("flag_secure", false)) {
-            FlagSecureHook.initAllHooks(loadPackageParam);// --
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_HTTP,true)) {
+            HttpHook.initAllHooks(loadPackageParam);
         }
-        HashHook.initAllHooks(loadPackageParam);//3
-        IPCHook.initAllHooks(loadPackageParam);//4
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_MISC,true)) {
+            MiscHook.initAllHooks(loadPackageParam);
+            ClipboardHook.initAllHooks(loadPackageParam);
+        }
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_WV,true)) {
+            WebViewHook.initAllHooks(loadPackageParam);
+        }
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_CRYPTO,true)) {
+            CryptoHook.initAllHooks(loadPackageParam);
+        }
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_FS,true)) {
+            FileSystemHook.initAllHooks(loadPackageParam);
+        }
+        FlagSecureHook.initAllHooks(loadPackageParam);
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_HASH,true)) {
+            HashHook.initAllHooks(loadPackageParam);
+        }
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_IPC,true)) {
+            IPCHook.initAllHooks(loadPackageParam);
+        }
         ProxyHook.initAllHooks(loadPackageParam);// --
-        SharedPrefsHook.initAllHooks(loadPackageParam);//5
-        SQLiteHook.initAllHooks(loadPackageParam);//6
-        if (sPrefs.getBoolean("sslunpinning", false)) {
-            SSLPinningHook.initAllHooks(loadPackageParam);// --
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SHAREDP,true)) {
+            SharedPrefsHook.initAllHooks(loadPackageParam);
         }
-        SerializationHook.initAllHooks(loadPackageParam);//
-        UserHooks.initAllHooks(loadPackageParam);
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SQLITE,true)) {
+            SQLiteHook.initAllHooks(loadPackageParam);
+        }
+        SSLPinningHook.initAllHooks(loadPackageParam);// --
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SERIALIZATION,true)) {
+            SerializationHook.initAllHooks(loadPackageParam);
+        }
+        if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_PHOOKS,true)) {
+            UserHooks.initAllHooks(loadPackageParam);
+        }
     }
 
     public static void logError(Error e){

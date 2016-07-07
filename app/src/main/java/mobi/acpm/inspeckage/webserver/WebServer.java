@@ -157,6 +157,9 @@ public class WebServer extends NanoHTTPD {
                         return addUserHooks(parms);
                     case "getuserhooks":
                         return getUserHooks();
+                    case "enableTab":
+                        html = tabsCheckbox(parms);
+                        break;
 
                 }
             } else {
@@ -257,6 +260,54 @@ public class WebServer extends NanoHTTPD {
         fileTree();
 
         return FileUtil.readHtmlFile(mContext, "/index.html");
+    }
+
+    private String tabsCheckbox(Map<String, String> parms) {
+        String tab = parms.get("tab");
+        if (tab != null) {
+            String state = parms.get("value");
+            SharedPreferences.Editor edit = mPrefs.edit();
+
+            switch (tab){
+                case "shared":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_SHAREDP, Boolean.valueOf(state));
+                    break;
+                case "serialization":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_SERIALIZATION, Boolean.valueOf(state));
+                    break;
+                case "crypto":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_CRYPTO, Boolean.valueOf(state));
+                    break;
+                case "hash":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_HASH, Boolean.valueOf(state));
+                    break;
+                case "sqlite":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_SQLITE, Boolean.valueOf(state));
+                    break;
+                case "http":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_HTTP, Boolean.valueOf(state));
+                    break;
+                case "filesystem":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_FS, Boolean.valueOf(state));
+                    break;
+                case "misc":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_MISC, Boolean.valueOf(state));
+                    break;
+                case "webview":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_WV, Boolean.valueOf(state));
+                    break;
+                case "ipc":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_IPC, Boolean.valueOf(state));
+                    break;
+                case "phooks":
+                    edit.putBoolean(Config.SP_TAB_ENABLE_PHOOKS, Boolean.valueOf(state));
+                    break;
+
+            }
+            edit.apply();
+
+        }
+        return "#tab_scheckbox#";
     }
 
     private String sslUnpinning(Map<String, String> parms) {
@@ -442,6 +493,7 @@ public class WebServer extends NanoHTTPD {
         html = html.replace("#flags#", flagSecureCheckbox());
         html = html.replace("#sslunpinning#", SSLUnpinningCheckbox());
         html = html.replace("#exported#", exportedCheckbox());
+        html = html.replace("#tab_scheckbox#", tabsCheckbox());
         html = html.replace("#exported_act#", htmlExportedActivities());
         html = html.replace("#activities_list#", htmlActivityList());
         html = html.replace("#exported_provider#", htmlExportedProviders());
@@ -450,12 +502,16 @@ public class WebServer extends NanoHTTPD {
         html = html.replace("#exported_broadcast#", htmlExportedBroadcasts());
 
         html = html.replace("#appName#", mPrefs.getString(Config.SP_APP_NAME, "AppName"));
+
+        String icon = "<img src=\"data:image/png;base64, "+mPrefs.getString(Config.SP_APP_ICON_BASE64, "AppIcon")+"\" width=\"80\" height=\"80\" />";
+        html = html.replace("#appIcon#", icon);
         html = html.replace("#appVersion#", mPrefs.getString(Config.SP_APP_VERSION, "Version"));
         html = html.replace("#uid#", mPrefs.getString(Config.SP_UID, "uid"));
         html = html.replace("#gids#", mPrefs.getString(Config.SP_GIDS, "GIDs"));
         html = html.replace("#package#", mPrefs.getString(Config.SP_PACKAGE, "package"));
         html = html.replace("#data_dir#", mPrefs.getString(Config.SP_DATA_DIR, "Data Path"));
         html = html.replace("#isdebuggable#", mPrefs.getString(Config.SP_DEBUGGABLE, "?"));
+        html = html.replace("#allowbackup#", mPrefs.getString(Config.SP_ALLOW_BACKUP, "?"));
 
         html = html.replace("#non_exported_act#", mPrefs.getString(Config.SP_N_EXP_ACTIVITIES, "Non Exported Activities").replace("\n", "</br>"));
         html = html.replace("#non_exported_services#", mPrefs.getString(Config.SP_N_EXP_SERVICES, "Services").replace("\n", "</br>"));
@@ -686,6 +742,59 @@ public class WebServer extends NanoHTTPD {
         }
         return flag_s;
     }
+
+    public String tabsCheckbox() {
+        String shared = "<input type='checkbox' name='shared' data-size='mini' checked> Shared Preferences</br>";
+        String serialization = "<input type='checkbox' name='serialization' data-size='mini' checked> Serialization</br>";
+        String crypto = "<input type='checkbox' name='crypto' data-size='mini' checked> Crypto</br>";
+        String hash = "<input type='checkbox' name='hash' data-size='mini' checked> Hash</br>";
+        String sqlite = "<input type='checkbox' name='sqlite' data-size='mini' checked> SQLite</br>";
+        String http = "<input type='checkbox' name='http' data-size='mini' checked> HTTP</br>";
+        String filesystem = "<input type='checkbox' name='filesystem' data-size='mini' checked> File System</br>";
+        String misc = "<input type='checkbox' name='misc' data-size='mini' checked> Misc.</br>";
+        String webview = "<input type='checkbox' name='webview' data-size='mini' checked> WebView</br>";
+        String ipc = "<input type='checkbox' name='ipc' data-size='mini' checked> IPC</br>";
+        String phooks = "<input type='checkbox' name='phooks' data-size='mini' checked> + Hooks</br>";
+
+        StringBuilder sb = new StringBuilder();
+
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_SHAREDP, true)) {
+            shared = "<input type='checkbox' name='shared' data-size='mini' unchecked>  Shared Preferences</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_SERIALIZATION, true)) {
+            serialization = "<input type='checkbox' name='serialization' data-size='mini' unchecked> Serialization</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_CRYPTO, true)) {
+            crypto = "<input type='checkbox' name='crypto' data-size='mini' unchecked> Crypto</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_HASH, true)) {
+            hash = "<input type='checkbox' name='hash' data-size='mini' unchecked> Hash</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_SQLITE, true)) {
+            sqlite = "<input type='checkbox' name='sqlite' data-size='mini' unchecked> SQLite</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_HTTP, true)) {
+            http = "<input type='checkbox' name='http' data-size='mini' unchecked> HTTP</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_FS, true)) {
+            filesystem = "<input type='checkbox' name='filesystem' data-size='mini' unchecked> File System</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_MISC, true)) {
+            misc = "<input type='checkbox' name='misc' data-size='mini' unchecked> Misc.</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_WV, true)) {
+            webview = "<input type='checkbox' name='webview' data-size='mini' unchecked> WebView</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_IPC, true)) {
+            ipc = "<input type='checkbox' name='ipc' data-size='mini' unchecked> IPC</br>";
+        }
+        if (!mPrefs.getBoolean(Config.SP_TAB_ENABLE_PHOOKS, true)) {
+            phooks = "<input type='checkbox' name='phooks' data-size='mini' unchecked> + Hooks</br>";
+        }
+        return sb.append("<div class=\"col-md-6\" style=\"line-height:200%;\">").append(shared).append(serialization).append(crypto).append(hash).append(sqlite).append(http).append("</div><div class=\"col-md-6\" style=\"line-height:200%;\">")
+                .append(filesystem).append(misc).append(webview).append(ipc).append(phooks).append("</div>").toString();
+    }
+
 
     //ACTIONS
 
