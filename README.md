@@ -2,6 +2,9 @@
 
 Inspeckage is a tool developed to offer dynamic analysis of Android applications. By applying hooks to functions of the Android API, Inspeckage will help you understand what an Android application is doing at runtime. 
 
+* https://twitter.com/inspeckage
+* https://play.google.com/store/apps/details?id=mobi.acpm.inspeckage
+
 Features
 ---------------
 
