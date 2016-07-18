@@ -1,5 +1,12 @@
 # Inspeckage - CHANGELOG
 
+1.4.1
+---------------
+
+- add the option "Bind to address" on "Config" app screen - now you can bind to all interfaces, any specific local IP address, or to just the loopback interface.
+Note: if you choose a non-loopback interface, other computers maybe can access the Inspeckage.
+- bug fix - the "App is running:" always false
+
 1.4
 ---------------
 
@@ -8,7 +15,7 @@
 - enable/disable hooks (tabs);
 - support to android 4.x (experimental);
 - android:allowBackup in info area;
-- app icon in ifo area;
+- app icon in info area;
 - some bug fixes.
 
 1.3
