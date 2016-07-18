@@ -20,6 +20,7 @@ import mobi.acpm.inspeckage.hooks.SQLiteHook;
 import mobi.acpm.inspeckage.hooks.SSLPinningHook;
 import mobi.acpm.inspeckage.hooks.SerializationHook;
 import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
+import mobi.acpm.inspeckage.hooks.UIHook;
 import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.util.Config;
@@ -105,6 +106,8 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
                         }
                     }
                 });
+
+        UIHook.initAllHooks(loadPackageParam);
 
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_HTTP,true)) {
             HttpHook.initAllHooks(loadPackageParam);
