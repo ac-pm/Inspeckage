@@ -23,6 +23,7 @@
     <string name="fragment_config_access_adb">Access with ADB:</string>
     <string name="package_inspector">Package Inspector</string>
 
+    <string name="fragment_config_server_host">Bind to address</string>
     <string name="fragment_config_server_port">Server Port</string>
     <string name="fragment_config_web_socket_port">Web Socket Port (logcat)</string>
     <string name="fragment_config_btn_apply">Apply</string>

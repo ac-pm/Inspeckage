@@ -61,8 +61,8 @@ public class WebServer extends NanoHTTPD {
     private Context mContext;
     private SharedPreferences mPrefs;
 
-    public WebServer(int port, Context context) throws IOException {
-        super(port);
+    public WebServer(String host, int port, Context context) throws IOException {
+        super(host,port);
         mContext = context;
         mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
 

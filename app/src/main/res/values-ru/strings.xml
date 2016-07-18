@@ -22,6 +22,7 @@
     <string name="fragment_config_access_adb">Доступ через ADB:</string>
     <string name="package_inspector">Package Inspector</string>
 
+    <string name="fragment_config_server_host">Bind to address</string>
     <string name="fragment_config_server_port">Порт сервера</string>
     <string name="fragment_config_web_socket_port">Web Socket порт (logcat)</string>
     <string name="fragment_config_btn_apply">Применить</string>

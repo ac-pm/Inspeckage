@@ -29,14 +29,16 @@ public class InspeckageService extends Service {
         // Let it continue running until it is stopped.
         Context context = getApplicationContext();
 
+        String host = null;
         int port = 8008;
         if (intent != null && intent.getExtras() != null) {
+            host = intent.getStringExtra("host");
             port = intent.getIntExtra("port", 8008);
         }
 
         try {
 
-            ws = new WebServer(port, context);
+            ws = new WebServer(host, port, context);
 
 
         } catch (IOException e) {

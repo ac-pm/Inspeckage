@@ -41,6 +41,8 @@ public class Config {
     public static final String SP_APP_PID = "pid";
 
     public static final String SP_SERVER_STARTED = "server_started";
+    public static final String SP_SERVER_INTERFACES = "server_interfaces";
+    public static final String SP_SERVER_HOST = "server_host";
     public static final String SP_SERVER_PORT = "server_port";
     public static final String SP_SERVER_IP = "server_ip";
 
