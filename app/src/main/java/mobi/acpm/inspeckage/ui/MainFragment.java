@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -302,7 +303,8 @@ public class MainFragment extends Fragment {
         pd = new PackageDetail(context, pkg);
 
         edit.putBoolean(Config.SP_HAS_W_PERMISSION, false);
-        if (pd.getRequestedPermissions().contains("android.permission.WRITE_EXTERNAL_STORAGE")) {
+        if (pd.getRequestedPermissions().contains("android.permission.WRITE_EXTERNAL_STORAGE") &&
+                Build.VERSION.SDK_INT < 23) {
             edit.putBoolean(Config.SP_HAS_W_PERMISSION, true);
         }
 
