@@ -29,9 +29,6 @@ $(document).ready(function() {
 
     });
 
-    setInterval(function() {
-        checkApp()
-    }, 6000);
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
         autoRefresh();
@@ -41,6 +38,8 @@ $(document).ready(function() {
 var refresh;
 
 function autoRefresh() {
+
+    checkApp();
 
     var target = $('.nav-tabs .active > a').attr('href');
 
