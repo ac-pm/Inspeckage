@@ -1,5 +1,11 @@
 # Inspeckage - CHANGELOG
 
+2.0
+---------------
+- New menu option "SSL / Authentication" (only Android 6) - Now you can use https with basic authentication.
+- SSL uncheck (pinning bypass) - okhttp3
+- Android 6 permissions fix
+
 1.4.1
 ---------------
 
