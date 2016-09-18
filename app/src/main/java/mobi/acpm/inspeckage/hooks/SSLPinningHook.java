@@ -193,6 +193,20 @@ public class SSLPinningHook extends XC_MethodHook {
         } catch (Error e) {
             Module.logError(e);
         }
+
+        ///OKHTTP
+        try {
+            findAndHookMethod("okhttp3.CertificatePinner", loadPackageParam.classLoader, "findMatchingPins", String.class, new XC_MethodHook() {
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    loadPrefs();
+                    if (sPrefs.getBoolean("sslunpinning", false)) {
+                        param.args[0] = "";
+                    }
+                }
+            });
+        } catch (Error e) {
+            Module.logError(e);
+        }
     }
 }
 
