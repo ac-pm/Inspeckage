@@ -8,7 +8,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.security.KeyPairGeneratorSpec;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.util.Log;
+
+import org.java_websocket.util.Base64;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,11 +23,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.security.GeneralSecurityException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.security.auth.x500.X500Principal;
 
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.hooks.CryptoHook;
@@ -60,16 +80,107 @@ public class WebServer extends NanoHTTPD {
 
     private Context mContext;
     private SharedPreferences mPrefs;
+    private KeyStore keyStore;
 
     public WebServer(String host, int port, Context context) throws IOException {
         super(host,port);
         mContext = context;
         mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
 
-        mContext.registerReceiver(new InspeckageWebReceiver(mContext),
-                new IntentFilter("mobi.acpm.inspeckage.INSPECKAGE_WEB"));
 
-        start();
+        try {
+            keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+
+            Enumeration<String> aliases = keyStore.aliases();
+            List<String> keyAliases = new ArrayList<>();
+            while (aliases.hasMoreElements()) {
+                keyAliases.add(aliases.nextElement());
+            }
+
+            //use device id as an alias, that way each installation has your own alias
+            TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+            String alias = telephonyManager.getDeviceId() + "";
+
+            boolean genNewKey = true;
+            for (String key : keyAliases) {
+                if(key.equals(alias)){
+                    genNewKey = false;
+                }
+            }
+            if(genNewKey) {
+                KeyPair keyPair = generateKeys(alias);
+                keyStore = KeyStore.getInstance("AndroidKeyStore");
+                keyStore.load(null);
+            }
+        }
+        catch(Exception e) {
+            Log.e("Error",e.getMessage());
+        }
+
+        if(mPrefs.getBoolean(Config.SP_SWITCH_AUTH, false)) {
+
+            KeyManagerFactory keyManagerFactory = null;
+            try {
+                keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());//
+                keyManagerFactory.init(keyStore, "".toCharArray());
+            } catch (NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException e) {
+                e.printStackTrace();
+            }
+
+            makeSecure(NanoHTTPD.makeSSLSocketFactory(keyStore, keyManagerFactory), null);
+        }
+        mContext.registerReceiver(new InspeckageWebReceiver(mContext), new IntentFilter("mobi.acpm.inspeckage.INSPECKAGE_WEB"));
+
+        start(10000);
+    }
+
+    public KeyPair generateKeys(String alias) {
+        KeyPair keyPair = null;
+        try {
+
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA","AndroidKeyStore");
+
+            Calendar start = Calendar.getInstance();
+            Calendar end = Calendar.getInstance();
+            end.add(Calendar.YEAR, 1);
+
+            if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.M) {
+
+                KeyGenParameterSpec spec= new KeyGenParameterSpec.Builder(
+                        alias,
+                        KeyProperties.PURPOSE_SIGN|KeyProperties.PURPOSE_VERIFY)
+                        .setCertificateSubject(new X500Principal("CN=Inspeckage, OU=ACPM, O=ACPM, C=BR"))
+                        .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
+                        .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                        .setCertificateNotBefore(start.getTime())
+                        .setCertificateNotAfter(end.getTime())
+                        .setKeyValidityStart(start.getTime())
+                        .setKeyValidityEnd(end.getTime())
+                        .setKeySize(2048)
+                        .setCertificateSerialNumber(BigInteger.valueOf(1))
+                        .build();
+
+                keyGen.initialize(spec);
+            }else {
+
+                KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(mContext)
+                        .setAlias(alias)
+                        .setSubject(new X500Principal("CN=Inspeckage, OU=ACPM, O=ACPM, C=BR"))
+                        .setSerialNumber(BigInteger.valueOf(12345))
+                        .setStartDate(start.getTime())
+                        .setEndDate(end.getTime())
+                        .build();
+
+
+                keyGen.initialize(spec);
+            }
+
+            keyPair = keyGen.generateKeyPair();
+        } catch(GeneralSecurityException e) {
+            Log.d("Inspeckage_Exception: ",e.getMessage());
+        }
+        return keyPair;
     }
 
     private Response ok(String type, String html) {
@@ -84,6 +195,28 @@ public class WebServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
 
         String uri = session.getUri();
+
+        if(mPrefs.getBoolean(Config.SP_SWITCH_AUTH, false)) {
+            Map<String, String> headers = session.getHeaders();
+
+            String authorization = headers.get("authorization");
+            String base64 = "";
+            if (authorization != null) {
+                base64 = authorization.substring(6);
+            }
+
+            boolean logged = false;
+            if (base64.equals(Base64.encodeBytes(mPrefs.getString(Config.SP_USER_PASS, "").getBytes()))) {
+                logged = true;
+            }
+
+            if (!logged) {
+                Response res = newFixedLengthResponse(Response.Status.UNAUTHORIZED, NanoHTTPD.MIME_HTML, "Denied!");
+                res.addHeader("WWW-Authenticate", "Basic realm=\"Server\"");
+                res.addHeader("Content-Length", "0");
+                return res;
+            }
+        }
 
         //add ip and port to proxy fields
         if (mPrefs.getString(Config.SP_PROXY_HOST, "").equals("")) {
@@ -827,8 +960,8 @@ public class WebServer extends NanoHTTPD {
 
         String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        if(new File("/storage/emulated/legacy").exists()){
-            //sdcardPath = "/storage/emulated/legacy";
+        if(new File(sdcardPath + Config.P_ROOT ).exists() && new File("/storage/emulated/legacy").exists()){
+            sdcardPath = "/storage/emulated/legacy";
         }
 
         String absolutePath = sdcardPath + Config.P_ROOT + "/" + filename;

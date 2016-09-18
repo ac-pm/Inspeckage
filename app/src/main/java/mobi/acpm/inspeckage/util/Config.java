@@ -91,4 +91,7 @@ public class Config {
     public static final String SP_TAB_ENABLE_WV = "enable_webview";
     public static final String SP_TAB_ENABLE_IPC = "enable_ipc";
     public static final String SP_TAB_ENABLE_PHOOKS = "enable_plus_hooks";
+
+    public static final String SP_USER_PASS = "login_pass";
+    public static final String SP_SWITCH_AUTH = "switch_auth";
 }

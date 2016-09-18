@@ -157,21 +157,25 @@ public class MainFragment extends Fragment {
 
         loadInterfaces();
 
-        String port = String.valueOf(mPrefs.getInt(Config.SP_SERVER_PORT, 8008));
+        String scheme = "http://";
+        if(mPrefs.getBoolean(Config.SP_SWITCH_AUTH, false)) {
+            scheme = "https://";
+        }
 
+        String port = String.valueOf(mPrefs.getInt(Config.SP_SERVER_PORT, 8008));
         String host = "";
         if(mPrefs.getString(Config.SP_SERVER_HOST, "All interfaces").equals("All interfaces")){
             String[] adds = mPrefs.getString(Config.SP_SERVER_INTERFACES, "--").split(",");
             for(int i=0; i<adds.length; i++){
                 if(!adds[i].equals("All interfaces"))
-                    host = host + "http://" + adds[i] + ":" + port+"\n";
+                    host = host + scheme + adds[i] + ":" + port+"\n";
             }
         }else{
-            host = mPrefs.getString(Config.SP_SERVER_HOST, "127.0.0.1");
-            host = "http://" + host + ":" + port;
+            String ip = mPrefs.getString(Config.SP_SERVER_HOST, "127.0.0.1");
+            host = scheme + ip + ":" + port;
 
             SharedPreferences.Editor edit = mPrefs.edit();
-            edit.putString(Config.SP_SERVER_IP, host);
+            edit.putString(Config.SP_SERVER_IP, ip);
             edit.apply();
         }
 

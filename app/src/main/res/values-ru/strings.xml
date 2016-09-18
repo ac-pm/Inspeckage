@@ -9,6 +9,7 @@
 
     <string name="action_settings">Настройки</string>
     <string name="action_config">Kонфигурация</string>
+    <string name="action_auth">SSL / Authentication</string>
     <string name="action_clear">Очистить</string>
 
     <string name="action_divider">Коммуникации</string>
