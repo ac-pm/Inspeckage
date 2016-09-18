@@ -25,11 +25,13 @@
 
         <service
             android:name=".webserver.InspeckageService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:stopWithTask="true"/>
 
         <service
             android:name=".log.LogService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:stopWithTask="true"/>
 
         <activity
             android:name=".ui.MainActivity"
