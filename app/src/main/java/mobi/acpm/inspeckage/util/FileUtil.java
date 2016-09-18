@@ -117,6 +117,9 @@ public class FileUtil {
                     path.setWritable(true, false);
 
                     path.mkdirs();
+                    path.setReadable(true, false);
+                    path.setExecutable(true, false);
+                    path.setWritable(true, false);
 
                     file.createNewFile();
 
