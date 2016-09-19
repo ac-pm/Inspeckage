@@ -43,7 +43,7 @@ With Xposed it's possible to perform actions such as start a unexported activity
 * Start any activity (exported and unexported);
 * Call any provider (exported and unexported);
 * Disable FLAG_SECURE;
-* SSL uncheck;
+* SSL uncheck (bypass certificate pinning - JSSE, Apache and okhttp3);
 * Start, stop and restart the application.
 
 #### Extras
@@ -93,7 +93,7 @@ Feel free to download the source!
 
 ### How to uninstall
 
-        adb uninstall mobi.acpm.inspeckage.apk
+        adb uninstall mobi.acpm.inspeckage
 And reboot!
 
 ## Genymotion
