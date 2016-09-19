@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -24,11 +25,13 @@
 
         <service
             android:name=".webserver.InspeckageService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:stopWithTask="true"/>
 
         <service
             android:name=".log.LogService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:stopWithTask="true"/>
 
         <activity
             android:name=".ui.MainActivity"

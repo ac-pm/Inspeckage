@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_tab">
 
     <group android:checkableBehavior="single">
 
@@ -8,7 +9,10 @@
             android:icon="@drawable/ic_settings_24dp"
             android:title="@string/action_config" />
 
-
+        <item
+            android:id="@+id/nav_auth"
+            android:icon="@drawable/ic_vpn_key_black_24dp"
+            android:title="@string/action_auth" />
         <item
             android:id="@+id/nav_clear"
             android:icon="@drawable/ic_autorenew_24dp"

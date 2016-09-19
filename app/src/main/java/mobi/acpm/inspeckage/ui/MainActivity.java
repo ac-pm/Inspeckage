@@ -1,9 +1,11 @@
 package mobi.acpm.inspeckage.ui;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -36,11 +38,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        File inspeckage = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+Config.P_ROOT);
-        if(!inspeckage.exists()){
-            inspeckage.mkdirs();
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -59,8 +56,49 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.container, mainFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            boolean granted = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            if (!granted) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE}, 0);
+            }
+        }else{
+            File inspeckage = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Config.P_ROOT);
+            if (!inspeckage.exists()) {
+                inspeckage.mkdirs();
+            }
+            hideItem();
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    File inspeckage = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Config.P_ROOT);
+                    if (!inspeckage.exists()) {
+                        inspeckage.mkdirs();
+                    }
+                } else {
+                    // permission denied
+                    //Util.showNotification(getApplicationContext(),"");
+                }
+                return;
+            }
+            case 1:{
+                return;
+            }
+        }
+    }
+
+    private void hideItem()
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_auth).setVisible(false);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -129,6 +167,13 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
+        } else if (id == R.id.nav_auth) {
+
+            AuthFragment authFragment = new AuthFragment(this);
+            fragmentTransaction.replace(R.id.container, authFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
         } else if (id == R.id.nav_share) {
 
             Intent sendIntent = new Intent();
@@ -169,6 +214,10 @@ public class MainActivity extends AppCompatActivity
         edit.putBoolean(Config.SP_UNPINNING, false);
         edit.putBoolean(Config.SP_EXPORTED, false);
         edit.putBoolean(Config.SP_HAS_W_PERMISSION, true);
+        edit.putString(Config.SP_SERVER_HOST, null);
+        edit.putString(Config.SP_SERVER_PORT, null);
+        edit.putString(Config.SP_SERVER_IP, null);
+        edit.putString(Config.SP_SERVER_INTERFACES, "");
 
         edit.putString(Config.SP_PACKAGE, "");
         edit.putString(Config.SP_APP_NAME, "");
@@ -178,6 +227,8 @@ public class MainActivity extends AppCompatActivity
         edit.putString(Config.SP_UID, "");
         edit.putString(Config.SP_GIDS, "");
         edit.putString(Config.SP_DATA_DIR, "");
+        //white img
+        edit.putString(Config.SP_APP_ICON_BASE64, "iVBORw0KGgoAAAANSUhEUgAAABoAAAAbCAIAAADtdAg8AAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAJUlEQVRIiWP8//8/A/UAExXNGjVu1LhR40aNGzVu1LhR44aScQDKygMz8IbG2QAAAABJRU5ErkJggg==");
 
         edit.putString(Config.SP_EXP_ACTIVITIES, "");
         edit.putString(Config.SP_N_EXP_ACTIVITIES, "");
@@ -194,6 +245,8 @@ public class MainActivity extends AppCompatActivity
 
         edit.putBoolean(Config.SP_APP_IS_RUNNING, false);
         edit.putString(Config.SP_DATA_DIR_TREE, "");
+
+        edit.putString(Config.SP_USER_HOOKS, "");
 
         edit.apply();
 
