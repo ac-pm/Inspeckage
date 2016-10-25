@@ -1,5 +1,10 @@
 # Inspeckage - CHANGELOG
 
+2.1
+---------------
+- Classes and Methods tree in +Hooks modal - now you can see all classes and methods of your target, select any method and add with new Hook!
+- bug fix
+
 2.0
 ---------------
 - New menu option "SSL / Authentication" (only Android 6) - Now you can use https with basic authentication.
