@@ -42,6 +42,7 @@ import java.util.Map;
 import javax.net.ssl.KeyManagerFactory;
 import javax.security.auth.x500.X500Principal;
 
+import fi.iki.elonen.NanoHTTPD;
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.hooks.CryptoHook;
 import mobi.acpm.inspeckage.hooks.FileSystemHook;
@@ -61,6 +62,7 @@ import mobi.acpm.inspeckage.util.FileUtil;
 import mobi.acpm.inspeckage.util.PackageDetail;
 import mobi.acpm.inspeckage.util.Util;
 
+import static mobi.acpm.inspeckage.util.FileType.APP_STRUCT;
 import static mobi.acpm.inspeckage.util.FileType.CRYPTO;
 import static mobi.acpm.inspeckage.util.FileType.FILESYSTEM;
 import static mobi.acpm.inspeckage.util.FileType.HASH;
@@ -76,7 +78,7 @@ import static mobi.acpm.inspeckage.util.FileType.WEBVIEW;
 /**
  * Created by acpm on 16/11/15.
  */
-public class WebServer extends NanoHTTPD {
+public class WebServer extends fi.iki.elonen.NanoHTTPD {
 
     private Context mContext;
     private SharedPreferences mPrefs;
@@ -293,6 +295,8 @@ public class WebServer extends NanoHTTPD {
                     case "enableTab":
                         html = tabsCheckbox(parms);
                         break;
+                    case "clipboard":
+                        return addToClipboard(parms);
 
                 }
             } else {
@@ -309,6 +313,11 @@ public class WebServer extends NanoHTTPD {
             html = html.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
             html = html.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
             return ok(html);
+        } else if (uri.equals("/struct")) {
+
+            String json = FileUtil.readFromFile(mPrefs, APP_STRUCT);//readHtmlFile(mContext, uri);
+            return ok("text/json", json);
+
         } else {
 
             String fname = FileUtil.readHtmlFile(mContext, uri);
@@ -322,8 +331,8 @@ public class WebServer extends NanoHTTPD {
             if (uri.contains(".png")) {
                 try {
                     InputStream f = mContext.getAssets().open("HTMLFiles" + uri);
-
-                    return new Response(Response.Status.OK, "image/png", f, f.available());
+                    return newChunkedResponse(Response.Status.OK, "image/png", f);
+                    //return new Response(Response.Status.OK, "image/png", f, f.available());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -564,6 +573,18 @@ public class WebServer extends NanoHTTPD {
         String mac = parms.get("mac");
         Util.setARPEntry(ip, mac);
         Util.showNotification(mContext, "arp -s " + ip + " " + mac + "");
+
+        return ok("OK");
+    }
+
+    private Response addToClipboard(Map<String, String> parms) {
+        String value = parms.get("value");
+
+        Intent intent = new Intent("mobi.acpm.inspeckage.INSPECKAGE_FILTER");
+        intent.putExtra("package", mPrefs.getString(Config.SP_PACKAGE, ""));
+        intent.putExtra("value", value);
+        intent.putExtra("action", "clipboard");
+        mContext.sendBroadcast(intent, null);
 
         return ok("OK");
     }
@@ -943,7 +964,7 @@ public class WebServer extends NanoHTTPD {
         try {
             FileInputStream f = new FileInputStream(absolutePath);
             File file = new File(absolutePath);
-            Response res = new Response(Response.Status.OK, "image/png", f, (int) file.length());
+            Response res = newChunkedResponse(Response.Status.OK, "image/png", f);//new Response(Response.Status.OK, "image/png", f, (int) file.length());
             res.addHeader("Content-Disposition", "attachment;filename=" + fileName);
             return res;
         } catch (FileNotFoundException e) {
@@ -969,7 +990,7 @@ public class WebServer extends NanoHTTPD {
         try {
             FileInputStream f = new FileInputStream(absolutePath);
             File file = new File(absolutePath);
-            Response res = new Response(Response.Status.OK, "application/octet-stream", f, (int) file.length());
+            Response res = newChunkedResponse(Response.Status.OK, "application/octet-stream", f);//new Response(Response.Status.OK, "application/octet-stream", f, (int) file.length());
             res.addHeader("Content-Disposition", "attachment;filename=" + filename);
 
             file.delete();
@@ -998,7 +1019,7 @@ public class WebServer extends NanoHTTPD {
 
             FileInputStream f = new FileInputStream(fullZipPath);
             File file = new File(fullZipPath);
-            Response res = new Response(Response.Status.OK, "application/zip", f, (int) file.length());
+            Response res = newChunkedResponse(Response.Status.OK, "application/zip", f);//new Response(Response.Status.OK, "application/zip", f, (int) file.length());
             res.addHeader("Content-Disposition", "attachment;filename=" + file.getName());
 
             return res;
@@ -1014,7 +1035,7 @@ public class WebServer extends NanoHTTPD {
         try {
             FileInputStream f = new FileInputStream(absolutePath);
             File file = new File(absolutePath);
-            Response res = new Response(Response.Status.OK, "application/vnd.android.package-archive", f, (int) file.length());
+            Response res = newChunkedResponse(Response.Status.OK, "application/vnd.android.package-archive", f);//new Response(Response.Status.OK, "application/vnd.android.package-archive", f, (int) file.length());
             String appName = mPrefs.getString(Config.SP_PACKAGE, "") + ".apk";
             res.addHeader("Content-Disposition", "attachment;filename=" + appName);
             return res;
