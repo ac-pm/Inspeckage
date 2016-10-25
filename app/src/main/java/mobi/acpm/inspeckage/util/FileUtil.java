@@ -40,7 +40,7 @@ public class FileUtil {
             } else {
                 absolutePath = prefs.getString(Config.SP_DATA_DIR, null)+Config.P_ROOT;
             }
-
+            boolean append = true;
             if (ft != null) {
                 switch (ft) {
                     case SERIALIZATION:
@@ -104,6 +104,10 @@ public class FileUtil {
                         absolutePath += Config.P_USERHOOKS;
                         data = data + "</br>";
                         break;
+                    case APP_STRUCT:
+                        absolutePath += Config.P_APP_STRUCT;
+                        append = false;
+                        break;
                     default:
                 }
 
@@ -129,7 +133,7 @@ public class FileUtil {
 
                 }
 
-                FileOutputStream fOut = new FileOutputStream(file, true);
+                FileOutputStream fOut = new FileOutputStream(file, append);
                 OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
 
                 myOutWriter.write(data);
@@ -197,6 +201,9 @@ public class FileUtil {
                     break;
                 case USERHOOKS:
                     absolutePath += Config.P_USERHOOKS; //10
+                    break;
+                case APP_STRUCT:
+                    absolutePath += Config.P_APP_STRUCT; //10
                     break;
                 default:
             }
@@ -343,5 +350,51 @@ public class FileUtil {
         }
 
         fileOrDirectory.delete();
+    }
+
+    public static void writeJsonFile(SharedPreferences prefs, String data, String name) {
+
+        try {
+
+            String absolutePath;
+
+            if (prefs.getBoolean(Config.SP_HAS_W_PERMISSION, false)) {
+                absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Config.P_ROOT + "/" + prefs.getString(Config.SP_PACKAGE, "");
+            } else {
+                absolutePath = prefs.getString(Config.SP_DATA_DIR, null) + Config.P_ROOT;
+            }
+
+            absolutePath += "/"+name;
+            File file = new File(absolutePath);
+
+            if (!file.exists()) {
+
+                File path = new File(String.valueOf(file.getParentFile()));
+                path.setReadable(true, false);
+                path.setExecutable(true, false);
+                path.setWritable(true, false);
+
+                path.mkdirs();
+                path.setReadable(true, false);
+                path.setExecutable(true, false);
+                path.setWritable(true, false);
+
+                file.createNewFile();
+
+                file.setReadable(true, false);
+                file.setExecutable(true, false);
+                file.setWritable(true, false);
+
+            }
+
+            FileOutputStream fOut = new FileOutputStream(file, false);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+
+            myOutWriter.write(data);
+            myOutWriter.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

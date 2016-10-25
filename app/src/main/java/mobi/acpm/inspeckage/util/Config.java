@@ -22,6 +22,7 @@ public class Config {
     public static final String P_SERIALIZATION = "/serialization";
     public static final String P_HTTP = "/http";
     public static final String P_USERHOOKS = "/user_hooks";
+    public static final String P_APP_STRUCT = "/struct";
     public static final String PREFS_BKP = "/prefs_bkp/";
 
     //Shared Preferences
