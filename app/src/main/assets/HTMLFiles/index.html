@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Inspeckage - Package Inspector</title>
-    <meta name="description" content="Source code generated using layoutit.com">
-    <meta name="author" content="LayoutIt!">
+
+    <link rel="icon" href="img/favicon-16.png" sizes="16x16">
+    <link rel="icon" href="img/favicon-32.png" sizes="32x32">
 
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-switch.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet" />
     <script type="text/javascript">
         var shown = true;
 
@@ -30,6 +32,15 @@
         }
     </script>
 
+    <style>
+        #myModal4 .modal-dialog
+        {
+          width: 80%;
+        }
+        .demo { overflow:auto; border:1px solid silver; min-height:100px; }
+
+    </style>
+
 </head>
 
 <body>
@@ -40,7 +51,20 @@
           win.focus();
         }
 </script>
-
+<script>
+        (function (global) {
+            global.console && global.console.log && global.console.log(
+'  _____                           _                    \n ' +
+'|_   _|                         | |                   \n ' +
+'  | |  _ __  ___ _ __   ___  ___| | ____ _  __ _  ___ \n ' +
+'  | | |  _ \\/ __|  _ \\ / _ \\/ __| |/ / _` |/ _` |/ _ \\ \n ' +
+' _| |_| | | \\__ \\ |_) |  __/ (__|   < (_| | (_| |  __/ \n ' +
+'|_____|_| |_|___/ .__/ \\___|\\___|_|\\_\\__,_|\\__, |\\___| \n ' +
+'                | |                         __/ |     \n ' +
+'                |_|                        |___/      \n\n\n '
+            );
+        }(this));
+    </script>
 <!--NEW-->
 <div class="container-fluid">
 
@@ -124,7 +148,6 @@
             </nav>
         </div>
     </div>
-
     <!--dados da app-->
     <div id="general-info">
         <div class="row">
@@ -143,9 +166,9 @@
             <div class="col-md-6">
                 <h5>Package: #package# </h5>
                 <h5>Data dir: #data_dir#
-                <button type="button" class="btn btn-default btn-xs" onclick="fileTree();" data-toggle="modal" data-target="#myModal3">
-                Tree View
-                </button>
+                    <button type="button" class="btn btn-default btn-xs" onclick="fileTree();" data-toggle="modal" data-target="#myModal3">
+                        Tree View
+                    </button>
 
                 </h5>
             </div>
@@ -153,7 +176,7 @@
         <hr>
     </div>
     <!--tabs-->
-    <div class="row">
+    <div id="tbs" class="row">
 
         <div class="col-md-12">
 
@@ -444,7 +467,7 @@
                 </div>
 
                 <div role="tabpanel" class="tab-pane fade" id="Hash">
-                   <div id="hash1"></div>
+                    <div id="hash1"></div>
                 </div>
 
                 <div role="tabpanel" class="tab-pane fade" id="SQLite">
@@ -478,7 +501,7 @@
                 </div>
 
                 <div role="tabpanel" class="tab-pane fade" id="misc">
-                        <div id="misc1"></div>
+                    <div id="misc1"></div>
                 </div>
 
                 <div role="tabpanel" class="tab-pane fade" id="userHooks">
@@ -896,7 +919,14 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
             <div class="modal-body">
 
                 <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
 
+                                <div id="jstree-classes" class="demo"></div>
+
+                                </div>
+                            <div class="col-md-8">
                     <div class="row">
                         <div class="bootstrap-iso">
                             <div class="container-fluid">
@@ -954,6 +984,10 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
                         </div>
                     </div>
                     <!-- /#list -->
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
                 <!-- /#main -->
             </div>
@@ -974,7 +1008,30 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
 <script src="js/tabs.js"></script>
 <script src="js/CollapsibleLists.compressed.js"></script>
 <script src="js/jquery.tabletojson.min.js"></script>
+<script src="js/jstree.min.js"></script>
 
+<script>
+
+$('#jstree-classes').on("changed.jstree", function(e, data) {
+
+    if (data.selected.length) {
+
+        if(!data.instance.is_parent(data.selected[0])){
+            document.getElementById('method').value = data.instance.get_node(data.selected[0]).text;
+            document.getElementById('className').value = data.instance.get_parent(data.selected[0]);
+        }
+
+    }
+}).jstree({
+    'core': {
+        'data': {
+            "url": "./struct",
+            "dataType": "json"
+        }
+    }
+});
+
+</script>
 </body>
 
 </html>
