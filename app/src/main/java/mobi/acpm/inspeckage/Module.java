@@ -24,6 +24,7 @@ import mobi.acpm.inspeckage.hooks.UIHook;
 import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.util.Config;
+import mobi.acpm.inspeckage.util.DexUtil;
 import mobi.acpm.inspeckage.util.FileType;
 import mobi.acpm.inspeckage.util.FileUtil;
 
@@ -146,6 +147,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_PHOOKS,true)) {
             UserHooks.initAllHooks(loadPackageParam);
         }
+        DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
     }
 
     public static void logError(Error e){
