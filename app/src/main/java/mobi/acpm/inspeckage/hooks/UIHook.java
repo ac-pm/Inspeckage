@@ -47,13 +47,13 @@ public class UIHook extends XC_MethodHook {
             }
         });
 
-        findAndHookMethod(Activity.class, "finish", new XC_MethodHook() {
+        //findAndHookMethod(Activity.class, "finish", new XC_MethodHook() {
 
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            //protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
-                android.os.Process.killProcess(android.os.Process.myPid());
+                //android.os.Process.killProcess(android.os.Process.myPid());
 
-            }
-        });
+            //}
+        //});
     }
 }

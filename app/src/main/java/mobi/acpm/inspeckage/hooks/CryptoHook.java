@@ -54,6 +54,9 @@ public class CryptoHook extends XC_MethodHook {
 
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
+                if (sb == null) {
+                    sb = new StringBuffer();
+                }
                 sb.append(" IV:" + (String) param.getResult());
             }
 
@@ -63,6 +66,9 @@ public class CryptoHook extends XC_MethodHook {
 
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
+                if (sb == null) {
+                    sb = new StringBuffer();
+                }
                 sb.append(" Seed:" + Util.byteArrayToString((byte[]) param.args[0]));
             }
 
