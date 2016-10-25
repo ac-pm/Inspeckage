@@ -113,6 +113,8 @@ And reboot!
 
 <img src="http://i.imgur.com/Lc6lHNB.png" width="900" />
 
+<img src="http://i.imgur.com/EJGPSdq.png" width="900" />
+
 
 License
 -------
