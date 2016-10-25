@@ -183,6 +183,13 @@ public class InspeckageReceiver extends BroadcastReceiver {
                         WebView.setWebContentsDebuggingEnabled(true);
                     }
 
+                } else if (action.equals("clipboard")) {
+                    String value = intent.getExtras().getString("value");
+
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData
+                            .newPlainText("simple text", value);
+                    clipboard.setPrimaryClip(clip);
                 }
             }
         }
