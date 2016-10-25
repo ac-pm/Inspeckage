@@ -87,11 +87,11 @@ public class DexUtil {
         root.setID("p_" + packageName);
         root.setName(packageName);
 
-        int m_id = 0;
+        int c_id = 0;
         for (String classNameComplete : classes.keySet()) {
 
             if (classNameComplete.contains(packageName)) {
-                m_id++;
+                c_id++;
                 String pack_name = classNameComplete.substring(0, classNameComplete.lastIndexOf("."));
                 String class_name = classNameComplete.substring(classNameComplete.lastIndexOf(".") + 1);
 
@@ -111,9 +111,11 @@ public class DexUtil {
 
                 //adiciona metodos nas folhas(ultimas classes)
                 ArrayList<String> methods = classes.get(classNameComplete);
+                int m_id = 0;
                 for (String method : methods) {
+                    m_id++;
                     ClassMethod m = new ClassMethod();
-                    m.setID("m_" + m_id);
+                    m.setID("m_" + c_id+"_"+m_id);
                     m.setName(method);
                     m.setIcon("jstree-file");
                     if (!class_leaf.contains(m)) {
