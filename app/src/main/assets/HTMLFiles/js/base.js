@@ -97,6 +97,14 @@ function setARP() {
         }
 }
 
+function clipboard(value) {
+
+            $.get("/", {
+                type: "clipboard",
+                value: value
+            });
+}
+
 function proxyTest() {
     $('#proxyTest').load('?type=proxytest');
 }
