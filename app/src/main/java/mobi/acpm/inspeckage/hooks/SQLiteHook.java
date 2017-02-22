@@ -229,7 +229,12 @@ public class SQLiteHook extends XC_MethodHook {
                                     int x = cursor.getColumnCount();
                                     StringBuffer sb = new StringBuffer();
                                     for (int i = 0; i < x; i++) {
-                                        sb.append(cursor.getColumnName(i) + "=" + cursor.getString(i) + ",");
+                                        if(cursor.getType(i) == Cursor.FIELD_TYPE_BLOB){
+                                            String blob = Base64.encodeToString(cursor.getBlob(i), Base64.NO_WRAP);
+                                            sb.append(cursor.getColumnName(i) + "=" + blob + ",");
+                                        }else {
+                                            sb.append(cursor.getColumnName(i) + "=" + cursor.getString(i) + ",");
+                                        }
                                     }
                                     result.append(sb.toString().substring(0, sb.length() - 1) + "\n");
 
