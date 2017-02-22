@@ -1,6 +1,7 @@
 package mobi.acpm.inspeckage.hooks;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
@@ -17,7 +18,10 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.util.Config;
+import mobi.acpm.inspeckage.util.Replacement;
+import mobi.acpm.inspeckage.util.Util;
 
+import static de.robv.android.xposed.XposedBridge.log;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 
 /**
@@ -26,8 +30,9 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 public class UserHooks extends XC_MethodHook {
 
     public static final String TAG = "Inspeckage_UserHooks:";
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder().disableHtmlEscaping().create();//new Gson();
     private static XSharedPreferences sPrefs;
+    private static XC_LoadPackage.LoadPackageParam lpp;
 
     public static void loadPrefs() {
         sPrefs = new XSharedPreferences(Module.class.getPackage().getName(), Module.PREFS);
@@ -36,14 +41,16 @@ public class UserHooks extends XC_MethodHook {
 
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
         loadPrefs();
-
+        lpp = loadPackageParam;
         String json = "{\"hookJson\": " + sPrefs.getString(Config.SP_USER_HOOKS, "") + "}";
         try {
 
             if(!json.trim().equals("{\"hookJson\":}")) {
                 HookList hookList = gson.fromJson(json, HookList.class);
                 for (HookItem hookItem : hookList.hookJson) {
-                    hook(hookItem, loadPackageParam.classLoader);
+                    if(hookItem.state) {
+                        hook(hookItem, loadPackageParam.classLoader);
+                    }
                 }
             }
         } catch (JsonSyntaxException ex) { }
@@ -76,7 +83,7 @@ public class UserHooks extends XC_MethodHook {
                 }
 
             } else {
-                XposedBridge.log(TAG + "class not found.");
+                log(TAG + "class not found.");
             }
         } catch (Error e) {
             Module.logError(e);
@@ -84,8 +91,15 @@ public class UserHooks extends XC_MethodHook {
     }
 
     static XC_MethodHook methodHook = new XC_MethodHook() {
+
+        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            loadPrefs();
+            Replacement.parameterReplace(param, sPrefs);
+        }
+
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
             loadPrefs();
+            Replacement.resultReplace(param, sPrefs);
             parseParam(param);
         }
     };
@@ -104,17 +118,29 @@ public class UserHooks extends XC_MethodHook {
                 for (Object object : (Object[]) param.args) {
 
                     if (object != null) {
-                        args.put(gson.toJson(object));
+                        if(object.getClass().equals(byte[].class)){
+                            String result = Util.byteArrayToString((byte[])object);
+                            args.put(gson.toJson(result));
+                        }else{
+                            args.put(gson.toJson(object));
+                        }
                     }
                 }
                 hookData.put("args", args);
             }
 
             if(param.getResult()!=null){
-                hookData.put("result", gson.toJson(param.getResult()));
+                String result = "";
+                if(param.getResult().getClass().equals(byte[].class)){
+                    result = Util.byteArrayToString((byte[])param.getResult());
+                    hookData.put("result", gson.toJson(result));
+                }else{
+                    hookData.put("result", gson.toJson(param.getResult()));
+                }
+
             }
 
-            XposedBridge.log(TAG + hookData.toString());
+            log(TAG + hookData.toString());
 
         } catch (Exception e) {
             e.getMessage();
@@ -127,7 +153,9 @@ class HookList {
 }
 
 class HookItem {
+    protected int id;
     protected String className;
     protected String method;
     protected boolean constructor;
+    protected boolean state;
 }
