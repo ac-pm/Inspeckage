@@ -40,15 +40,21 @@ public class InspeckageWebReceiver extends BroadcastReceiver {
             String tree = script+"<ul class=\"collapsibleList\">"+sub1+"</ul>";
             edit.putString(Config.SP_DATA_DIR_TREE, tree);
             edit.apply();
-        }
-
-        if(action.equals("checkApp")){
+        }else if(action.equals("checkApp")){
 
             boolean isRunning = intent.getExtras().getBoolean("isRunning");
             int pid = intent.getExtras().getInt("PID");
             edit.putBoolean(Config.SP_APP_IS_RUNNING, isRunning);
             edit.putInt(Config.SP_APP_PID, pid);
             edit.apply();
+        }else if(action.equals("clipboard")){
+
+            String value = intent.getExtras().getString("value");
+
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                    .newPlainText("simple text", value);
+            clipboard.setPrimaryClip(clip);
         }
     }
 }
