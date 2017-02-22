@@ -3,6 +3,7 @@ package mobi.acpm.inspeckage.hooks;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -60,6 +61,17 @@ public class CryptoHook extends XC_MethodHook {
                 sb.append(" IV:" + (String) param.getResult());
             }
 
+        });
+
+        findAndHookConstructor(IvParameterSpec.class, byte[].class, new XC_MethodHook() {
+
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
+                if (sb == null) {
+                    sb = new StringBuffer();
+                }
+                sb.append(" IV: " + Util.byteArrayToString((byte[]) param.args[0]));
+            }
         });
 
         findAndHookMethod(SecureRandom.class, "setSeed", byte[].class, new XC_MethodHook() {
