@@ -23,6 +23,7 @@ public class Config {
     public static final String P_HTTP = "/http";
     public static final String P_USERHOOKS = "/user_hooks";
     public static final String P_APP_STRUCT = "/struct";
+    public static final String P_REPLACEMENT = "/replacement";
     public static final String PREFS_BKP = "/prefs_bkp/";
 
     //Shared Preferences
@@ -80,6 +81,8 @@ public class Config {
     public static final String SP_HAS_W_PERMISSION = "write_permission";
 
     public static final String SP_USER_HOOKS = "user_hooks";
+    public static final String SP_USER_REPLACES = "user_param_replaces";
+    public static final String SP_USER_RETURN_REPLACES = "user_return_replaces";
 
     public static final String SP_TAB_ENABLE_SHAREDP = "enable_sharedp";
     public static final String SP_TAB_ENABLE_SERIALIZATION = "enable_serialization";

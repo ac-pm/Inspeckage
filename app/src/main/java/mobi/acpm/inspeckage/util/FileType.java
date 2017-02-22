@@ -19,5 +19,6 @@ public enum FileType {
     SERIALIZATION,
     HTTP,
     USERHOOKS,
-    APP_STRUCT
+    APP_STRUCT,
+    REPLACEMENT
 }

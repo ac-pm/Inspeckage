@@ -108,6 +108,9 @@ public class FileUtil {
                         absolutePath += Config.P_APP_STRUCT;
                         append = false;
                         break;
+                    case REPLACEMENT:
+                        absolutePath += Config.P_REPLACEMENT;
+                        break;
                     default:
                 }
 
@@ -350,6 +353,10 @@ public class FileUtil {
         }
 
         fileOrDirectory.delete();
+    }
+
+    public static void deleteFile(File file) {
+        file.delete();
     }
 
     public static void writeJsonFile(SharedPreferences prefs, String data, String name) {
