@@ -122,11 +122,11 @@ var shown = true;
           var generalInfoIcon = $('#general-info-icon');
           if(shown) {
             general.fadeOut();
-            generalInfoIcon.attr("class", "glyphicon glyphicon-chevron-down");
+            generalInfoIcon.attr("class", "fa fa-chevron-circle-down");
             shown = false;
           } else {
             general.fadeIn();
-            generalInfoIcon.attr("class", "glyphicon glyphicon-chevron-up");
+            generalInfoIcon.attr("class", "fa fa-chevron-circle-up");
             shown = true;
           }
         }
