@@ -54,26 +54,28 @@ public class SerializationHook extends XC_MethodHook {
                 if (paramObject != null) {
 
                     String name = paramObject.getClass().getCanonicalName();
-                    if (name.length() > 5 && name.substring(0, 5).contains("java.") || name.substring(0, 5).contains("byte")) {
-                        //do nothing
-                    } else {
+                    if(name != null) {
+                        if (name.length() > 5 && name.substring(0, 5).contains("java.") || name.substring(0, 5).contains("byte")) {
+                            //do nothing
+                        } else {
 
-                        sb.append("Read Object[" + name + "] HEX = ");
+                            sb.append("Read Object[" + name + "] HEX = ");
 
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-                        try {
-                            ObjectOutput out = new ObjectOutputStream(bos);
-                            out.writeObject(paramObject);
-                            byte[] yourBytes = bos.toByteArray();
-                            String hex = Util.toHexString(yourBytes);
+                            try {
+                                ObjectOutput out = new ObjectOutputStream(bos);
+                                out.writeObject(paramObject);
+                                byte[] yourBytes = bos.toByteArray();
+                                String hex = Util.toHexString(yourBytes);
 
-                            sb.append(hex);
-                            XposedBridge.log(TAG + "Possible Path [" + f + "] " + sb.toString());
-                        } catch (NullPointerException e) {
-                            //
-                        } catch (IOException i) {
-                            i.printStackTrace();
+                                sb.append(hex);
+                                XposedBridge.log(TAG + "Possible Path [" + f + "] " + sb.toString());
+                            } catch (NullPointerException e) {
+                                //
+                            } catch (IOException i) {
+                                i.printStackTrace();
+                            }
                         }
                     }
                 }
