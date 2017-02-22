@@ -109,11 +109,7 @@ public class LogService extends Service {
                         while (isStarted && (line = bufferedReader.readLine()) != null) {
 
                             if (pid.trim().length() > 2 && line.contains(pid.trim())) {
-
-                                String filterType = line.substring(0, 1);
-                                if (filter.contains(filterType)) {
-                                    wss.sendToClient(line);
-                                }
+                                wss.sendToClient(line);
                             }
                         }
                         logProcess.destroy();
