@@ -1,5 +1,4 @@
 @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css";
-@import "https://daneden.github.io/animate.css/animate.min.css";
 
 .badge-success {
   background-color: #468847;
@@ -195,14 +194,11 @@ html {
 .sidebar-nav li:nth-child(5):before {
   background-color: #583e7e;
 }
-.sidebar-nav li:nth-child(6):before {
-  background-color: #583e7e;
-}
-.sidebar-nav li:nth-child(7){
+.sidebar-nav li:nth-child(6){
   padding-top: 20px;
   background-color: #375a7f;
 }
-.sidebar-nav li:nth-child(8){
+.sidebar-nav li:nth-child(7){
  padding-top: 200px;
  background-color: #375a7f;
 }
