@@ -16,7 +16,7 @@ $(document).ready(function() {
     $('#serialization1').load('?type=file&value=serialization&count=-1');
     $('#userhooks1').load('?type=file&value=userhooks&count=-1');
 
-    myStartFunction();
+
     $("[name='refresh']").bootstrapSwitch();
     $('input[name="refresh"]').on('switchChange.bootstrapSwitch', function(event, state) {
         console.log(state);
