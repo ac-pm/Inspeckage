@@ -1,0 +1,183 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- Form Name -->
+
+        <div class="col-md-6">
+            <legend>Replace Parameters</legend>
+            <div class="alert alert-warning fade in" style="display:none;" id="alertParam">
+                <button type="button" class="close">&times;</button>
+                <div id="alertParamText"></div>
+            </div>
+            <form class="form-horizontal">
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="returnType">Class.Method</label>
+                    <div class="col-md-9">
+                        <select id="classMethod" name="classMethod" class="form-control">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Index</label>
+                    <div class="col-md-2">
+                        <select id="position" name="position" class="form-control">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+                    <label class="col-md-2 control-label" for="paramType">Type</label>
+                    <div class="col-md-5">
+                        <select id="paramType" name="paramType" class="form-control">
+                            <option value="String">String</option>
+                            <option value="boolean">boolean</option>
+                            <option value="int">int</option>
+                            <option value="double">double</option>
+                            <option value="float">float</option>
+                            <option value="short">short</option>
+                            <option value="long">long</option>
+                            <option value="charArray">char[]</option>
+                            <option value="ByteArray">Byte[]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="paramMatch">Match</label>
+                    <div class="col-md-6">
+                        <input id="paramMatch" name="paramMatch" type="text" placeholder="eg: x" class="form-control input-md">
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="paramNewValue">New Value</label>
+                    <div class="col-md-6">
+                        <input id="paramNewValue" name="paramNewValue" type="text" placeholder="eg: y" class="form-control input-md" required="true">
+
+                    </div>
+                </div>
+            </form>
+            <!-- Button -->
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button id="buttonInsert" name="singlebutton" class="btn btn-primary pull-right">Add</button>
+                </div>
+            </div>
+            <table id="table" data-toggle="table" data-toolbar="#toolbar" data-height="260"
+                   class="table" data-unique-id="id" data-side-pagination="client"
+                   data-pagination="true" data-url="/?type=getparamreplaces">
+                <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="classMethod" data-sortable="true">Class.Method</th>
+                    <th data-field="position" data-sortable="true">Index</th>
+                    <th data-field="paramType" data-sortable="true">Type</th>
+                    <th data-field="paramMatch" data-editable="true">Match</th>
+                    <th data-field="paramNewValue" data-editable="true">New Value</th>
+                    <th data-field="action" data-formatter="actionFormatterReplace" data-events="actionEventsReplace">Del</th>
+                </tr>
+                </thead>
+            </table>
+
+        </div>
+
+
+
+
+        <div class="col-md-6">
+            <legend>Replace Return</legend>
+            <div class="alert alert-warning fade in" style="display:none;" id="alertReturn">
+                <button type="button" class="close">&times;</button>
+                <div id="alertReturnText"></div>
+            </div>
+            <form class="form-horizontal">
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="returnType">Class.Method</label>
+                    <div class="col-md-9">
+                        <select id="classMethodReturn" name="classMethod" class="form-control">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="returnType">Return Type</label>
+                    <div class="col-md-4">
+                        <select id="returnType" name="returnType" class="form-control" data-resizable="true" onchange="changeReturnType(this)">
+                            <option value="void">void</option>
+                            <option value="String">String</option>
+                            <option value="boolean">boolean</option>
+                            <option value="int">int</option>
+                            <option value="double">double</option>
+                            <option value="float">float</option>
+                            <option value="short">short</option>
+                            <option value="long">long</option>
+                            <option value="charArray">char[]</option>
+                            <option value="ByteArray">Byte[]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="returnMatch">Return Match</label>
+                    <div class="col-md-6">
+                        <input id="returnMatch" name="returnMatch" type="text" placeholder="eg: x" class="form-control input-md" disabled>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="returnNewValue">New Value</label>
+                    <div class="col-md-6">
+                        <input id="returnNewValue" name="returnNewValue" type="text" placeholder="eg: y" class="form-control input-md" disabled>
+                    </div>
+                </div>
+
+            </form>
+            <!-- Button -->
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button id="buttonInsertReturn" name="singlebutton" class="btn btn-primary pull-right">Add</button>
+                </div>
+            </div>
+            <table id="tableReturn" data-toggle="table" data-toolbar="#toolbar" data-height="260"
+                   class="table" data-unique-id="id" data-side-pagination="client"
+                   data-pagination="true" data-url="/?type=getreturnreplaces" data-page-size="10">
+                <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="classMethod" data-sortable="true">Class.Method</th>
+                    <th data-field="returnType" data-sortable="true">Return</th>
+                    <th data-field="returnMatch">Match</th>
+                    <th data-field="returnNewValue">New Value</th>
+                    <th data-field="action" data-formatter="actionFormatterReturn" data-events="actionEventsReturn">Del</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/plushooks.js"></script>

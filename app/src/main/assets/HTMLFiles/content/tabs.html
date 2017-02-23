@@ -1,0 +1,420 @@
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Package Information</a>
+    </li>
+    <li role="presentation"><a href="#sharedPreferences" aria-controls="sharedPreferences" role="tab" data-toggle="tab">Shared Preferences <span class="badge badge-success" id="badge_sharedPreferences"></span></a>
+    </li>
+    <li role="presentation"><a href="#serialization" aria-controls="serialization" role="tab" data-toggle="tab">Serialization <span class="badge badge-success" id="badgeSerialization"></span></a>
+    </li>
+    <li role="presentation"><a href="#Crypto" aria-controls="Crypto" role="tab" data-toggle="tab">Crypto <span class="badge badge-success" id="badgeCrypto"></span></a>
+    </li>
+    <li role="presentation"><a href="#Hash" aria-controls="Hash" role="tab" data-toggle="tab">Hash <span class="badge badge-success" id="badgeHash"></span></a>
+    </li>
+    <li role="presentation"><a href="#SQLite" action="javascript:alert(2);" aria-controls="SQLite" role="tab" data-toggle="tab">SQLite <span class="badge badge-success" id="badgeSqlite"></span></a>
+    </li>
+    <li role="presentation"><a href="#http" aria-controls="http" role="tab" data-toggle="tab">HTTP <span class="badge badge-success" id="badgeHttp"></span></a>
+    </li>
+    <li role="presentation"><a href="#fileSystem" aria-controls="fileSystem" role="tab" data-toggle="tab">File System <span class="badge badge-success" id="badgeFs"></span></a>
+    </li>
+    <li role="presentation"><a href="#misc" aria-controls="misc" role="tab" data-toggle="tab">Misc. <span class="badge badge-success" id="badgeMisc"></span></a>
+    </li>
+    <li role="presentation"><a href="#webView" aria-controls="webView" role="tab" data-toggle="tab">WebView <span class="badge badge-success" id="badgeWeb"></span></a>
+    </li>
+    <li role="presentation"><a href="#ipc" aria-controls="ipc" role="tab" data-toggle="tab">IPC <span class="badge badge-success" id="badgeIpc"></span></a>
+    </li>
+    <li role="presentation"><a href="#userHooks" aria-controls="userHooks" role="tab" data-toggle="tab">+ Hooks <span class="badge badge-success" id="badgeHooks"></span></a>
+    </li>
+
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+
+    <!--home-->
+    <div role="tabpanel" class="tab-pane fade in active" id="home">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap2" aria-expanded="true" aria-controls="collap2">
+                                Exported Activities
+                            </a>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>
+                                    <button type="button" class="btn .btn-default btn-xs" data-toggle="modal" data-target="#myModal1">
+                                        <i class="fa fa-play" aria-hidden="true"></i> Start Activity
+                                    </button>
+                                </li>
+                            </ul>
+                        </h4>
+                    </div>
+                    <div id="collap2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head2">
+                        <div class="panel-body">
+                            #exported_act#
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap3" aria-expanded="true" aria-controls="collap3">
+                                        Non Exported Activities
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap3" class="panel-collapse collapse in" aria-expanded="true" role="tabpanel" aria-labelledby="head3">
+                                <div class="panel-body">
+                                    #non_exported_act#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" aria-expanded="true" role="button" data-toggle="collapse" data-parent="#accordion" href="#collap6" aria-controls="collap6">
+                                        Exported Content Provider
+                                    </a>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li>
+                                            <button type="button" class="btn .btn-default btn-xs" data-toggle="modal" data-target="#myModal2">
+                                                <i class="fa fa-database" aria-hidden="true"></i> Query Provider
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </h4>
+                            </div>
+                            <div id="collap6" class="panel-collapse collapse in" aria-expanded="true" role="tabpanel" aria-labelledby="head6">
+                                <div class="panel-body">
+                                    #exported_provider#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap10" aria-expanded="true" aria-controls="collap10">
+                                        Non Exported Content Provider
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap10" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head10">
+                                <div class="panel-body">
+                                    #non_exported_provider#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap4" aria-expanded="true" aria-controls="collap4">
+                                        Exported Services
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap4" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head4">
+                                <div class="panel-body">
+                                    #exported_services#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap5" aria-expanded="true" aria-controls="collap5">
+                                        Exported Broadcast Receiver
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap5" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head5">
+                                <div class="panel-body">
+                                    #exported_broadcast#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap7" aria-expanded="true" aria-controls="collap7">
+                                Requested Permissions
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collap7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head7">
+                        <div class="panel-body">
+                            #req_permissions#
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap8" aria-expanded="true" aria-controls="collap8">
+                                        App Permissions
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap8" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head8">
+                                <div class="panel-body">
+                                    #app_permissions#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap9" aria-expanded="true" aria-controls="collap9">
+                                        Shared Libraries
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap9" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head9">
+                                <div class="panel-body">
+
+                                    #shared_libraries#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap11" aria-expanded="true" aria-controls="collap11">
+                                        Non Exported Services
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap11" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head11">
+                                <div class="panel-body">
+                                    #non_exported_services#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collap12" aria-expanded="true" aria-controls="collap12">
+                                        Non Exported Broadcast Receiver
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collap12" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="head12">
+                                <div class="panel-body">
+                                    #non_exported_broadcast#
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end home-->
+
+    <div role="tabpanel" class="tab-pane fade" id="sharedPreferences">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('prefs');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="bs-docs-example">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#Plog" data-toggle="tab">Log</a></li>
+                        <li><a href="#pFile" data-toggle="tab">Files</a></li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="Plog">
+                            <div id="prefs1"></div>
+                        </div>
+                        <div class="tab-pane fade" id="pFile">
+                            <div id="accordion1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="serialization">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" onclick="clearLog('serialization');" class="btn btn-default btn-xs">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <div id="serialization1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="Crypto">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('crypto');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="crypto1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="Hash">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('hash');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="hash1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="SQLite">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal2">
+                    <i class="fa fa-database" aria-hidden="true"></i> Query Provider
+                </button>
+                <button type="button" onclick="clearLog('sqlite');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="sqlite1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="ipc">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('ipc');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="ipc1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="fileSystem">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('fs');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="fs1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="http">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('http');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="http1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="webView">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('webview');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="webview1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="misc">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" onclick="clearLog('misc');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="misc1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="userHooks">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal4">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> New hooks
+                </button>
+                <button type="button" onclick="loadReplaces();" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal5">
+                    <i class="fa fa-cog" aria-hidden="true"></i> Replaces
+                </button>
+                <button type="button" onclick="clearLog('userhooks');" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
+                </button>
+            </div>
+            <div class="panel-body">
+                <div id="userhooks1"></div>
+            </div>
+        </div>
+    </div>
+</div>
