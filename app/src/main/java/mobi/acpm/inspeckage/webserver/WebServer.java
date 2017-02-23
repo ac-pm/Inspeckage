@@ -290,8 +290,18 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         break;
                     case "adduserhooks":
                         return addUserHooks(parms);
+                    case "addparamreplaces":
+                        return addUserReplaces(parms);
+                    case "addreturnreplaces":
+                        return addUserReturnReplaces(parms);
                     case "getuserhooks":
                         return getUserHooks();
+                    case "getparamreplaces":
+                        return getUserReplaces();
+                    case "getreturnreplaces":
+                        return getUserReturnReplaces();
+                    case "deleteLogs":
+                        return clearHooksLog(parms);
                     case "enableTab":
                         html = tabsCheckbox(parms);
                         break;
@@ -313,6 +323,10 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
             html = html.replace("#ip_ws#", mPrefs.getString(Config.SP_SERVER_IP, "127.0.0.1"));
             html = html.replace("#port_ws#", String.valueOf(mPrefs.getInt(Config.SP_WSOCKET_PORT, 8887)));
             return ok(html);
+        } else if (uri.contains("/content/")) {
+
+            html = FileUtil.readHtmlFile(mContext, uri);
+
         } else if (uri.equals("/struct")) {
 
             String json = FileUtil.readFromFile(mPrefs, APP_STRUCT);//readHtmlFile(mContext, uri);
@@ -351,7 +365,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                 return ok("application/x-font-ttf", fname);
             }
             if (uri.contains(".woff")) {
-                return ok("font/x-woff", fname);
+                return ok("application/font-woff", fname);
             }
             if (uri.contains(".woff2")) {
                 return ok("font/woff2", fname);
@@ -580,7 +594,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
     private Response addToClipboard(Map<String, String> parms) {
         String value = parms.get("value");
 
-        Intent intent = new Intent("mobi.acpm.inspeckage.INSPECKAGE_FILTER");
+        Intent intent = new Intent("mobi.acpm.inspeckage.INSPECKAGE_WEB");
         intent.putExtra("package", mPrefs.getString(Config.SP_PACKAGE, ""));
         intent.putExtra("value", value);
         intent.putExtra("action", "clipboard");
@@ -636,10 +650,93 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
         return ok("OK");
     }
 
+    private Response addUserReplaces(Map<String, String> parms) {
+
+        String json = parms.get("data");
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_USER_REPLACES, json);
+        edit.apply();
+
+        return ok("OK");
+    }
+
+    private Response addUserReturnReplaces(Map<String, String> parms) {
+
+        String json = parms.get("data");
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_USER_RETURN_REPLACES, json);
+        edit.apply();
+
+        return ok("OK");
+    }
+
     private Response getUserHooks() {
 
         String json = mPrefs.getString(Config.SP_USER_HOOKS,"");
         return ok("text/json", json);
+    }
+
+    private Response getUserReplaces() {
+
+        String json = mPrefs.getString(Config.SP_USER_REPLACES,"");
+        return ok("text/json", json);
+    }
+
+    private Response getUserReturnReplaces() {
+
+        String json = mPrefs.getString(Config.SP_USER_RETURN_REPLACES,"");
+        return ok("text/json", json);
+    }
+
+    private Response clearHooksLog(Map<String, String> parms) {
+
+        String hook = parms.get("value");
+
+        String appPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (!mPrefs.getBoolean(Config.SP_HAS_W_PERMISSION, false)) {
+            appPath = mPrefs.getString(Config.SP_DATA_DIR, "");
+        }
+
+        String path = "";
+        switch (hook) {
+            case "userhooks":
+                path = Config.P_USERHOOKS;
+                break;
+            case "misc":
+                path = Config.P_MISC;
+                break;
+            case "webview":
+                path = Config.P_WEBVIEW;
+                break;
+            case "http":
+                path = Config.P_HTTP;
+                break;
+            case "fs":
+                path = Config.P_FILESYSTEM;
+                break;
+            case "ipc":
+                path = Config.P_IPC;
+                break;
+            case "sqlite":
+                path = Config.P_SQLITE;
+                break;
+            case "hash":
+                path = Config.P_HASH;
+                break;
+            case "crypto":
+                path = Config.P_CRYPTO;
+                break;
+            case "serialization":
+                path = Config.P_SERIALIZATION;
+                break;
+            case "prefs":
+                path = Config.P_PREFS;
+                break;
+        }
+
+        File root = new File(appPath + Config.P_ROOT + path);
+        FileUtil.deleteFile(root);
+        return ok("ok");
     }
 
     private String replaceHtmlVariables(String html) {
@@ -1287,7 +1384,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         if (x[i].length() > 170) {
                             x[i] = "<div class=\"breakWord\"><span class=\"label label-info\"> " + (i + 1) + "</span>  " + x[i] + "</div>";
                         } else {
-                            x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+                            x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
                         }
 
                         if ((i + 1) > count) {
@@ -1332,7 +1429,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                                 color = "label-danger";
                             }
 
-                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span> " + x[i] + "</br>";
+                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span> " + Html.escapeHtml(x[i]) + "</br>";
                         }
                         if ((i + 1) > count) {
                             countTmp = (i + 1);
@@ -1460,7 +1557,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                                     "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
                             continue;
                         }
-                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
 
 
                     }
@@ -1563,7 +1660,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                                     "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
                             continue;
                         }
-                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + x[i] + "</br>";
+                        x[i] = "<span class=\"label label-info\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
 
 
                     }
@@ -1658,7 +1755,17 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                 if(!html.equals("")) {
                     String[] x = html.split("</br>");
                     for (int i = 0; i < x.length; i++) {
-                        x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+
+                        if (x[i].length() > 470) {
+                            String len300 = x[i].substring(0, 400);
+                            String rest = x[i].substring(400);
+
+                            x[i] = "<div class=\"collapse-group\"> <div class=\"breakWord\"><span class=\"label label-default\">" + (i + 1) + "</span>   " + len300 + "</div>" +
+                                    "<div class=\"collapse\"><p class=\"breakWord\">" + rest + "</p></div><a class=\"a\" href=\"#\"> &raquo;</a></div>";
+
+                        } else {
+                            x[i] = "<span class=\"label label-default\">" + (i + 1) + "</span>   " + x[i];
+                        }
 
                         if ((i + 1) > count) {
                             countTmp = (i + 1);
@@ -1677,7 +1784,16 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         if (i < 1000)
                             sb.append(x[i] + "</br>");
                     }
-
+                    //need load from here for callapse work correctaly
+                    String script = "<script>$(document).ready(function() {" +
+                            "$('a').on('click', function(e) {" +
+                            "                    e.preventDefault();" +
+                            "                    var $this = $(this);" +
+                            "                    var $collapse = $this.closest('.collapse-group').find('.collapse');" +
+                            "                    $collapse.collapse('toggle');" +
+                            "                });" +
+                            "});</script>";
+                    sb.append(script);
                     if (count == -1) {
                         html = sb.toString();
                     } else {
