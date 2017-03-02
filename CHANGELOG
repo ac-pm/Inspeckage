@@ -1,5 +1,17 @@
 # Inspeckage - CHANGELOG
 
+2.2
+---------------
+- Replaces - now you can replace parameters/return value of hooked methods (+Hooks)
+- Sidebar menu (so far)
+ * Tabs - hooks
+ * Replaces - shortcut to the Replaces feature
+ * Tips - some tips about monkeyrunner, decompile, proxy, etc.
+ * clipboard input
+ * share options
+- "clear log" option in all tabs
+- bug fix
+
 2.1
 ---------------
 - Classes and Methods tree in +Hooks modal - now you can see all classes and methods of your target, select any method and add with new Hook!
