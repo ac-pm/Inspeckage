@@ -98,4 +98,6 @@ public class Config {
 
     public static final String SP_USER_PASS = "login_pass";
     public static final String SP_SWITCH_AUTH = "switch_auth";
+
+    public static final String KEYPAIR_ALIAS = "alias";
 }

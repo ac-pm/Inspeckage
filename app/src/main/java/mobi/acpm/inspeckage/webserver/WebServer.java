@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.util.Log;
 
@@ -38,6 +37,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.security.auth.x500.X500Principal;
@@ -100,9 +100,14 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                 keyAliases.add(aliases.nextElement());
             }
 
-            //use device id as an alias, that way each installation has your own alias
-            TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-            String alias = telephonyManager.getDeviceId() + "";
+            //use uuid as an alias, that way each installation has your own alias
+            if(mPrefs.getString(Config.KEYPAIR_ALIAS,"").equals("")) {
+                SharedPreferences.Editor edit = mPrefs.edit();
+                edit.putString(Config.KEYPAIR_ALIAS, UUID.randomUUID().toString());
+                edit.apply();
+            }
+
+            String alias = mPrefs.getString(Config.KEYPAIR_ALIAS,"");
 
             boolean genNewKey = true;
             for (String key : keyAliases) {
@@ -1816,5 +1821,4 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
     public static boolean isModuleEnabled() {
         return false;
     }
-
 }
