@@ -25,10 +25,12 @@
       </div>
       
       <style>
-div.paypal {
-   
-    width: 40%;
-    
+footer {
+    padding: 1em;
+    color: white;
+    background-color: #375a7f;
+    clear: left;
+    text-align: center;
 }
 </style>
     </header>
@@ -46,51 +48,9 @@ div.paypal {
 <li><a href="https://play.google.com/store/apps/details?id=mobi.acpm.inspeckage">https://play.google.com/store/apps/details?id=mobi.acpm.inspeckage</a></li>
 </ul>
 
-<h3>
-<a id="donate" class="anchor" href="#donate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Donate</h3>
-
-<p>If you've found Inspeckage useful, it'd be great if you could send us a little gift. </p>
-
-<h4>
-<a id="bitcoin-or-paypal" class="anchor" href="#bitcoin-or-paypal" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bitcoin or Paypal.</h4>
-
-
-<script src="//blockr.io/js_external/coinwidget/coin.js"></script>
-		<script>
-			CoinWidgetCom.go({
-				wallet_address: '1Ku2iLHX1Xn67t4JfdnvbWK9dAnZ8RCghc',
-				currency: 'bitcoin',
-				counter: 'hide',
-				lbl_button: 'Donate',
-				lbl_count: 'donations',
-				lbl_amount: 'BTC',
-				lbl_address: 'Use address below to donate. Thanks!',
-				qrcode: true,
-				alignment: 'bl',
-				decimals: 8,
-				size: "big",
-				color: "dark",
-				countdownFrom: "0",
-				element: "#coinwidget-bitcoin-1Ku2iLHX1Xn67t4JfdnvbWK9dAnZ8RCghc",
-				onShow: function(){},
-				onHide: function(){}
-			});
-		</script>
-		<div id="coinwidget-bitcoin-1Ku2iLHX1Xn67t4JfdnvbWK9dAnZ8RCghc"></div>
-		</br>
-		<div class="paypal">
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif" width="1" height="1">
-</form>
-</div>
-
-<h4>Other Ways to Contribute</h4>
+<h4>Ways to Contribute</h4>
 <p>
-Besides donating money, you can contribute your time by helping us with programming, testing, documentation, translations or by answering questions on the Inspeckage Issues. We have always welcomed users whose only contribution is simply using Inspeckage, giving us feedback on how to improve it and telling others about it. Thank you for supporting Inspeckage.
+You can contribute with your time by helping us with programming, testing, documentation, translations or by answering questions on the Inspeckage Issues. We have always welcomed users whose only contribution is simply using Inspeckage, giving us feedback on how to improve it and telling others about it. Thank you for supporting Inspeckage.
 </p>
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
@@ -140,6 +100,7 @@ Besides donating money, you can contribute your time by helping us with programm
 <li>Disable FLAG_SECURE;</li>
 <li>SSL uncheck (bypass certificate pinning - JSSE, Apache and okhttp3);</li>
 <li>Start, stop and restart the application.</li>
+<li>Replace params and return (+Hooks tab)</li>
 </ul>
 
 <h4>
@@ -151,6 +112,7 @@ Besides donating money, you can contribute your time by helping us with programm
 <li>Download the app's files;</li>
 <li>Download the output generated by hooks in text file format;</li>
 <li>Take a screen capture;</li>
+<li>Send to android clipboard</li>
 </ul>
 
 <h4>
@@ -229,7 +191,13 @@ Xposed Framework</p>
         </aside>
       </div>
     </div>
-
+<footer>
+    <div align="center">
+        <a href="http://www.tempest.com.br/en/">
+          <img src="azul.png" width="300">
+        </a>
+    </div>
+</footer>
   
   </body>
 </html>
