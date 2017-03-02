@@ -8,13 +8,13 @@ android {
         applicationId "mobi.acpm.inspeckage"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 7
-        versionName "2.1"
+        versionCode 8
+        versionName "2.2"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -26,7 +26,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'de.robv.android.xposed:api:5+'
-    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.code.gson:gson:2+'
     compile group: 'org.nanohttpd', name: 'nanohttpd', version: '2.3.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
