@@ -5,6 +5,7 @@ Inspeckage is a tool developed to offer dynamic analysis of Android applications
 * http://ac-pm.github.io/Inspeckage
 * https://twitter.com/inspeckage
 * https://play.google.com/store/apps/details?id=mobi.acpm.inspeckage
+* http://repo.xposed.info/module/mobi.acpm.inspeckage
 
 Features
 ---------------
