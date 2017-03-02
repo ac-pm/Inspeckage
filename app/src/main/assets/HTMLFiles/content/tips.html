@@ -1,0 +1,87 @@
+<div class="container-fluid">
+
+    <h2 id=nav-adb>Backup App Data with ADB</h2>
+    <p><code>android:allowBackup</code> the default value of this attribute is <code>true</code></p>
+
+    <figure class=highlight>
+        <pre><code class=language-html data-lang=html>adb backup -f backup.ab app.package.name</code></pre>
+    </figure>
+
+    <p>Use Android backup extractor (abe) to extract and repack android backups. </p>
+
+    <figure class=highlight>
+        <pre><code class=language-html data-lang=html>abe unpack backup.ab backup.tar</code></pre>
+    </figure>
+
+    <a href="https://developer.android.com/guide/topics/manifest/application-element.html#allowbackup"><i class="fa fa-external-link"></i> https://developer.android.com/guide/topics/manifest/application-element.html#allowbackup</a><br>
+
+    <a href="https://github.com/nelenkov/android-backup-extractor"><i class="fa fa-external-link"></i> https://github.com/nelenkov/android-backup-extractor</a>
+
+    <h2 id=nav-apk>APK Decompile</h2>
+    <p>Download the .apk through the Inspeckage.<code>Download -> APK</code> </p>
+
+    <p>Use Google Enjarify tool for translating Dalvik bytecode to equivalent Java bytecode.
+        <figure class=highlight>
+            <pre><code class=language-html data-lang=html>enjarify yourapp.apk -o yourapp.jar</code></pre>
+        </figure>
+    <p>Use JD-GUI to decompile and analyze Java bytecode.</p>
+
+    <figure class=highlight>
+        <pre><code class=language-html data-lang=html>java -jar jd-gui.jar</code></pre>
+    </figure>
+
+    <a href="https://github.com/google/enjarify"><i class="fa fa-external-link"></i> https://github.com/google/enjarify</a><br>
+    <a href="http://jd.benow.ca/"><i class="fa fa-external-link"></i> http://jd.benow.ca/</a>
+
+    <h2 id=nav-monkeyrunner>monkeyrunner</h2>
+
+    <p>With monkeyrunner, you can write a Python program that run an automated start-to-finish test of an Android application. You provide input values with keystrokes or touch events, and view the results as screenshots.</p>
+
+    <p>Exemplo: Go to <code>android-sdk-path/tools/</code> where the <code>monkeyrunner</code> program there is and save in a file <i>startfox.py</i>:</p>
+    <pre>
+from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice<br>
+import commands<br>
+import sys<br>
+<br>
+# starting script<br>
+print "start"<br>
+<br>
+# connection to the current device<br>
+device = MonkeyRunner.waitForConnection()<br>
+<br>
+print "launching firefox: Package=org.mozilla.firefox and Main Activity=org.mozilla.gecko.BrowserApp"<br>
+device.startActivity(component='org.mozilla.firefox/org.mozilla.gecko.BrowserApp')<br>
+<br>
+#wait<br>
+MonkeyRunner.sleep(3)<br>
+<br>
+print "end of script"
+    </pre>
+
+    <p>Now, run: <code>monkeyrunner startfox.py</code> and the firefox is launched.</p>
+
+    <a href="https://developer.android.com/studio/test/monkeyrunner/index.html"><i class="fa fa-external-link"></i> https://developer.android.com/studio/test/monkeyrunner/index.html</a>
+    <h2 id=nav-proxy>HTTP Proxy</h2>
+
+    <p>1 - Connect both your device and your computer to the same wireless network;</p>
+    <p>2 - Choose your favorite http proxy tool and set up a new proxy listenner -- eg. listener address: 192.168.25.22 (computer ip) and port: 8001 (port number that is not currently in use);</p>
+    <p>3 - Go to Inspeckage (<code>Settings -> Add Proxy</code>) and set up the same address (192.168.25.22) and port (8001) of your proxy tool;</p>
+    <p>4 - Now, open the app (in a feature that makes http request) and the request should be intercepted in your proxy tool. </p>
+
+    <a href="https://github.com/zaproxy/zaproxy"><i class="fa fa-external-link"></i> OWASP ZAP</a><br>
+    <a href="https://portswigger.net/burp/freedownload"><i class="fa fa-external-link"></i> Burp Suite Free Edition</a><br>
+    <a href="http://www.telerik.com/fiddler"><i class="fa fa-external-link"></i> Fiddler</a><br>
+
+    <h2 id=nav-https>HTTPS</h2>
+
+    <p>If the app use HTTPS, you need install the proxy tool certificate in your device.</p>
+
+    <a href="https://developer.android.com/training/articles/security-ssl.html"><i class="fa fa-external-link"></i> https://developer.android.com/training/articles/security-ssl.html</a><br>
+    <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpUiDialogsOptionsDynsslcert"><i class="fa fa-external-link"></i> OWASP ZAP allows you to transparently decrypt SSL connections.</a><br>
+
+    <h2 id=nav-pinning>SSL Pinning</h2>
+
+    <p>If the app use HTTPS and certificate pinning, you need install the proxy tool certificate in your device and bypass the pinning.</p>
+    <p>The Inspeckage can disable pinning for some libraries. <code>Settings->SSL uncheck [ON]</code></p>
+
+</div>
