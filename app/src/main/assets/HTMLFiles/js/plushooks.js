@@ -294,7 +294,7 @@ function loadReplaces() {
 
 function clearLog(h) {
 
-    var value = confirm("OK to confirm.");
+    var value = confirm("Are you sure?");
     if (value) {
         $.get("/", {
             type: "deleteLogs",
