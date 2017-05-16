@@ -7,6 +7,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import mobi.acpm.inspeckage.hooks.BuildHook;
 import mobi.acpm.inspeckage.hooks.ClipboardHook;
 import mobi.acpm.inspeckage.hooks.CryptoHook;
 import mobi.acpm.inspeckage.hooks.FileSystemHook;
@@ -55,16 +56,15 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         //estes hooks tem que ocorrer na inicialização
         //ProcessHook.initAllHooks(loadPackageParam);
 
-
         //check if this module is enable
         if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage")) {
             findAndHookMethod("mobi.acpm.inspeckage.webserver.WebServer", loadPackageParam.classLoader, "isModuleEnabled", XC_MethodReplacement.returnConstant(true));
         }
 
-        if (!loadPackageParam.packageName.equals(sPrefs.getString("package", "")))
+        if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage"))
             return;
 
-        if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage"))
+        if (!loadPackageParam.packageName.equals(sPrefs.getString("package", "")))
             return;
 
         findAndHookMethod("android.util.Log", loadPackageParam.classLoader, "i",
@@ -147,6 +147,9 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_PHOOKS,true)) {
             UserHooks.initAllHooks(loadPackageParam);
         }
+
+        BuildHook.initAllHooks(loadPackageParam);
+
         DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
     }
 

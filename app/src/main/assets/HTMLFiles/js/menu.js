@@ -51,7 +51,7 @@ $("#nav_location").on("click", function() {
 
 $("#nav_config").on("click", function() {
     $("[name='refresh']").bootstrapSwitch('state', false);
-    $("#tbs-content").load("/content/android.html");
+    $("#tbs-content").load("/content/build.html");
     showGeneralInfo(true);
 });
 

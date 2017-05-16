@@ -30,6 +30,7 @@ public class SharedPrefsHook extends XC_MethodHook {
     public static final String TAG = "Inspeckage_Prefs:";
     static StringBuffer sb = null;
     private static XSharedPreferences sPrefs;
+    public static String putFileName = "";
 
     public static void loadPrefs() {
         sPrefs = new XSharedPreferences(Module.class.getPackage().getName(), Module.PREFS);
@@ -54,7 +55,8 @@ public class SharedPrefsHook extends XC_MethodHook {
                             mode = "APPEND or MULTI_PROCESS";
                         }
                         sb = new StringBuffer();
-                        sb.append("PUT[" + (String) param.args[0] + ".xml , "+mode+"]");
+                        //sb.append("PUT[" + (String) param.args[0] + ".xml , "+mode+"]");
+                        putFileName = "PUT[" + (String) param.args[0] + ".xml , "+mode+"]";
                     }
                 });
 
@@ -194,7 +196,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, String.class, new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        sb.append(" String(" + (String) param.args[0] + "," + (String) param.args[1] + "),");
+                        sb.append(putFileName+" String(" + (String) param.args[0] + "," + (String) param.args[1] + "),");
                     }
                 });
 
@@ -202,7 +204,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, "boolean", new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        sb.append(" Boolean(" + (String) param.args[0] + "," + String.valueOf(param.args[1]) + "),");
+                        sb.append(putFileName+" Boolean(" + (String) param.args[0] + "," + String.valueOf(param.args[1]) + "),");
                     }
                 });
 
@@ -210,7 +212,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, "int", new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        sb.append(" Int(" + (String) param.args[0] + "," + Integer.toString((Integer) param.args[1]) + "),");
+                        sb.append(putFileName+" Int(" + (String) param.args[0] + "," + Integer.toString((Integer) param.args[1]) + "),");
                     }
                 });
 
@@ -218,7 +220,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, "long", new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        sb.append(" Long(" + (String) param.args[0] + "," + Long.toString((Long) param.args[1]) + "),");
+                        sb.append(putFileName+" Long(" + (String) param.args[0] + "," + Long.toString((Long) param.args[1]) + "),");
                     }
                 });
 
@@ -226,7 +228,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                 String.class, "float", new XC_MethodHook() {
 
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        sb.append(" Float(" + (String) param.args[0] + "," + Float.toString((Float) param.args[1]) + "),");
+                        sb.append(putFileName+" Float(" + (String) param.args[0] + "," + Float.toString((Float) param.args[1]) + "),");
                     }
                 });
     }

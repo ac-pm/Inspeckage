@@ -19,7 +19,6 @@ $(document).ready(function() {
 
     $("[name='refresh']").bootstrapSwitch();
     $('input[name="refresh"]').on('switchChange.bootstrapSwitch', function(event, state) {
-        console.log(state);
 
         if (state == true) {
             myStartFunction();

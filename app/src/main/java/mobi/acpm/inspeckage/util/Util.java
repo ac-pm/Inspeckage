@@ -121,7 +121,7 @@ public class Util {
 
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
-                        .setSmallIcon(R.drawable.ic_check_box_outline_blank_24dp)
+                        .setSmallIcon(R.drawable.inspectorw)
                         .setContentTitle("Inspeckage")
                         .setContentText(info);
 

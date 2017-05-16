@@ -17,6 +17,7 @@
     <link href="css/normalize.css" rel="stylesheet">
     <link href="css/style.min.css" rel="stylesheet" />
     <link href="css/animate.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-editable.css" rel="stylesheet" />
 
     <style>
         #myModal4 .modal-dialog
@@ -64,7 +65,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
         <ul class="nav sidebar-nav">
             <li class="sidebar-brand">
-                <a href="#">
+                <a href="/">
                     Inspeckage v#inspeckageVersion#
                 </a>
             </li>
@@ -77,11 +78,11 @@
             <!--
                         <li>
                             <a href="#" id="nav_location"><i class="fa fa-fw fa-location-arrow"></i> Location</a>
-                        </li>
+                        </li>-->
                         <li>
-                            <a href="#" id="nav_config"><i class="fa fa-fw fa-cog"></i> Android Configs</a>
+                            <a href="#" id="nav_config"><i class="fa fa-fw fa-cogs"></i> Build</a>
                         </li>
-                        -->
+
             <li>
                 <a href="#" id="nav_howto"><i class="fa fa-fw fa-lightbulb-o"></i> Tips</a>
             </li>
@@ -754,6 +755,8 @@ sudo iptables -t nat -A PREROUTING -p tcp -d TARGET_HOST --dport 443 -j REDIRECT
 <script src="js/menu.js"></script>
 <script src="js/bootstrap-table.min.js"></script>
 <script src="js/plushooks.js"></script>
+<script src="js/bootstrap-editable.min.js"></script>
+<script src="js/bootstrap-table-editable.min.js"></script>
 
 <script>
 

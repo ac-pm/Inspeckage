@@ -90,6 +90,35 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
         mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
 
 
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean("fake_board_key",true);
+        editor.putBoolean("fake_bootloader_key",false);
+        editor.putBoolean("fake_brand_key",false);
+        editor.putBoolean("fake_cpu_abi_key",false);
+        editor.putBoolean("fake_cpu_abi2_key",false);
+        editor.putBoolean("fake_device_key",false);
+        editor.putBoolean("fake_display_key",false);
+        editor.putBoolean("fake_fingerprint_key",false);
+        editor.putBoolean("fake_hardware_key",false);
+        editor.putBoolean("fake_host_key",false);
+        editor.putBoolean("fake_id_key",false);
+        editor.putBoolean("fake_manufacturer_key",false);
+        editor.putBoolean("fake_model_key",false);
+        editor.putBoolean("fake_product_key",false);
+        editor.putBoolean("fake_radio_key",false);
+        editor.putBoolean("fake_tags_key",false);
+        editor.putBoolean("fake_time_key",false);
+        editor.putBoolean("fake_type_key",false);
+        editor.putBoolean("fake_user_key",false);
+        editor.putBoolean("fake_codename_key",false);
+        editor.putBoolean("fake_incremental_key",false);
+        editor.putBoolean("fake_release_key",false);
+        editor.putBoolean("fake_sdk_key",false);
+        editor.putBoolean("fake_sdk_int_key",false);
+        editor.apply();
+
+
+
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
@@ -305,6 +334,10 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         return getUserReplaces();
                     case "getreturnreplaces":
                         return getUserReturnReplaces();
+                    case "getbuild":
+                        return getBuild();
+                    case "addbuild":
+                        return addBuild(parms);
                     case "deleteLogs":
                         return clearHooksLog(parms);
                     case "enableTab":
@@ -693,6 +726,25 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
         return ok("text/json", json);
     }
 
+    private Response getBuild() {
+
+        String json = mPrefs.getString(Config.SP_BUILD_HOOKS,"");
+        json = json.replace("{\"buildItems\":[{","[{");
+        json = json.replace("\"}]}","\"}]");
+        return ok("text/json", json);
+    }
+
+    private Response addBuild(Map<String, String> parms) {
+
+        String json = parms.get("build");
+        json = "{\"buildItems\":"+json+"}";
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_BUILD_HOOKS, json);
+        edit.apply();
+
+        return ok("OK");
+    }
+
     private Response clearHooksLog(Map<String, String> parms) {
 
         String hook = parms.get("value");
@@ -962,10 +1014,14 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     "<h4 class='panel-title'><a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + i + "' " +
                     "aria-expanded='true' aria-controls='collapse" + i + "'> " + k + " </a> </h4> </div> <div id='collapse" + i + "' " +
                     "class='panel-collapse collapse in' role='tabpanel' aria-labelledby='heading" + i + "'> " +
-                    "<div class='panel-body'><xmp>" + v + "</xmp></div> </div> </div>";
+                    "<div class='panel-body'><textarea rows='"+countLines(v)+"' style=\"border:none;width:100%\" readonly>" +v + "</textarea></div> </div> </div>";
         }
 
         return prefs_files;
+    }
+    private static int countLines(String str){
+        String[] lines = str.split("\r\n|\r|\n");
+        return  lines.length+1;
     }
 
     //CONFIG
@@ -1324,7 +1380,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1369,7 +1425,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i] + "</br>");
                     }
 
@@ -1406,7 +1462,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1451,7 +1507,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1530,7 +1586,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i] + "</br>");
                     }
 
@@ -1574,7 +1630,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1603,21 +1659,20 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     String[] x = html.split("</br>");
                     for (int i = 0; i < x.length; i++) {
 
-                        String color = "label-danger";
+                        String color = "danger";
                         if (x[i].contains("GET[")) {
-                            color = "label-info";
+                            color = "info";
                         } else if (x[i].contains("CONTAINS[")) {
-                            color = "label-warning";
+                            color = "warning";
                         } else if (x[i].contains("PUT[")) {
-                            color = "label-danger";
+                            color = "danger";
                         }
 
                         if (x[i].length() > 170) {
-                            x[i] = "<div class=\"breakWord\"><span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</div>";
+                            x[i] = "<tr><td><div class=\"breakWord\"><span class=\"label label-" + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</div></td></tr>";
                         } else {
-                            x[i] = "<span class=\"label " + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br>";
+                            x[i] = "<tr><td><span class=\"label label-" + color + "\">" + (i + 1) + "</span>   " + Html.escapeHtml(x[i]) + "</br></td></tr>";
                         }
-
                         if ((i + 1) > count) {
                             countTmp = (i + 1);
                         } else {
@@ -1630,12 +1685,14 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     Collections.reverse(ls);
                     x = (String[]) ls.toArray();
                     StringBuilder sb = new StringBuilder();
-
+                    String tableBefore = "<table class=\"table\"><tbody>";
+                    String tableAfter = "</tbody></table>";
+                    //sb.append(tableBefore);
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 2000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
-
+                    //sb.append(tableAfter);
                     if (count == -1) {
                         html = sb.toString();
                     } else {
@@ -1677,7 +1734,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1741,7 +1798,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i]);
                     }
 
@@ -1786,7 +1843,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                     StringBuilder sb = new StringBuilder();
 
                     for (int i = 0; i < x.length; i++) {
-                        if (i < 1000)
+                        if (i < 500)
                             sb.append(x[i] + "</br>");
                     }
                     //need load from here for callapse work correctaly

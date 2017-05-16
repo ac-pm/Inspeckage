@@ -100,4 +100,6 @@ public class Config {
     public static final String SP_SWITCH_AUTH = "switch_auth";
 
     public static final String KEYPAIR_ALIAS = "alias";
+
+    public static final String SP_BUILD_HOOKS = "build_hooks";
 }
