@@ -6,8 +6,8 @@ import java.util.List;
  * Created by acpm on 29/04/17.
  */
 
-public class BuildList{
+public class FingerprintList {
 
-    public List<BuildItem> buildItems;
+    public List<FingerprintItem> fingerprintItems;
 
 }

@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -26,5 +27,22 @@ public class MiscHook extends XC_MethodHook {
             }
         });
 
+        try {
+            Class<?> classBuildVersion = XposedHelpers.findClass("com.google.android.gms.ads.identifier.AdvertisingIdClient$Info", loadPackageParam.classLoader);
+            findAndHookMethod(classBuildVersion, "getId", new XC_MethodHook() {
+
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    if(param!=null) {
+                        XposedBridge.log(TAG + "AdvertisingID: " + param.args[0] + "");
+                    }
+                }
+
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    if(param!=null) {
+                        XposedBridge.log(TAG + "AdvertisingID before: " + param.args[0] + "");
+                    }
+                }
+            });
+        }catch (XposedHelpers.ClassNotFoundError ex) {}
     }
 }

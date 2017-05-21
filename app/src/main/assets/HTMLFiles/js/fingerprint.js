@@ -11,6 +11,9 @@ $(function() {
                 checkbox: 'true'
             },
             {
+               field: 'type',
+               title: 'From'
+            },{
                 field: 'name',
                 title: 'Name'
             }, {

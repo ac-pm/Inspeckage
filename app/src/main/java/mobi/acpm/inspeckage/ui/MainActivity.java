@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
 import java.io.File;
 
@@ -58,10 +63,43 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            boolean granted = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-            if (!granted) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            boolean granted = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+            boolean grantedPhone = checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED;
+            if (granted || grantedPhone) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE}, 0);
             }
+
+            AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    AdvertisingIdClient.Info idInfo = null;
+                    try {
+                        idInfo = AdvertisingIdClient.getAdvertisingIdInfo(getApplicationContext());
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        e.printStackTrace();
+                    } catch (GooglePlayServicesRepairableException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String advertId = null;
+                    try{
+                        advertId = idInfo.getId();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return advertId;
+                }
+                @Override
+                protected void onPostExecute(String advertId) {
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putString(Config.SP_ADS_ID,advertId);
+                    editor.apply();
+                    //Toast.makeText(getApplicationContext(), advertId, Toast.LENGTH_SHORT).show();
+                }
+            };
+            task.execute();
+
         }else{
             File inspeckage = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Config.P_ROOT);
             if (!inspeckage.exists()) {
