@@ -1,0 +1,47 @@
+<div class="container-fluid">
+
+    <style>
+    body {
+    margin: 0;
+    }
+    iframe {
+    display: block;
+    border: none;
+    height: 80vh;
+    width: 100%;
+    }
+    </style>
+
+    <legend>Location</legend>
+
+    <div class="row">
+        <div class="col-md-3">
+            <form>
+                <div class="form-group">
+                    <label for="loc">Latitude and Longitude</label>
+                    <input class="form-control input-sm" id="loc" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="address">Geocode (address)</label>
+                    <p id="address"></p>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" onclick="saveLocation();" class="btn btn-default pull-right">Save</button>
+                </div>
+
+            </form>
+            <legend>Saved location</legend>
+            <form class="form-inline">
+             <label class="text-success" id="savedLoc">#savedLoc#</label>
+                #switchLoc#
+            </form>
+        </div>
+        <div class="col-md-9">
+            <iframe src="/content/maps.html">
+                <p>Your browser does not support iframes.</p>
+            </iframe>
+        </div>
+    </div>
+</div>
+<script src="js/base.js?v=1"></script>
