@@ -7,7 +7,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import mobi.acpm.inspeckage.hooks.BuildHook;
+import mobi.acpm.inspeckage.hooks.FingerprintHook;
 import mobi.acpm.inspeckage.hooks.ClipboardHook;
 import mobi.acpm.inspeckage.hooks.CryptoHook;
 import mobi.acpm.inspeckage.hooks.FileSystemHook;
@@ -24,6 +24,7 @@ import mobi.acpm.inspeckage.hooks.SharedPrefsHook;
 import mobi.acpm.inspeckage.hooks.UIHook;
 import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
+import mobi.acpm.inspeckage.hooks.entities.LocationHook;
 import mobi.acpm.inspeckage.util.Config;
 import mobi.acpm.inspeckage.util.DexUtil;
 import mobi.acpm.inspeckage.util.FileType;
@@ -147,8 +148,10 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_PHOOKS,true)) {
             UserHooks.initAllHooks(loadPackageParam);
         }
-
-        BuildHook.initAllHooks(loadPackageParam);
+        if(sPrefs.getBoolean(Config.SP_GEOLOCATION_SW,false)) {
+            LocationHook.initAllHooks(loadPackageParam);
+        }
+        FingerprintHook.initAllHooks(loadPackageParam);
 
         DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
     }

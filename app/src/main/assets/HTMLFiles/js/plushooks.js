@@ -259,7 +259,7 @@ function getUserHooks() {
         type: "getuserhooks"
     }).done(function(data) {
 
-        console.log("Data Loaded data: " + JSON.stringify(data));
+
 
         for (index in data) {
             if (data[index].state) {

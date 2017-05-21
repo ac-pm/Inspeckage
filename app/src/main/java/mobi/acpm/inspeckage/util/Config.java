@@ -101,5 +101,9 @@ public class Config {
 
     public static final String KEYPAIR_ALIAS = "alias";
 
-    public static final String SP_BUILD_HOOKS = "build_hooks";
+    public static final String SP_FINGERPRINT_HOOKS = "fingerprint_hooks";
+    public static final String SP_ADS_ID = "ads_id";
+
+    public static final String SP_GEOLOCATION = "geoloc";
+    public static final String SP_GEOLOCATION_SW = "geoloc_switch";
 }

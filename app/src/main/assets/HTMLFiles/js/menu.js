@@ -46,12 +46,15 @@ $("#nav_replaces").on("click", function() {
 $("#nav_location").on("click", function() {
     $("[name='refresh']").bootstrapSwitch('state', false);
     $("#tbs-content").load("/content/location.html");
+
     showGeneralInfo(true);
 });
 
+
+
 $("#nav_config").on("click", function() {
     $("[name='refresh']").bootstrapSwitch('state', false);
-    $("#tbs-content").load("/content/build.html");
+    $("#tbs-content").load("/content/fingerprint.html");
     showGeneralInfo(true);
 });
 

@@ -204,3 +204,27 @@ function startActivity(act){
          });
 }
 
+function saveLocation() {
+
+    var geolocation = document.getElementById("loc").value;
+
+        $.get("/", {
+            type: "location",
+            geolocation: geolocation
+        }).done(function( data ) {
+            if(data == "OK"){
+                document.getElementById("savedLoc").innerHTML = geolocation;
+            }
+        });
+}
+
+$("[name='savedLoc']").bootstrapSwitch();
+    $('input[name="savedLoc"]').on('switchChange.bootstrapSwitch', function(event, state) {
+
+        console.log(state);
+        $.get("/", {
+            type: "geolocationSwitch",
+            geolocationSwitch: state
+        });
+
+    });

@@ -59,6 +59,7 @@ import mobi.acpm.inspeckage.log.LogService;
 import mobi.acpm.inspeckage.receivers.InspeckageWebReceiver;
 import mobi.acpm.inspeckage.util.Config;
 import mobi.acpm.inspeckage.util.FileUtil;
+import mobi.acpm.inspeckage.util.Fingerprint;
 import mobi.acpm.inspeckage.util.PackageDetail;
 import mobi.acpm.inspeckage.util.Util;
 
@@ -88,35 +89,6 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
         super(host,port);
         mContext = context;
         mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
-
-
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putBoolean("fake_board_key",true);
-        editor.putBoolean("fake_bootloader_key",false);
-        editor.putBoolean("fake_brand_key",false);
-        editor.putBoolean("fake_cpu_abi_key",false);
-        editor.putBoolean("fake_cpu_abi2_key",false);
-        editor.putBoolean("fake_device_key",false);
-        editor.putBoolean("fake_display_key",false);
-        editor.putBoolean("fake_fingerprint_key",false);
-        editor.putBoolean("fake_hardware_key",false);
-        editor.putBoolean("fake_host_key",false);
-        editor.putBoolean("fake_id_key",false);
-        editor.putBoolean("fake_manufacturer_key",false);
-        editor.putBoolean("fake_model_key",false);
-        editor.putBoolean("fake_product_key",false);
-        editor.putBoolean("fake_radio_key",false);
-        editor.putBoolean("fake_tags_key",false);
-        editor.putBoolean("fake_time_key",false);
-        editor.putBoolean("fake_type_key",false);
-        editor.putBoolean("fake_user_key",false);
-        editor.putBoolean("fake_codename_key",false);
-        editor.putBoolean("fake_incremental_key",false);
-        editor.putBoolean("fake_release_key",false);
-        editor.putBoolean("fake_sdk_key",false);
-        editor.putBoolean("fake_sdk_int_key",false);
-        editor.apply();
-
 
 
         try {
@@ -217,6 +189,14 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
             Log.d("Inspeckage_Exception: ",e.getMessage());
         }
         return keyPair;
+    }
+
+    private Response ok(String type, String html, String cacheTime) {
+
+        Response response = newFixedLengthResponse(Response.Status.OK, type, html);
+        response.addHeader("Cache-Control", "public");
+        response.addHeader("Cache-Control", "max-age="+cacheTime);
+        return response;
     }
 
     private Response ok(String type, String html) {
@@ -345,7 +325,10 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         break;
                     case "clipboard":
                         return addToClipboard(parms);
-
+                    case "location":
+                        return addLocation(parms);
+                    case "geolocationSwitch":
+                        return geoLocSwitch(parms);
                 }
             } else {
                 html = setDefaultOptions();
@@ -365,6 +348,16 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
 
             html = FileUtil.readHtmlFile(mContext, uri);
 
+            if (uri.contains("location.html")) {
+                html = html.replace("#savedLoc#", mPrefs.getString(Config.SP_GEOLOCATION, ""));
+
+                if (mPrefs.getBoolean(Config.SP_GEOLOCATION_SW, false)) {
+                    html = html.replace("#switchLoc#", "<input type='checkbox' name='savedLoc' data-size='mini' checked>");
+                }else {
+                    html = html.replace("#switchLoc#", "<input type='checkbox' name='savedLoc' data-size='mini' unchecked>");
+                }
+            }
+
         } else if (uri.equals("/struct")) {
 
             String json = FileUtil.readFromFile(mPrefs, APP_STRUCT);//readHtmlFile(mContext, uri);
@@ -375,10 +368,10 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
             String fname = FileUtil.readHtmlFile(mContext, uri);
 
             if (uri.contains(".css")) {
-                return ok("text/css", fname);
+                return ok("text/css", fname, "86400");
             }
             if (uri.contains(".js")) {
-                return ok("text/javascript", fname);
+                return ok("text/javascript", fname, "86400");
             }
             if (uri.contains(".png")) {
                 try {
@@ -728,8 +721,10 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
 
     private Response getBuild() {
 
-        String json = mPrefs.getString(Config.SP_BUILD_HOOKS,"");
-        json = json.replace("{\"buildItems\":[{","[{");
+        Fingerprint.getInstance(mContext).load();
+
+        String json = mPrefs.getString(Config.SP_FINGERPRINT_HOOKS,"");
+        json = json.replace("{\"fingerprintItems\":[{","[{");
         json = json.replace("\"}]}","\"}]");
         return ok("text/json", json);
     }
@@ -737,9 +732,9 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
     private Response addBuild(Map<String, String> parms) {
 
         String json = parms.get("build");
-        json = "{\"buildItems\":"+json+"}";
+        json = "{\"fingerprintItems\":"+json+"}";
         SharedPreferences.Editor edit = mPrefs.edit();
-        edit.putString(Config.SP_BUILD_HOOKS, json);
+        edit.putString(Config.SP_FINGERPRINT_HOOKS, json);
         edit.apply();
 
         return ok("OK");
@@ -830,6 +825,32 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
         return html;
     }
 
+    private Response addLocation(Map<String, String> parms) {
+
+        String loc = parms.get("geolocation");
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(Config.SP_GEOLOCATION, loc);
+        edit.apply();
+        return ok("OK");
+    }
+
+    private Response getLocation() {
+        String loc = mPrefs.getString(Config.SP_GEOLOCATION,"");
+        return ok(loc);
+    }
+
+    private Response geoLocSwitch(Map<String, String> parms) {
+        String geo_switch = parms.get("geolocationSwitch");
+        if (geo_switch != null) {
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putBoolean(Config.SP_GEOLOCATION_SW, Boolean.valueOf(geo_switch));
+            edit.apply();
+            if (Boolean.valueOf(geo_switch)) {
+                Util.showNotification(mContext, "Geolocation ON");
+            }
+        }
+        return ok("OK");
+    }
     //HTML
 
     public String htmlNonExportedProviders() {
