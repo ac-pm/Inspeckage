@@ -100,13 +100,8 @@
                     <li><a class="twitter customer share" href="http://twitter.com/share?url=http://ac-pm.github.io/Inspeckage/&amp;text=Android Package Inspector &amp;hashtags=inspeckage" title="Twitter share" target="_blank">Twitter</a></li>
                     <li><a class="google_plus customer share" href="https://plus.google.com/share?url=http://ac-pm.github.io/Inspeckage/" title="Google Plus Share" target="_blank">Google +</a></li>
                 </ul>
-            </li>
-
-            <li>
-                <center><input type="text" id="clipboard" placeholder="clipboard" onkeyup="clipboard(this.value)"></center>
-            </li>
-            <li>
-                <center><img src="img/sponsored.svg" width="200"></center>
+                <br><br>
+                <center><img src="img/azul.png" width="200"></center>
             </li>
         </ul>
     </nav>
@@ -147,9 +142,15 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download" aria-hidden="true"></i> Download <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#" onclick="download_apk();"> APK</a>
+                                    <li>
+                                     <a href="#" onclick="download_apk();">
+                                        <i class="fa fa-android" aria-hidden="true"></i> APK
+                                    </a>
                                     </li>
-                                    <li><a href="#" onclick="download_all();"> All Files</a>
+                                    <li>
+                                        <a href="#" onclick="download_all();">
+                                            <i class="fa fa-file-archive-o" aria-hidden="true"></i> All Files
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
@@ -175,8 +176,20 @@
 
 
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="/logcat.html" onclick="logcat();" >LogCat</a>
+
+                            <li class="active"><a href="#" onclick="logcat();" >
+                                <i class="fa fa-external-link" aria-hidden="true"></i>
+                                LogCat
+                            </a>
                             </li>
+                        </ul>
+
+                        <form class="navbar-form navbar-left">
+                            <div class="form-group">
+                                <input type="text" id="clipboard" class="form-control" placeholder="clipboard">
+                            </div>
+                        </form>
+
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">

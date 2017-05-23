@@ -195,22 +195,19 @@ html {
 .sidebar-nav li:nth-child(5):before {
   background-color: #583e7e;
 }
-.sidebar-nav li:nth-child(6){
-  padding-top: 20px;
-  background-color: #375a7f;
+.sidebar-nav li:nth-child(6):before {/*------------TIPS-------------------*/
+  background-color: #583e7e;
 }
-.sidebar-nav li:nth-child(7){
- padding-top: 100px;
+.sidebar-nav li:nth-child(7){/*------------SHARE-------------------*/
  background-color: #375a7f;
 }
-
 .sidebar-nav li:hover:before {
   -webkit-transition: width 0.2s ease-in;
   transition: width 0.2s ease-in;
   width: 100%;
 }
 .sidebar-nav li a {
-  color: #dddddd;
+  color: #ffffff;
   display: block;
   padding: 10px 15px 10px 30px;
   text-decoration: none;

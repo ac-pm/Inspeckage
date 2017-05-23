@@ -4,6 +4,7 @@ $(function() {
 
     $tableBuild.bootstrapTable({
         idField: 'name',
+        search: true,
         url: '/?type=getbuild',
         columns: [{
                 field: 'enable',

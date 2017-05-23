@@ -47,13 +47,15 @@ $(document).ready(function() {
 
         CollapsibleLists.apply();
 
-
 });
 
-
-
-
-
+$(document.body).on('keyup', '#clipboard', function(){
+        var chararcters = $("#clipboard").val();
+         $.get("/", {
+              type: "clipboard",
+              value: chararcters
+         });
+ });
 
 function fileTree() {
     $('#fileTree1').load('?type=filetree');
@@ -97,13 +99,7 @@ function setARP() {
         }
 }
 
-function clipboard(value) {
 
-            $.get("/", {
-                type: "clipboard",
-                value: value
-            });
-}
 
 function proxyTest() {
     $('#proxyTest').load('?type=proxytest');
