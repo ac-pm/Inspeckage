@@ -329,6 +329,8 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
                         return addLocation(parms);
                     case "geolocationSwitch":
                         return geoLocSwitch(parms);
+                    case "resetfingerprint":
+                        return resetFingerprint();
                 }
             } else {
                 html = setDefaultOptions();
@@ -720,12 +722,23 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
     }
 
     private Response getBuild() {
-
-        Fingerprint.getInstance(mContext).load();
+        if(mPrefs.getString(Config.SP_FINGERPRINT_HOOKS,"").equals("")) {
+            Fingerprint.getInstance(mContext).load();
+        }
 
         String json = mPrefs.getString(Config.SP_FINGERPRINT_HOOKS,"");
         json = json.replace("{\"fingerprintItems\":[{","[{");
         json = json.replace("\"}]}","\"}]");
+        return ok("text/json", json);
+    }
+
+    private Response resetFingerprint() {
+
+        Fingerprint.getInstance(mContext).load();
+
+        String json = mPrefs.getString(Config.SP_FINGERPRINT_HOOKS, "");
+        json = json.replace("{\"fingerprintItems\":[{", "[{");
+        json = json.replace("\"}]}", "\"}]");
         return ok("text/json", json);
     }
 

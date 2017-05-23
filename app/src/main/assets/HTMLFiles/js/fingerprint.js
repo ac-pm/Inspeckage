@@ -41,3 +41,12 @@ function addBuild(build) {
         build: build
     }).done(function(data) {});
 };
+
+function resetFingerprint() {
+
+        $.get("/", {
+            type: "resetfingerprint"
+        }).done(function( data ) {
+           $("#tbs-content").load("/content/fingerprint.html");
+        });
+}

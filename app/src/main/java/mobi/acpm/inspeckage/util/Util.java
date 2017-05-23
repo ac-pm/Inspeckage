@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -276,5 +277,24 @@ public class Util {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public static int inetAddressToInt(InetAddress inetAddr)
+            throws IllegalArgumentException {
+        byte [] addr = inetAddr.getAddress();
+        return ((addr[3] & 0xff) << 24) | ((addr[2] & 0xff) << 16) |
+                ((addr[1] & 0xff) << 8) | (addr[0] & 0xff);
+    }
+
+    public static byte[] macAddressToByteArr(String mac){
+        String macAddress = mac;
+        String[] macAddressParts = macAddress.split(":");
+
+        byte[] macAddressBytes = new byte[6];
+        for(int i=0; i<6; i++){
+            Integer hex = Integer.parseInt(macAddressParts[i], 16);
+            macAddressBytes[i] = hex.byteValue();
+        }
+        return macAddressBytes;
     }
 }
