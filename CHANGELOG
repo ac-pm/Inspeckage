@@ -1,5 +1,11 @@
 # Inspeckage - CHANGELOG
 
+2.3
+---------------
+- Device Fingerprint - override more than 30 parameters such as advertising id, MAC address, IMEI, release, brand, build mode...
+- Location - without use "Mock location" functionality, change GPS location to the searched location on the map or enter latitude/longitude
+- bug fix
+
 2.2
 ---------------
 - Replaces - now you can replace parameters/return value of hooked methods (+Hooks)
