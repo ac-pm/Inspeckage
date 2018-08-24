@@ -108,4 +108,6 @@ public class Config {
 
     public static final String SP_GEOLOCATION = "geoloc";
     public static final String SP_GEOLOCATION_SW = "geoloc_switch";
+    
+    public static final String TMP_FOLDER = "/data/local/tmp";
 }

@@ -46,11 +46,8 @@ public class FileUtil {
 
             String absolutePath;
 
-            if (prefs.getBoolean(Config.SP_HAS_W_PERMISSION,false)) {
-                absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath()+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
-            } else {
-                absolutePath = prefs.getString(Config.SP_DATA_DIR, null)+Config.P_ROOT;
-            }
+            absolutePath = Config.TMP_FOLDER+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
+
             boolean append = true;
             if (ft != null) {
                 switch (ft) {
@@ -166,13 +163,8 @@ public class FileUtil {
         try {
 
             String absolutePath;
-
-            if (prefs.getBoolean(Config.SP_HAS_W_PERMISSION, false)) {
-                absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath()+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
-            } else {
-                absolutePath = prefs.getString(Config.SP_DATA_DIR, null)+Config.P_ROOT;
-            }
-
+            absolutePath = Config.TMP_FOLDER+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
+            
             switch (ft) {
                 case SERIALIZATION:
                     absolutePath += Config.P_SERIALIZATION; //1
@@ -268,11 +260,7 @@ public class FileUtil {
 
             String absolutePath;
 
-            if (prefs.getBoolean(Config.SP_HAS_W_PERMISSION, false)) {
-                absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath()+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"")+"/"+ folderName;
-            } else {
-                absolutePath = prefs.getString(Config.SP_DATA_DIR, null)+Config.P_ROOT+"/"+folderName;
-            }
+            absolutePath = Config.TMP_FOLDER+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
 
             File folder = new File(absolutePath);
             if (folder.listFiles() != null && folder.length() > 0) {
@@ -378,12 +366,7 @@ public class FileUtil {
 
             String absolutePath;
 
-            if (prefs.getBoolean(Config.SP_HAS_W_PERMISSION, false)) {
-                absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath() + Config.P_ROOT + "/" + prefs.getString(Config.SP_PACKAGE, "");
-            } else {
-                absolutePath = prefs.getString(Config.SP_DATA_DIR, null) + Config.P_ROOT;
-            }
-
+            absolutePath = Config.TMP_FOLDER+Config.P_ROOT+"/"+prefs.getString(Config.SP_PACKAGE,"");
             absolutePath += "/"+name;
             File file = new File(absolutePath);
 
