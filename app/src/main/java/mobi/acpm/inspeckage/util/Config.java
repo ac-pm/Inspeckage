@@ -6,6 +6,8 @@ package mobi.acpm.inspeckage.util;
 public class Config {
 
     //Paths
+    public static final String P_INSPECKAGE_PATH = "/data/data/mobi.acpm.inspeckage";
+    public static final String P_SHARED_PATH = "/shared_prefs/";
     public static final String P_ROOT = "/Inspeckage";
 
     public static final String P_LOG = "/log";

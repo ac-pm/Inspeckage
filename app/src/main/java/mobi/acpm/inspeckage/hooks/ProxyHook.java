@@ -1,5 +1,7 @@
 package mobi.acpm.inspeckage.hooks;
 
+import android.os.Build;
+
 import org.apache.http.HttpHost;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -32,8 +34,7 @@ public class ProxyHook extends XC_MethodHook {
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
 
 
-        findAndHookMethod("java.net.ProxySelectorImpl", loadPackageParam.classLoader, "select", URI.class, new XC_MethodHook() {
-
+        XC_MethodHook ProxySelectorHook = new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
@@ -59,20 +60,17 @@ public class ProxyHook extends XC_MethodHook {
                     XposedBridge.log(TAG + " [P:" + sPrefs.getString("host", null) + ":" + sPrefs.getString("port", null) + "] - URI = " + uri);
                 }
             }
-        });
+        };
 
-        findAndHookMethod("java.net.ProxySelectorImpl", loadPackageParam.classLoader, "isNonProxyHost", String.class, String.class, new XC_MethodHook() {
-
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-
-                loadPrefs();
-
-                if (sPrefs.getBoolean("switch_proxy", false)) {
-                    param.args[1] = "--inpeckage--";
-                }
+        try {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                findAndHookMethod("java.net.ProxySelectorImpl", loadPackageParam.classLoader, "select", URI.class, ProxySelectorHook);
+            } else {
+                findAndHookMethod("sun.net.spi.DefaultProxySelector", loadPackageParam.classLoader, "select", URI.class, ProxySelectorHook);
             }
-        });
+        } catch (Error e) {
+            Module.logError(e);
+        }
 
         hookAllConstructors(XposedHelpers.findClass("org.apache.http.impl.client.DefaultHttpClient", loadPackageParam.classLoader), new XC_MethodHook() {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {

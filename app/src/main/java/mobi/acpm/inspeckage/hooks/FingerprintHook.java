@@ -48,80 +48,83 @@ public class FingerprintHook extends XC_MethodHook {
 
             try {
                 FingerprintList fingerprintList = gson.fromJson(json, FingerprintList.class);
+                if (fingerprintList != null && fingerprintList.fingerprintItems != null && fingerprintList.fingerprintItems.size() > 0) {
+                    for (FingerprintItem fingerprintItem : fingerprintList.fingerprintItems) {
+                        if (fingerprintItem.enable) {
 
-                for (FingerprintItem fingerprintItem : fingerprintList.fingerprintItems) {
-                    if (fingerprintItem.enable) {
+                            if (fingerprintItem.type.equals("BUILD")) {
+                                XposedHelpers.setStaticObjectField(classBuild, fingerprintItem.name, fingerprintItem.newValue);
+                            } else if (fingerprintItem.type.equals("VERSION")) {
+                                XposedHelpers.setStaticObjectField(classBuildVersion, fingerprintItem.name, fingerprintItem.newValue);
+                            } else if (fingerprintItem.type.equals("TelephonyManager")) {
 
-                        if (fingerprintItem.type.equals("BUILD")) {
-                            XposedHelpers.setStaticObjectField(classBuild, fingerprintItem.name, fingerprintItem.newValue);
-                        } else if (fingerprintItem.type.equals("VERSION")) {
-                            XposedHelpers.setStaticObjectField(classBuildVersion, fingerprintItem.name, fingerprintItem.newValue);
-                        } else if (fingerprintItem.type.equals("TelephonyManager")) {
-
-                            try {
-                                switch (fingerprintItem.name) {
-                                    case "IMEI":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
-                                        HookFingerprintItem("com.android.internal.telephony.PhoneSubInfo", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
-                                        HookFingerprintItem("com.android.internal.telephony.PhoneProxy", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
-                                        if (Build.VERSION.SDK_INT < 22) {
-                                            HookFingerprintItem("com.android.internal.telephony.gsm.GSMPhone", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
-                                        }
-                                    case "IMSI":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSubscriberId", fingerprintItem.newValue);
-                                    case "PhoneNumber":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getLine1Number", fingerprintItem.newValue);
-                                    case "SimSerial":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimSerialNumber", fingerprintItem.newValue);
-                                    case "CarrierCode":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkOperator", fingerprintItem.newValue);
-                                    case "Carrier":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkOperatorName", fingerprintItem.newValue);
-                                    case "SimCountry":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimCountryIso", fingerprintItem.newValue);
-                                    case "NetworkCountry":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkCountryIso", fingerprintItem.newValue);
-                                    case "SimSerialNumber":
-                                        HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimSerialNumber", fingerprintItem.newValue);
+                                try {
+                                    switch (fingerprintItem.name) {
+                                        case "IMEI":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
+                                            HookFingerprintItem("com.android.internal.telephony.PhoneSubInfo", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
+                                            HookFingerprintItem("com.android.internal.telephony.PhoneProxy", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
+                                            if (Build.VERSION.SDK_INT < 22) {
+                                                HookFingerprintItem("com.android.internal.telephony.gsm.GSMPhone", loadPackageParam, "getDeviceId", fingerprintItem.newValue);
+                                            }
+                                        case "IMSI":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSubscriberId", fingerprintItem.newValue);
+                                        case "PhoneNumber":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getLine1Number", fingerprintItem.newValue);
+                                        case "SimSerial":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimSerialNumber", fingerprintItem.newValue);
+                                        case "CarrierCode":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkOperator", fingerprintItem.newValue);
+                                        case "Carrier":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkOperatorName", fingerprintItem.newValue);
+                                        case "SimCountry":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimCountryIso", fingerprintItem.newValue);
+                                        case "NetworkCountry":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getNetworkCountryIso", fingerprintItem.newValue);
+                                        case "SimSerialNumber":
+                                            HookFingerprintItem("android.telephony.TelephonyManager", loadPackageParam, "getSimSerialNumber", fingerprintItem.newValue);
+                                    }
+                                } catch (Exception ex) {
+                                    log(TAG + fingerprintItem.name + ex.getMessage());
                                 }
-                            } catch (Exception ex) {
-                                log(TAG + fingerprintItem.name + ex.getMessage());
+
+                            } else if (fingerprintItem.type.equals("Advertising")) {
+                                try {
+                                    HookFingerprintItem("com.google.android.gms.ads.identifier.AdvertisingIdClient$Info", loadPackageParam, "getId", fingerprintItem.newValue);
+                                } catch (XposedHelpers.ClassNotFoundError ex) {
+                                }
+                            } else if (fingerprintItem.type.equals("Wi-Fi")) {
+                                try {
+
+                                    switch (fingerprintItem.name) {
+                                        case "BSSID":
+                                            HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getBSSID", fingerprintItem.newValue);
+                                            break;
+                                        case "SSID":
+                                            HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getSSID", fingerprintItem.newValue);
+                                            break;
+                                        case "IP": {
+                                            int value = 0;
+                                            try {
+                                                value = Util.inetAddressToInt(InetAddress.getByName(fingerprintItem.newValue));
+                                            } catch (UnknownHostException e) {
+                                                e.printStackTrace();
+                                            }
+                                            HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getIpAddress", value);
+                                            break;
+                                        }
+                                        case "Android": {
+                                            byte[] mac = Util.macAddressToByteArr(fingerprintItem.newValue);
+                                            HookFingerprintItem("java.net.NetworkInterface", loadPackageParam, "getHardwareAddress", mac);
+                                            break;
+                                        }
+
+                                    }
+                                } catch (XposedHelpers.ClassNotFoundError ex) {
+                                }
+                            } else if (fingerprintItem.type.equals("Wi-Fi")) {
+
                             }
-
-                        } else if (fingerprintItem.type.equals("Advertising")) {
-                            try {
-                                HookFingerprintItem("com.google.android.gms.ads.identifier.AdvertisingIdClient$Info", loadPackageParam, "getId", fingerprintItem.newValue);
-                            }catch (XposedHelpers.ClassNotFoundError ex) {}
-                        } else if (fingerprintItem.type.equals("Wi-Fi")) {
-                            try {
-
-                                switch (fingerprintItem.name) {
-                                    case "BSSID":
-                                        HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getBSSID", fingerprintItem.newValue);
-                                        break;
-                                    case "SSID":
-                                        HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getSSID", fingerprintItem.newValue);
-                                        break;
-                                    case "IP":{
-                                        int value = 0;
-                                        try {
-                                            value = Util.inetAddressToInt(InetAddress.getByName(fingerprintItem.newValue));
-                                        } catch (UnknownHostException e) {
-                                            e.printStackTrace();
-                                        }
-                                        HookFingerprintItem("android.net.wifi.WifiInfo", loadPackageParam, "getIpAddress", value);
-                                        break;
-                                    }
-                                    case "Android": {
-                                        byte[] mac = Util.macAddressToByteArr(fingerprintItem.newValue);
-                                        HookFingerprintItem("java.net.NetworkInterface", loadPackageParam, "getHardwareAddress", mac);
-                                        break;
-                                    }
-
-                                }
-                            }catch (XposedHelpers.ClassNotFoundError ex) {}
-                        } else if (fingerprintItem.type.equals("Wi-Fi")) {
-
                         }
                     }
                 }

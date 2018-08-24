@@ -29,7 +29,8 @@ public class PackageDetail {
 
     public PackageDetail(Context context, String app) {
 
-        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_PRIVATE);
+
         mContext = context;
         pm = context.getPackageManager();
         List<PackageInfo> plist = context.getPackageManager().getInstalledPackages(0);

@@ -48,7 +48,7 @@ public class SharedPrefsHook extends XC_MethodHook {
                         int modeId = (Integer) param.args[1];
                         String mode = "MODE_PRIVATE";
                         if(modeId == 1){
-                            mode = "MODE_WORLD_READABLE";
+                            mode = "MODE_PRIVATE";
                         }else if(modeId == 2){
                             mode = "MODE_WORLD_WRITEABLE";
                         }else if(modeId > 2){

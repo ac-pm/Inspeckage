@@ -35,15 +35,13 @@ public class FileSystemHook extends XC_MethodHook {
 
                     String m;
                     switch (mode) {
+
                         case android.content.Context.MODE_PRIVATE:
                             m = "MODE_PRIVATE";
                             break;
-                        case android.content.Context.MODE_WORLD_READABLE:
-                            m = "MODE_WORLD_READABLE";
-                            break;
-                        case android.content.Context.MODE_WORLD_WRITEABLE:
-                            m = "MODE_WORLD_WRITEABLE";
-                            break;
+                        //case android.content.Context.MODE_WORLD_WRITEABLE:
+                          //  m = "MODE_WORLD_WRITEABLE";
+                            //break;
                         case android.content.Context.MODE_APPEND:
                             m = "MODE_APPEND";
                             break;
@@ -76,10 +74,12 @@ public class FileSystemHook extends XC_MethodHook {
 
                 String dir = (String) param.args[0];
                 String fileName = (String) param.args[1];
-                if (dir.contains("Inspeckage") || fileName.contains("Inspeckage")) {
-                    XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                } else {
-                    XposedBridge.log(TAG + "R/W Dir: " + dir + " File: " + fileName);
+                if(dir != null) {
+                    if (dir.contains("Inspeckage") || fileName.contains("Inspeckage")) {
+                        XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+                    } else {
+                        XposedBridge.log(TAG + "R/W Dir: " + dir + " File: " + fileName);
+                    }
                 }
             }
         });
@@ -91,10 +91,12 @@ public class FileSystemHook extends XC_MethodHook {
 
                 File fileDir = (File) param.args[0];
                 String fileName = (String) param.args[1];
-                if (fileDir.getAbsolutePath().contains("Inspeckage") || fileName.contains("Inspeckage")) {
-                    XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                } else {
-                    XposedBridge.log(TAG + "R/W Dir: " + fileDir.getAbsolutePath() + " File: " + fileName);
+                if(fileDir != null) {
+                    if (fileDir.getAbsolutePath().contains("Inspeckage") || fileName.contains("Inspeckage")) {
+                        XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+                    } else {
+                        XposedBridge.log(TAG + "R/W Dir: " + fileDir.getAbsolutePath() + " File: " + fileName);
+                    }
                 }
             }
         });
@@ -104,10 +106,12 @@ public class FileSystemHook extends XC_MethodHook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
                 URI uri = (URI) param.args[0];
-                if (uri.toString().contains("Inspeckage")) {
-                    XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
-                } else {
-                    XposedBridge.log(TAG + "R/W [new File(URI)]: " + uri.toString());
+                if(uri!=null) {
+                    if (uri.toString().contains("Inspeckage")) {
+                        XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+                    } else {
+                        XposedBridge.log(TAG + "R/W [new File(URI)]: " + uri.toString());
+                    }
                 }
             }
         });

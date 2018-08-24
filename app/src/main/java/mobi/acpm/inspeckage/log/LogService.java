@@ -54,7 +54,7 @@ public class LogService extends Service {
                 filter = intent.getStringExtra("filter");
             }
 
-            mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+            mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_PRIVATE);
 
             wss = new WSocketServer(port);
             wss.start();
@@ -130,7 +130,8 @@ public class LogService extends Service {
                         while (isStarted) {
 
                             String name = mPrefs.getString(Config.SP_PACKAGE, "null");
-                            Process p = Runtime.getRuntime().exec("ps");
+                            String ps = "su -c ps |grep "+name;
+                            Process p = Runtime.getRuntime().exec(ps);
                             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
                             String var = "";
                             String psline;

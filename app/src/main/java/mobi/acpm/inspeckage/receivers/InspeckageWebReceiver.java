@@ -14,13 +14,16 @@ import mobi.acpm.inspeckage.util.Config;
 public class InspeckageWebReceiver extends BroadcastReceiver {
 
     private Context mContext;
+    public InspeckageWebReceiver(){
+
+    }
     public InspeckageWebReceiver(Context ctx){
         mContext = ctx;
     }
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        SharedPreferences mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
+        SharedPreferences mPrefs = context.getSharedPreferences(Module.PREFS, mContext.MODE_PRIVATE);
         SharedPreferences.Editor edit = mPrefs.edit();
 
         String action = intent.getExtras().getString("action");

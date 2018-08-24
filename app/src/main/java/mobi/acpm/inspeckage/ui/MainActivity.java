@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mPrefs = getSharedPreferences(Module.PREFS, MODE_WORLD_READABLE);
+        mPrefs = getSharedPreferences(Module.PREFS, MODE_PRIVATE);
 
         //main fragment
         FragmentManager fragmentManager = getFragmentManager();

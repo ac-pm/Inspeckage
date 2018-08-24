@@ -78,7 +78,7 @@ public class AuthFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_PRIVATE);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);

@@ -63,7 +63,8 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+            mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_PRIVATE);
+
             String host = null;
             if(!mPrefs.getString(Config.SP_SERVER_HOST, "All interfaces").equals("All interfaces")){
                 host = mPrefs.getString(Config.SP_SERVER_HOST, "All interfaces");

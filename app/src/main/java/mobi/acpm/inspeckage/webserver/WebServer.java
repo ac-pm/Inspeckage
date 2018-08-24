@@ -88,8 +88,7 @@ public class WebServer extends fi.iki.elonen.NanoHTTPD {
     public WebServer(String host, int port, Context context) throws IOException {
         super(host,port);
         mContext = context;
-        mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_WORLD_READABLE);
-
+        mPrefs = mContext.getSharedPreferences(Module.PREFS, mContext.MODE_PRIVATE);
 
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");

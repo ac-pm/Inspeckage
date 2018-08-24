@@ -17,7 +17,7 @@
         <include
             layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="60dp" />
 
         <!-- The main content view where fragments are loaded -->
         <FrameLayout

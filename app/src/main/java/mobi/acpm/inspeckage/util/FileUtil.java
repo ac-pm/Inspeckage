@@ -24,10 +24,21 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import mobi.acpm.inspeckage.Module;
+
 /**
  * Created by acpm on 29/11/15.
  */
 public class FileUtil {
+
+    public static void fixSharedPreference(Context context) {
+
+        File folder = new File(Config.P_INSPECKAGE_PATH);
+        folder.setExecutable(true, false);
+
+        String mPrefFile = Config.P_INSPECKAGE_PATH + Config.P_SHARED_PATH + Module.PREFS + ".xml";
+        (new File(mPrefFile)).setReadable(true, false);
+    }
 
     public static void writeToFile(SharedPreferences prefs, String data, FileType ft, String name) {
 
@@ -327,21 +338,23 @@ public class FileUtil {
     static void addDir(File srcFile, ZipOutputStream zos) throws IOException {
 
         File[] files = srcFile.listFiles();
-        byte[] buffer = new byte[1024];
-        for (File file : files) {
+        if(files != null) {
+            byte[] buffer = new byte[1024];
+            for (File file : files) {
 
-            if (file.isDirectory()) {
-                addDir(file, zos);
-                continue;
+                if (file.isDirectory()) {
+                    addDir(file, zos);
+                    continue;
+                }
+                FileInputStream fis = new FileInputStream(file);
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, length);
+                }
+                zos.closeEntry();
+                fis.close();
             }
-            FileInputStream fis = new FileInputStream(file);
-            zos.putNextEntry(new ZipEntry(file.getName()));
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                zos.write(buffer, 0, length);
-            }
-            zos.closeEntry();
-            fis.close();
         }
     }
 

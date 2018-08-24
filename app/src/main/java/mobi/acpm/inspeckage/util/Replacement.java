@@ -39,8 +39,9 @@ public class Replacement {
                                 if (item.paramMatch != null && item.paramMatch.toString().trim() != "") {
                                     if (item.paramMatch.equals(param.args[p])) {
                                         param.args[p] = item.paramNewValue;
+                                    }else if(((String)param.args[p]).contains((String)item.paramMatch)){
+                                        ((String)param.args[p]).replace((String)item.paramMatch,(String)item.paramNewValue);
                                     }
-
                                 } else {
                                     param.args[p] = item.paramNewValue;
                                 }
@@ -56,9 +57,22 @@ public class Replacement {
                             } else if (item.paramType.equals("ByteArray") && param.args[p].getClass().equals(byte[].class)) {
                                 String v = Util.byteArrayToString((byte[]) param.args[p]);
 
+                                /**
+                                String originalValue = v;
+
+                                if(v.contains("{\"body")) {
+                                    XposedBridge.log(UserHooks.TAG+" PROJETOX REQUEST" + originalValue);
+                                }else if(v.contains("{")){
+                                    XposedBridge.log(UserHooks.TAG+" PROJETOX RESPONSE" + originalValue);
+                                }
+                                **/
                                 if (item.paramMatch != null && !item.paramMatch.toString().trim().equals("")) {
-                                    if (v.equals(item.paramMatch.toString())) {
-                                        param.args[p] = v.getBytes();
+
+                                    if(v.contains(item.paramMatch.toString())){
+                                        //XposedBridge.log(UserHooks.TAG+" PROJETOX - OLD - "+originalValue);
+                                        String newValue = v.replace(item.paramMatch.toString(),item.paramNewValue.toString());
+                                        param.args[p] = newValue.getBytes();
+                                        //XposedBridge.log(UserHooks.TAG+" PROJETOX - NEW - "+newValue);
                                     }
                                 } else {
                                     param.args[p] = item.paramNewValue.toString().getBytes();

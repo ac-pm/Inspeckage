@@ -1,5 +1,12 @@
 package mobi.acpm.inspeckage;
 
+import android.app.AndroidAppHelper;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+
+import java.io.File;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
@@ -7,10 +14,10 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import mobi.acpm.inspeckage.hooks.FingerprintHook;
 import mobi.acpm.inspeckage.hooks.ClipboardHook;
 import mobi.acpm.inspeckage.hooks.CryptoHook;
 import mobi.acpm.inspeckage.hooks.FileSystemHook;
+import mobi.acpm.inspeckage.hooks.FingerprintHook;
 import mobi.acpm.inspeckage.hooks.FlagSecureHook;
 import mobi.acpm.inspeckage.hooks.HashHook;
 import mobi.acpm.inspeckage.hooks.HttpHook;
@@ -26,7 +33,6 @@ import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.hooks.entities.LocationHook;
 import mobi.acpm.inspeckage.util.Config;
-import mobi.acpm.inspeckage.util.DexUtil;
 import mobi.acpm.inspeckage.util.FileType;
 import mobi.acpm.inspeckage.util.FileUtil;
 
@@ -54,12 +60,25 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
 
         sPrefs.reload();
 
-        //estes hooks tem que ocorrer na inicialização
-        //ProcessHook.initAllHooks(loadPackageParam);
-
         //check if this module is enable
         if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage")) {
             findAndHookMethod("mobi.acpm.inspeckage.webserver.WebServer", loadPackageParam.classLoader, "isModuleEnabled", XC_MethodReplacement.returnConstant(true));
+
+            //workaround to bypass MODE_PRIVATE of shared_prefs
+            findAndHookMethod("android.app.SharedPreferencesImpl.EditorImpl", loadPackageParam.classLoader, "notifyListeners",
+                    "android.app.SharedPreferencesImpl.MemoryCommitResult", new XC_MethodHook() {
+
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            //workaround to bypass the concurrency (io)
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    Context context = (Context) AndroidAppHelper.currentApplication();
+                                    FileUtil.fixSharedPreference(context);
+                                }
+                            }, 1000);
+                        }
+                    });
         }
 
         if (loadPackageParam.packageName.equals("mobi.acpm.inspeckage"))
@@ -67,6 +86,10 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
 
         if (!loadPackageParam.packageName.equals(sPrefs.getString("package", "")))
             return;
+
+        //inspeckage needs access to the files
+        File folder = new File(sPrefs.getString(Config.SP_DATA_DIR, null));
+        folder.setExecutable(true, false);
 
         findAndHookMethod("android.util.Log", loadPackageParam.classLoader, "i",
                 String.class, String.class, new XC_MethodHook() {
@@ -153,7 +176,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         }
         FingerprintHook.initAllHooks(loadPackageParam);
 
-        DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+        //DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
     }
 
     public static void logError(Error e){

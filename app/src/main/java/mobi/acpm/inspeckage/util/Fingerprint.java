@@ -33,7 +33,7 @@ public class Fingerprint {
 
     public Fingerprint(Context context){
         mContext = context;
-        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_WORLD_READABLE);
+        mPrefs = context.getSharedPreferences(Module.PREFS, context.MODE_PRIVATE);
     }
     public static Fingerprint getInstance(Context context){
         if (instance == null)

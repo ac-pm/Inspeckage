@@ -32,13 +32,13 @@ public class MiscHook extends XC_MethodHook {
             findAndHookMethod(classBuildVersion, "getId", new XC_MethodHook() {
 
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    if(param!=null) {
+                    if(param.args!=null && param.args.length>0) {
                         XposedBridge.log(TAG + "AdvertisingID: " + param.args[0] + "");
                     }
                 }
 
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    if(param!=null) {
+                    if(param.args!=null && param.args.length>0) {
                         XposedBridge.log(TAG + "AdvertisingID before: " + param.args[0] + "");
                     }
                 }

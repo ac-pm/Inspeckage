@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.R;
+import mobi.acpm.inspeckage.util.FileUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,7 +20,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mPrefs = getSharedPreferences(Module.PREFS, MODE_WORLD_READABLE);
+        mPrefs = getSharedPreferences(Module.PREFS, MODE_PRIVATE);
+        FileUtil.fixSharedPreference(this);
 
         new Handler().postDelayed(new Runnable() {
 

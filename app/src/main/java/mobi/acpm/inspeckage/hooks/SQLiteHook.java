@@ -314,8 +314,8 @@ public class SQLiteHook extends XC_MethodHook {
                         }
 
                     });
-        } catch (XposedHelpers.ClassNotFoundError _) {
-        } catch (NoSuchMethodError _) {
+        } catch (XposedHelpers.ClassNotFoundError e) {
+        } catch (NoSuchMethodError e) {
         }
     }
 }
