@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.WebView;
 
 import java.lang.reflect.Field;
@@ -154,7 +155,7 @@ public class InspeckageReceiver extends BroadcastReceiver {
 
                 } else if (action.equals("fileTree")) {
 
-                    String tree = Util.FileTree(activity.getApplicationInfo().dataDir, "");
+                    /*String tree = Util.FileTree(activity.getApplicationInfo().dataDir, "");
 
                     Intent i = new Intent("mobi.acpm.inspeckage.INSPECKAGE_WEB");
                     i.putExtra("action", "fileTree");
@@ -164,7 +165,7 @@ public class InspeckageReceiver extends BroadcastReceiver {
                     //talvez tenha que dividir pq a arvore pode ficar muito grande para ser enviada via intent
                     i.putExtra("tree", tree);
                     activity.sendBroadcast(i, null);
-                    Util.sb = new StringBuilder();
+                    Util.sb = new StringBuilder();*/
 
                 } else if (action.equals("checkApp")) {
 

@@ -1,5 +1,7 @@
 package mobi.acpm.inspeckage.hooks;
 
+import android.util.Log;
+
 import org.apache.http.conn.scheme.HostNameResolver;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
@@ -8,10 +10,13 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -45,6 +50,7 @@ public class SSLPinningHook extends XC_MethodHook {
     }
 
     public static void initAllHooks(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
+
 
         // --- Java Secure Socket Extension (JSSE) ---
 
@@ -227,11 +233,19 @@ class EmptyTrustManager implements X509TrustManager {
             throws CertificateException {
     }
 
-    @Override
-    public void checkServerTrusted(X509Certificate[] chain, String authType)
-            throws CertificateException {
+    public void checkServerTrusted(X509Certificate[] certs, String authType, Socket socket) throws CertificateException {
     }
 
+    public void checkServerTrusted(X509Certificate[] certs, String authType, SSLEngine engine) throws CertificateException {
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+    }
+
+    public List<X509Certificate> checkServerTrusted(X509Certificate[] certs, String authType, String hostname) throws CertificateException {
+        return Arrays.asList(new X509Certificate[0]);
+    }
     @Override
     public X509Certificate[] getAcceptedIssuers() {
         return new X509Certificate[0];

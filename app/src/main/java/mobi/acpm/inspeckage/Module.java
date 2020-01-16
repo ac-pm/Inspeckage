@@ -4,6 +4,7 @@ import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.io.File;
 
@@ -157,14 +158,13 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_IPC,true)) {
             IPCHook.initAllHooks(loadPackageParam);
         }
-        ProxyHook.initAllHooks(loadPackageParam);// --
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SHAREDP,true)) {
             SharedPrefsHook.initAllHooks(loadPackageParam);
         }
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SQLITE,true)) {
             SQLiteHook.initAllHooks(loadPackageParam);
         }
-        SSLPinningHook.initAllHooks(loadPackageParam);// --
+
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SERIALIZATION,true)) {
             SerializationHook.initAllHooks(loadPackageParam);
         }
@@ -177,6 +177,8 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         FingerprintHook.initAllHooks(loadPackageParam);
 
         //DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+        SSLPinningHook.initAllHooks(loadPackageParam);// --
+        ProxyHook.initAllHooks(loadPackageParam);// --
     }
 
     public static void logError(Error e){
