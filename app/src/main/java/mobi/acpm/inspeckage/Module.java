@@ -177,6 +177,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         FingerprintHook.initAllHooks(loadPackageParam);
 
         //DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+
         SSLPinningHook.initAllHooks(loadPackageParam);// --
         ProxyHook.initAllHooks(loadPackageParam);// --
     }

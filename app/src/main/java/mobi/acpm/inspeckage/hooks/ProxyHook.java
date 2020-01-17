@@ -10,7 +10,10 @@ import org.apache.http.HttpHost;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URI;
+import java.net.URL;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -75,6 +78,21 @@ public class ProxyHook extends XC_MethodHook {
             }
         } catch (Error e) {
             Module.logError(e);
+        }
+
+        try{
+            findAndHookMethod("java.net.URL", loadPackageParam.classLoader, "openConnection", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param)
+                        throws Throwable {
+                    URL url = (URL) param.thisObject;
+                    Log.d("overjt", url.toString());
+                    Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress( sPrefs.getString("host", null), Integer.parseInt(sPrefs.getString("port", null))));
+                    param.setResult(url.openConnection(proxy));
+                }
+            });
+        }catch(Error e){
+            Log.d("overjt", "falló algo");
         }
 
         hookAllConstructors(XposedHelpers.findClass("org.apache.http.impl.client.DefaultHttpClient", loadPackageParam.classLoader), new XC_MethodHook() {
