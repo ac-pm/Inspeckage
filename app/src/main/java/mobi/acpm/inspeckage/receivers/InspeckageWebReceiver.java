@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import mobi.acpm.inspeckage.Module;
 import mobi.acpm.inspeckage.util.Config;
@@ -29,8 +30,7 @@ public class InspeckageWebReceiver extends BroadcastReceiver {
         String action = intent.getExtras().getString("action");
 
         if(action.equals("fileTree")){
-
-            String sub1 = intent.getExtras().getString("tree");
+            String sub1 = mPrefs.getString("tree","");
 
             String script = "<script>\n" +
                     "$(document).ready(function() {\n" +
