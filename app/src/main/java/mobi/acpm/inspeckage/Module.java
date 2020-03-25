@@ -4,6 +4,7 @@ import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.io.File;
 
@@ -22,6 +23,7 @@ import mobi.acpm.inspeckage.hooks.FlagSecureHook;
 import mobi.acpm.inspeckage.hooks.HashHook;
 import mobi.acpm.inspeckage.hooks.HttpHook;
 import mobi.acpm.inspeckage.hooks.IPCHook;
+import mobi.acpm.inspeckage.hooks.JustTrustMeHook;
 import mobi.acpm.inspeckage.hooks.MiscHook;
 import mobi.acpm.inspeckage.hooks.ProxyHook;
 import mobi.acpm.inspeckage.hooks.SQLiteHook;
@@ -33,6 +35,7 @@ import mobi.acpm.inspeckage.hooks.UserHooks;
 import mobi.acpm.inspeckage.hooks.WebViewHook;
 import mobi.acpm.inspeckage.hooks.entities.LocationHook;
 import mobi.acpm.inspeckage.util.Config;
+import mobi.acpm.inspeckage.util.DexUtil;
 import mobi.acpm.inspeckage.util.FileType;
 import mobi.acpm.inspeckage.util.FileUtil;
 
@@ -157,14 +160,13 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_IPC,true)) {
             IPCHook.initAllHooks(loadPackageParam);
         }
-        ProxyHook.initAllHooks(loadPackageParam);// --
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SHAREDP,true)) {
             SharedPrefsHook.initAllHooks(loadPackageParam);
         }
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SQLITE,true)) {
             SQLiteHook.initAllHooks(loadPackageParam);
         }
-        SSLPinningHook.initAllHooks(loadPackageParam);// --
+
         if(sPrefs.getBoolean(Config.SP_TAB_ENABLE_SERIALIZATION,true)) {
             SerializationHook.initAllHooks(loadPackageParam);
         }
@@ -176,7 +178,12 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         }
         FingerprintHook.initAllHooks(loadPackageParam);
 
-        //DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+
+
+        SSLPinningHook.initAllHooks(loadPackageParam);// --
+        ProxyHook.initAllHooks(loadPackageParam);// --
+        DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+        JustTrustMeHook.initAllHooks(loadPackageParam);// --
     }
 
     public static void logError(Error e){

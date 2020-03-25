@@ -5,8 +5,11 @@ import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.webkit.WebView;
 
 import java.lang.reflect.Field;
@@ -156,13 +159,13 @@ public class InspeckageReceiver extends BroadcastReceiver {
 
                     String tree = Util.FileTree(activity.getApplicationInfo().dataDir, "");
 
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.activity);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("tree",tree);
+                    editor.apply();
+
                     Intent i = new Intent("mobi.acpm.inspeckage.INSPECKAGE_WEB");
                     i.putExtra("action", "fileTree");
-                    float m = (float) tree.length() / 3;
-                    String sub1 = tree.substring(0, (int) m);
-                    String sub2 = tree.substring((int) m, tree.length());
-                    //talvez tenha que dividir pq a arvore pode ficar muito grande para ser enviada via intent
-                    i.putExtra("tree", tree);
                     activity.sendBroadcast(i, null);
                     Util.sb = new StringBuilder();
 
