@@ -23,6 +23,7 @@ import mobi.acpm.inspeckage.hooks.FlagSecureHook;
 import mobi.acpm.inspeckage.hooks.HashHook;
 import mobi.acpm.inspeckage.hooks.HttpHook;
 import mobi.acpm.inspeckage.hooks.IPCHook;
+import mobi.acpm.inspeckage.hooks.JustTrustMeHook;
 import mobi.acpm.inspeckage.hooks.MiscHook;
 import mobi.acpm.inspeckage.hooks.ProxyHook;
 import mobi.acpm.inspeckage.hooks.SQLiteHook;
@@ -182,6 +183,7 @@ public class Module extends XC_MethodHook implements IXposedHookLoadPackage, IXp
         SSLPinningHook.initAllHooks(loadPackageParam);// --
         ProxyHook.initAllHooks(loadPackageParam);// --
         DexUtil.saveClassesWithMethodsJson(loadPackageParam, sPrefs);
+        JustTrustMeHook.initAllHooks(loadPackageParam);// --
     }
 
     public static void logError(Error e){
